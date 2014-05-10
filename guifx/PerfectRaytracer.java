@@ -29,13 +29,13 @@ import utils.ObservableProperties;
  */ 
 public class PerfectRaytracer extends Application {
 	
-	private static final Properties				properties			= new Properties();
-	private static final ObservableProperties	strings				= new ObservableProperties();
-	
-	private static final int					PREFERRED_SKIN		= 0;
-	private static final int					PREFERRED_LANGUAGE	= 1;
+	private static final Properties			properties		= new Properties();
+	private static final ObservableProperties	strings			= new ObservableProperties();
 
-	private MenuItem[]							preferences			= new MenuItem[2];
+	private static final int			PREFERRED_SKIN		= 0;
+	private static final int			PREFERRED_LANGUAGE	= 1;
+
+	private MenuItem[]				preferences		= new MenuItem[2];
 	
 	@Override
 	public void start(Stage primaryStage)  {	
@@ -80,9 +80,9 @@ public class PerfectRaytracer extends Application {
         Menu menuEdit   = new Menu();
         Menu menuHelp   = new Menu();
 		
-		menuFile.textProperty().bind(strings.getObservableProperty("file"));
-		menuEdit.textProperty().bind(strings.getObservableProperty("edit"));
-		menuHelp.textProperty().bind(strings.getObservableProperty("help"));
+	menuFile.textProperty().bind(strings.getObservableProperty("file"));
+	menuEdit.textProperty().bind(strings.getObservableProperty("edit"));
+	menuHelp.textProperty().bind(strings.getObservableProperty("help"));
         
         MenuItem newScene;
         MenuItem save;
@@ -96,12 +96,12 @@ public class PerfectRaytracer extends Application {
         menuFile.getItems().add(saveAs   = new MenuItem());
         menuFile.getItems().add(quit     = new MenuItem());
 		
-		newScene.textProperty().bind(strings.getObservableProperty("newScene"));
-		load    .textProperty().bind(strings.getObservableProperty("loadScene"));
-		save    .textProperty().bind(strings.getObservableProperty("saveScene"));
-		saveAs  .textProperty().bind(strings.getObservableProperty("saveSceneAs"));
-		quit    .textProperty().bind(strings.getObservableProperty("quit"));
-        
+	newScene.textProperty().bind(strings.getObservableProperty("newScene"));
+	load    .textProperty().bind(strings.getObservableProperty("loadScene"));
+	save    .textProperty().bind(strings.getObservableProperty("saveScene"));
+	saveAs  .textProperty().bind(strings.getObservableProperty("saveSceneAs"));
+	quit    .textProperty().bind(strings.getObservableProperty("quit"));
+       
         newScene.setAccelerator(new KeyCharacterCombination("N",
                                 KeyCombination.CONTROL_DOWN));
         save    .setAccelerator(new KeyCharacterCombination("S",
