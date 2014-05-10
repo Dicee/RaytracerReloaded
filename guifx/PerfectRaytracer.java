@@ -166,7 +166,7 @@ public class PerfectRaytracer extends Application {
 	private Menu setChooseStyle(final ImageView checkedIcon) {
 		Menu chooseStyle        = new Menu();		
 		final MenuItem caspian  = new MenuItem("Caspian");
-        final MenuItem modena   = new MenuItem("Modena");
+        	final MenuItem modena   = new MenuItem("Modena");
 		MenuItem       selectedMenu;
 		switch (properties.getProperty("defaultStyle")) {
 			case "CASPIAN" : 
@@ -189,7 +189,7 @@ public class PerfectRaytracer extends Application {
 			setUserAgentStylesheet(STYLESHEET_MODENA);
 			changePreference(modena,PREFERRED_SKIN,checkedIcon);
 		});       
-        chooseStyle.getItems().addAll(caspian,modena);
+  		chooseStyle.getItems().addAll(caspian,modena);
 		return chooseStyle;
 	}
 	
@@ -215,13 +215,13 @@ public class PerfectRaytracer extends Application {
         
         Button resize     = new Button("",resizeIcon);
         Button translate  = new Button("",translateIcon);
-		Button showOrHide = new Button("",showOrHideIcon);
+	Button showOrHide = new Button("",showOrHideIcon);
         Button trash      = new Button("",trashIcon); 
 		
-		resize    .textProperty().bind(strings.getObservableProperty("resize"));
-		translate .textProperty().bind(strings.getObservableProperty("translate"));
-		showOrHide.textProperty().bind(strings.getObservableProperty("showOrHide"));
-		trash     .textProperty().bind(strings.getObservableProperty("trash"));
+	resize    .textProperty().bind(strings.getObservableProperty("resize"));
+	translate .textProperty().bind(strings.getObservableProperty("translate"));
+	showOrHide.textProperty().bind(strings.getObservableProperty("showOrHide"));
+	trash     .textProperty().bind(strings.getObservableProperty("trash"));
         
         ToolBar tb = new ToolBar(resize,translate,showOrHide,trash);
         header.getChildren().addAll(menuBar,tb);
