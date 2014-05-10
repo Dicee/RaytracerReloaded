@@ -26,7 +26,7 @@ import utils.ObservableProperties;
 /**
  *
  * @author David Courtinot
- */
+ */ 
 public class PerfectRaytracer extends Application {
 	
 	private static final Properties				properties			= new Properties();
