@@ -8,11 +8,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import objects.PlaneSurface;
+
+import org.jdom2.Element;
+
 import utils.math.Point;
 import utils.math.Rotatable;
 import utils.math.Translatable;
 import utils.math.Vector3D;
 import XML.XMLable;
+import XML.basicTypes.XMLInteger;
+import XML.basicTypes.XMLVector;
 
 public class Screen implements XMLable, Translatable, Rotatable {	
 	private int				density;
@@ -123,6 +128,7 @@ public class Screen implements XMLable, Translatable, Rotatable {
 		return getCarac(align,"");
 	}
 	
+	@Override
 	public String toString() {
 		Point[]  pts = containingPlane.getPoints();
 		Point    X   = pts[0], O = pts[1], Y = pts[2];
@@ -175,7 +181,14 @@ public class Screen implements XMLable, Translatable, Rotatable {
 	}
 
 	@Override
-	public String toXML(String align, String attributes) {
-		return null;
+	public Element toXML() {
+		Element result = new Element("Screen");
+		Point[] pts    = getPoints();
+		result.addContent(new XMLVector("pointOfView",pView));
+		result.addContent(new XMLVector("A",pts[0]));
+		result.addContent(new XMLVector("B",pts[1]));
+		result.addContent(new XMLVector("C",pts[2]));
+		result.addContent(new XMLInteger("density",density));
+		return result;
 	}
 }

@@ -1,5 +1,8 @@
 package objects;
 
+import org.jdom2.Element;
+
+import XML.basicTypes.XMLVector;
 import utils.math.CustomMath;
 import utils.math.Point;
 import utils.math.Vector3D;
@@ -114,12 +117,12 @@ public class PlaneSurface extends Object3D {
 	}
 	
 	@Override
-	public String toXML(String align, String attributes) {		
-		return align + "<Plan>"                           + "\n"  +
-			   align + "\t" + a.x + " " + a.y + " " + a.z + "\n"  +
-			   align + "\t" + b.x + " " + b.y + " " + b.z + "\n"  +
-			   align + "\t" + c.x + " " + c.y + " " + c.z + "\n"  +
-			   super.toXML(align + "\t",attributes)  + "\n" + align + "</Plan>";
+	public Element toXML() {	
+		Element result = new Element("PlaneSurface");
+		result.addContent(new XMLVector("A",a));
+		result.addContent(new XMLVector("B",b));
+		result.addContent(new XMLVector("C",c));
+		return result;
 	}
 
 	@Override

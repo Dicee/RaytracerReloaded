@@ -1,5 +1,9 @@
 package objects;
 
+import org.jdom2.Element;
+
+import XML.basicTypes.XMLDouble;
+import XML.basicTypes.XMLVector;
 import utils.math.Matrix;
 import utils.math.Vector3D;
 import utils.math.CustomMath;
@@ -333,14 +337,14 @@ public class Cone extends WrappedObject {
 	}
 	
 	@Override
-	public String toXML(String align, String attributes) {		
-		return align        + "<Cone>"                                                                     + "\n" +
-			   "\t" + align + baseRay                                                                      + "\n" +
-			   "\t" + align + vertice.getX()        + " "  + vertice.getY()    + " "   + vertice.getZ()    + "\n" +
-			   "\t" + align + baseCenter.getX()     + " "  + baseCenter.getY() + " "   + baseCenter.getZ() + "\n" +
-			   super.toXML(align + "\t",attributes) + "\n"              + align + "</Cone>";
+	public Element toXML() {	
+		Element result = new Element("Cone");
+		result.addContent(new XMLDouble("baseRay",baseRay));
+		result.addContent(new XMLVector("vertice",vertice));
+		result.addContent(new XMLVector("baseCenter",baseCenter));
+		return result;
 	}
-
+	
 	@Override
 	public void translate(Vector3D v) {
 		baseCenter = baseCenter.translate(v);

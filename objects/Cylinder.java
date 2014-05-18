@@ -1,9 +1,13 @@
 package objects;
 
-import utils.math.Vector3D;
-import utils.math.Matrix;
+import org.jdom2.Element;
+
 import utils.math.CustomMath;
+import utils.math.Matrix;
 import utils.math.Point;
+import utils.math.Vector3D;
+import XML.basicTypes.XMLDouble;
+import XML.basicTypes.XMLVector;
 
 public class Cylinder extends Object3D 
 {
@@ -323,13 +327,13 @@ public class Cylinder extends Object3D
 	}
 	
 	@Override
-	public String toXML(String align, String attributes) {		
-		return align + "<Cylindre>"                                                                 + "\n"  +
-			   align + "\t" + h                                                                     + "\n"  +
-			   align + "\t" + r                                                                     + "\n"  +
-			   align + "\t" + baseCenter.getX() + " " + baseCenter.getY() + " " + baseCenter.getZ() + "\n"  +
-			   align + "\t" + axis.getX()        + " " + axis.getY()        + " " + axis.getZ()        + "\n"  +
-			   super.toXML(align+"\t",attributes)  + "\n"              + align                   + "</Cylindre>";
+	public Element toXML() {	
+		Element result = new Element("Cylinder");
+		result.addContent(new XMLDouble("height",h));
+		result.addContent(new XMLDouble("ray",r));
+		result.addContent(new XMLVector("baseCenter",baseCenter));
+		result.addContent(new XMLVector("axis",axis));
+		return result;
 	}
 	
 	@Override

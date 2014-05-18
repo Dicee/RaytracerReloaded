@@ -1,5 +1,7 @@
 package XML;
 
+import org.jdom2.Element;
+
 public interface XMLable {
-	public String toXML(String align, String attributes);
+	public Element toXML();
 }

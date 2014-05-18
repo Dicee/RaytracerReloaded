@@ -2,36 +2,24 @@ package scene;
 
 import java.awt.Color;
 
+import org.jdom2.Element;
+
 import utils.math.Point;
 import utils.math.Translatable;
 import utils.math.Vector3D;
 import XML.XMLable;
+import XML.basicTypes.XMLColor;
+import XML.basicTypes.XMLVector;
 
-public class Source implements XMLable, Translatable {
+public class Source implements XMLable, Translatable, Cloneable {
 	public Color color;
 	public Point pos;
 
 	public Source(Color color, Point pos) {
 		this.color = color;
 		this.pos   = pos;
-	}
-	
-	@Override
-	public String toXML(String align, String attributes)	{		
-		float R = (float) color.getRed() / (float) 255;
-		float V = (float) color.getGreen() / (float) 255;
-		float B = (float) color.getBlue() / (float) 255;
+	}	
 		
-		return align + "<Source>"                                               + "\n" +
-			   align + "\t" + pos.getX() + " " + pos.getY() + " "  + pos.getZ() + "\n" + 
-			   align + "\t" + R          + " " + V    +              " "  + B   + "\n" +
-			   align + "</Source>";
-	}
-	
-	public String toXML(String align) {		
-		return toXML(align,"");
-	}
-	
 	public Point getCenter() {
 		return pos;
 	}
@@ -48,6 +36,14 @@ public class Source implements XMLable, Translatable {
 	
 	public Source clone() {
 		return new Source(new Color(color.getRed(),color.getGreen(),color.getBlue()),pos.clone());
+	}
+
+	@Override
+	public Element toXML() {
+		Element result = new Element("Source");
+		result.addContent(new XMLVector("pos",pos));
+		result.addContent(new XMLColor("color",color));
+		return result;
 	}
 }
 

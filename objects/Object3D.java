@@ -6,7 +6,7 @@ import utils.math.Point;
 import utils.math.Rotatable;
 import utils.math.Vector3D;
 
-public abstract class Object3D implements XMLable, Translatable, Rotatable {	
+public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable {	
 	
 	protected Texture texture;	
 	private boolean   shown;
@@ -73,11 +73,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable {
 		checkedResize(factor);
 	}
 	protected abstract void checkedResize(double factor);
-	
-	public String toXML(String align, String attributes) {
-		return texture.toXML(align,attributes);
-	}
-	
+		
 	public String toString() {
 	  return String.format("State : %s, Texture : ",isShown() ? "Shown" : "Hided",texture);
 	}

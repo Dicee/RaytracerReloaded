@@ -2,6 +2,9 @@ package objects;
 
 import java.util.Arrays;
 
+import org.jdom2.Element;
+
+import XML.basicTypes.XMLVector;
 import utils.math.Point;
 import utils.math.Vector3D;
 
@@ -102,16 +105,15 @@ public class Parallelepiped extends MeshedObject {
 				"      Sommet 4 :  " + Z + "\n" +
 				"\n" + super.toString();				
 	}
-
+	
 	@Override
-	public String toXML(String align, String attributes) {		
-		return align        + "<Parallelepipede>"          + "\n" +
-			   "\t" + align + O.x + " " + O.y + " "  + O.z + "\n" +
-			   "\t" + align + X.x + " " + X.y + " "  + X.z + "\n" +
-			   "\t" + align + Y.x + " " + Y.y + " "  + Y.z + "\n" +
-			   "\t" + align + Z.x + " " + Z.y + " "  + Z.z + "\n" +
-			   super.toXML(align + "\t",attributes)  + "\n" + align + 
-			   "</Parallelepipede>";
+	public Element toXML() {	
+		Element result = new Element("Parallelepiped");
+		result.addContent(new XMLVector("O",O));
+		result.addContent(new XMLVector("X",X));
+		result.addContent(new XMLVector("Y",Y));
+		result.addContent(new XMLVector("Z",Z));
+		return result;
 	}
 
 	@Override

@@ -3,10 +3,17 @@ package scene;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import objects.Object3D;
 
-public class Scene {
+import org.jdom2.Element;
+
+import XML.XMLable;
+import XML.basicTypes.XMLColor;
+import XML.basicTypes.XMLFloat;
+
+public class Scene implements XMLable, Cloneable {
 	private Color				ambientColor;
 	private ArrayList<Source>	sources;
 	private ArrayList<Object3D>	objects;
@@ -37,7 +44,7 @@ public class Scene {
 		return ambientColor;
 	}
 	
-	public void setAmbientColor(Color color)	{
+	public void setAmbientColor(Color color) {
 		ambientColor = color;
 	}
 	
@@ -45,11 +52,6 @@ public class Scene {
 		return refraction;
 	}
 	
-	/**
-	 * 
-	 * @param indice
-	 * @throws IllegalArgumentException if indice < 1
-	 */
 	public void setIndice(double indice) {
 		if (indice < 1)
 			throw new IllegalArgumentException();
@@ -57,16 +59,26 @@ public class Scene {
 	}
 
 	public Scene clone() {
-		List<Object3D> obj = new ArrayList<Object3D>();
-		List<Source>   src = new ArrayList<Source>();
-		
-		for (Object3D object3d : obj)
-			obj.add(object3d.clone()); 
-		
-		for (Source source : sources)
-			src.add(source.clone());
-			
+		List<Object3D> obj = objects.stream().map(object -> object.clone()).collect(Collectors.toList());
+		List<Source>   src = sources.stream().map(source -> source.clone()).collect(Collectors.toList());
 		return new Scene(ambientColor,refraction,obj,src);
+	}
+
+	@Override
+	public Element toXML() {
+		Element result = new Element("Scene");
+		result.addContent(new XMLFloat("indice",refraction));
+		result.addContent(new XMLColor("ambient",ambientColor));
+		
+		Element objectsElt = new Element("Objects");
+		objects.stream().forEachOrdered(object -> objectsElt.addContent(object.toXML()));
+		
+		Element sourcesElt = new Element("Sources");
+		sources.stream().forEachOrdered(s -> sourcesElt.addContent(s.toXML()));
+		
+		result.addContent(objectsElt);
+		result.addContent(sourcesElt);
+		return result;
 	}
 }
 

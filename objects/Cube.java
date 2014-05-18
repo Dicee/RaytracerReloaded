@@ -1,5 +1,8 @@
 package objects;
 
+import org.jdom2.Element;
+
+import XML.basicTypes.XMLVector;
 import utils.math.CustomMath;
 import utils.math.Point;
 import utils.math.Vector3D;
@@ -98,15 +101,16 @@ public class Cube extends MeshedObject
 				"      Vertice 4 :  " + Z + "\n" +
 				"\n" + super.toString();				
 	}
-
-	public String toXML(String align, String attributes) {		
-		return align        + "<Cube>"                     + "\n" +
-			   "\t" + align + O.x + " " + O.y + " "  + O.z + "\n" +
-			   "\t" + align + X.x + " " + X.y + " "  + X.z + "\n" +
-			   "\t" + align + Y.x + " " + Y.y + " "  + Y.z + "\n" +
-			   "\t" + align + Z.x + " " + Z.y + " "  + Z.z + "\n" +
-			   super.toXML(align + "\t",attributes)  + "\n" + align + "</Cube>";
-	}	
+	
+	@Override
+	public Element toXML() {	
+		Element result = new Element("Cube");
+		result.addContent(new XMLVector("O",O));
+		result.addContent(new XMLVector("X",X));
+		result.addContent(new XMLVector("Y",Y));
+		result.addContent(new XMLVector("Z",Z));
+		return result;
+	}
 
 	public Object3D getWrappingObject() {		
 		return new Sphere(getCenter(),Math.sqrt(3)*getSideLength()/2,Texture.defaultTexture);

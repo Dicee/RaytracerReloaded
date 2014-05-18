@@ -1,9 +1,13 @@
 package objects;
 
+import org.jdom2.Element;
+
 import utils.math.CustomMath;
 import utils.math.Matrix;
 import utils.math.Point;
 import utils.math.Vector3D;
+import XML.basicTypes.XMLDouble;
+import XML.basicTypes.XMLVector;
 
 public class Sphere extends Object3D {
 	protected Point c;
@@ -102,13 +106,13 @@ public class Sphere extends Object3D {
 	public int getPriority() {
 		return -1;
 	}
-	
+		
 	@Override
-	public String toXML(String align, String attributes) {		
-		return align + "<Sphere>"                                        + "\n"  +
-			   align + "\t" + r                                          + "\n"  +
-			   align + "\t" + c.getX() + " " + c.getY() + " " + c.getZ() + "\n"  +
-			   super.toXML(align + "\t",attributes)  + "\n"           + align + "</Sphere>";
+	public Element toXML() {	
+		Element result = new Element("Sphere");
+		result.addContent(new XMLDouble("ray",r));
+		result.addContent(new XMLVector("center",c));
+		return result;
 	}
 
 	@Override
