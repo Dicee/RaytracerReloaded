@@ -3,7 +3,7 @@ RaytracerReloaded
 
 It was initially a student project to build a simple raytracer with a Swing UI. Since this was at the very beginning of my Java adventure, the code was clumsy although it worked fine.
 
-I decided to rebuild it from scratch, particularly the UI part for which JavaFX will be used instead of Swing. Plus, this will be the opportunity to use the JDK 8 and its nice lambda expressions :) The following features will be included :
+I decided to rebuild it from scratch, particularly the UI part for which JavaFX will be used instead of Swing. Plus, this will be the opportunity to use JDK 8. The following features will be included :
 
 - XML import/export of scenes
 - realistic 3D scenes processing using the ray tracing algorithm
