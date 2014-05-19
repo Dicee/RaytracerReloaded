@@ -122,6 +122,10 @@ public class Texture implements XMLable, Cloneable {
 	  this(indice,new float[] { brillance,brillance,brillance },getRGB(reflectance),getRGB(Ka),getRGB(Kr),getRGB(Kt));
   }
   
+  public Texture(float indice, float brillance, Color reflectance, File f, Color Kr, Color Kt) throws IOException {
+	  this(indice,new float[] { brillance,brillance,brillance },getRGB(reflectance),f,getRGB(Kr),getRGB(Kt));
+  }
+  
   private static float[] getRGB(Color c) {
 	  return new float[] { ((float) c.getRed())/255,((float) c.getGreen())/255,((float) c.getBlue())/255 };
   }
@@ -229,6 +233,7 @@ private boolean testParam(float[] param, float inf,
 			elt = new XMLColor("Ka",Ka);
 		else {
 			elt = new Element("Color");
+			elt.setAttribute(new Attribute("name","Ka"));
 			elt.setAttribute(new Attribute("url",path));
 		}
 		result.addContent(elt);

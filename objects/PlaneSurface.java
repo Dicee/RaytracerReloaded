@@ -181,7 +181,7 @@ public class PlaneSurface extends Object3D {
 
 	@Override
 	protected void checkedResize(double factor) {
-		//Nothing to do since th plane surface is unlimited
+		//Nothing to do since the plane surface is unlimited
 	}
 }
 

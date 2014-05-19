@@ -17,7 +17,7 @@ public class XMLColor extends Element {
 	}
 	
 	public XMLColor(String name, Color c) {
-		this(name,c.getRed(),c.getGreen(),c.getBlue());
+		this(name,((float) c.getRed())/255,((float) c.getGreen())/255,((float) c.getBlue())/255);
 	}
 	
 	public XMLColor(String name, float[] rgb) {

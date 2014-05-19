@@ -36,7 +36,7 @@ public class Cube extends MeshedObject
 		generateFaces();
 	}
 	
-	private Cube(Point O, Point X, Point Y, Point Z, Texture t) {
+	public Cube(Point O, Point X, Point Y, Point Z, Texture t) {
 		super(t.clone());
 		this.O = new Point(O);
 		this.X = new Point(X);

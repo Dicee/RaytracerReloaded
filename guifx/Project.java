@@ -33,7 +33,7 @@ public class Project implements XMLable {
 		int i = 0;
 		for (Texture t : textures) {
 			Element elt = t.toXML();
-			elt.setAttribute(new Attribute("id",i + ""));
+			elt.setAttribute(new Attribute("id",(i++) + ""));
 			elt.setAttribute(new Attribute("show","true"));
 			texturesElt.addContent(elt);
 		}

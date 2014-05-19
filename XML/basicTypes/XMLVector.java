@@ -31,4 +31,8 @@ public class XMLVector extends Element {
 		double z = Double.parseDouble(elt.getAttributeValue("Z"));
 		return new Point(x,y,z);
 	}
+	
+	public static Vector3D xmlToVector(Element elt) {
+		return new Vector3D(new Point(),xmlToPoint(elt));
+	}
 }

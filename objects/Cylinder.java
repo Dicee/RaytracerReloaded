@@ -34,13 +34,13 @@ public class Cylinder extends Object3D
 		this.baseCenter = new Point();
 	}	
 	
-	public Cylinder(double h, double r, Point centre, Vector3D axe, Texture texture) {
+	public Cylinder(double h, double r, Point center, Vector3D axis, Texture texture) {
 		super(texture);
 		this.h          = h;
 		this.r          = r;
-		this.ex         = CustomMath.adaptedBase(axe)[0];
-		this.axis       = axe.multScal(1/axe.norm());
-		this.baseCenter = centre.clone();
+		this.ex         = CustomMath.adaptedBase(axis)[0];
+		this.axis       = axis.multScal(1/axis.norm());
+		this.baseCenter = center.clone();
 	}
 
 	@Override

@@ -22,12 +22,11 @@ import scene.Scene;
 import scene.Screen;
 import scene.Source;
 import utils.math.Point;
-import XML.basicTypes.XMLColor;
-import XML.basicTypes.XMLVector;
+import static XML.basicTypes.XMLVector.xmlToPoint;
+import static XML.basicTypes.XMLColor.xmlToColor;
+import static XML.XMLObjectLoader.xmlToObjects;
 
 public class XMLSceneLoader {
-	private static XMLObjectLoader objectLoader = new XMLObjectLoader();
-	
 	public static Project load(File f) throws JDOMException, IOException {
 		SAXBuilder     builder     = new SAXBuilder();
 		Document       doc         = builder.build(f);
@@ -39,23 +38,23 @@ public class XMLSceneLoader {
 		
 		List<Screen>   screens     = xmlToScreens(viewsElt);
 		List<Texture>  textures    = xmlToTextures(texturesElt);
-		Scene          scene       = xmlToScene(sceneElt);
+		Scene          scene       = xmlToScene(sceneElt,textures);
 		
 		return new Project(scene,screens,textures);
 	}
 
-	private static Scene xmlToScene(Element sceneElt) {
+	private static Scene xmlToScene(Element sceneElt, List<Texture>  textures) {
 		float          indice  = Float.parseFloat(sceneElt.getChild("Float").getAttributeValue("value"));
-		Color          ambient = XMLColor.xmlToColor(sceneElt.getChild("Color"));
-		List<Object3D> objects = objectLoader.xmlToObjects(sceneElt.getChild("Objects"));
+		Color          ambient = xmlToColor(sceneElt.getChild("Color"));
+		List<Object3D> objects = xmlToObjects(sceneElt.getChild("Objects"),textures);
 		List<Source>   sources = xmlToSources(sceneElt.getChild("Sources"));
 		return new Scene(ambient,indice,objects,sources);
 	}
 	
 	private static List<Source> xmlToSources(Element sourcesElt) {
 		return mapAndCollect(elt -> {
-			Point pos   = XMLVector.xmlToPoint(elt.getChild("Vector"));
-			Color color = XMLColor.xmlToColor(elt.getChild("Color"));
+			Point pos   = xmlToPoint(elt.getChild("Vector"));
+			Color color = xmlToColor(elt.getChild("Color"));
 			return new Source(color,pos);
 		},sourcesElt,"Source");
 	}
@@ -63,10 +62,11 @@ public class XMLSceneLoader {
 	private static List<Screen> xmlToScreens(Element viewsElt) {
 		return mapAndCollect(elt -> {
 			List<Element> points  = elt.getChildren("Vector");
-			Point         A       = XMLVector.xmlToPoint(findByName(points,"A"));
-			Point         B       = XMLVector.xmlToPoint(findByName(points,"B"));
-			Point         C       = XMLVector.xmlToPoint(findByName(points,"C"));
-			Point         pView   = XMLVector.xmlToPoint(findByName(points,"pointOfView"));
+			//points.stream().map(p -> p.getAttributeValue("name")).forEach(System.out::println);
+			Point         A       = xmlToPoint(findByName(points,"A"));
+			Point         B       = xmlToPoint(findByName(points,"B"));
+			Point         C       = xmlToPoint(findByName(points,"C"));
+			Point         pView   = xmlToPoint(findByName(points,"pointOfView"));
 			int           density = Integer.parseInt(elt.getChild("Integer").getAttributeValue("value"));
 			return new Screen(A,B,C,pView,density);
 		},viewsElt,"Screen");
@@ -79,11 +79,21 @@ public class XMLSceneLoader {
 			float brillance      = Float.parseFloat(findByName(floats,"brillance").getAttributeValue("value"));
 			
 			List<Element> colors = elt.getChildren("Color");
-			Color reflectance    = XMLColor.xmlToColor(findByName(colors,"reflectance"));
-			Color Ka             = XMLColor.xmlToColor(findByName(colors,"Ka"));
-			Color Kr             = XMLColor.xmlToColor(findByName(colors,"Kr"));
-			Color Kt             = XMLColor.xmlToColor(findByName(colors,"Kt"));
-			return new Texture(indice,brillance,reflectance,Ka,Kr,Kt);
+			Color reflectance    = xmlToColor(findByName(colors,"reflectance"));
+			Color Kr             = xmlToColor(findByName(colors,"Kr"));
+			Color Kt             = xmlToColor(findByName(colors,"Kt"));
+			
+			Element Ka           = findByName(colors,"Ka");
+			String path;
+			if ((path = Ka.getAttributeValue("url")) != null) {
+				try {
+					return new Texture(indice,brillance,reflectance,new File(path),Kr,Kt);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			} else
+				return new Texture(indice,brillance,reflectance,xmlToColor(Ka),Kr,Kt);
 		},texturesElt,"Texture");
 	}
 
@@ -93,8 +103,8 @@ public class XMLSceneLoader {
 					collect(Collectors.toList());
 	}
 	
-	private static Element findByName(List<Element> elts, String name) {
-		Optional<Element> result = elts.stream().filter(elt -> elt.getName().equals(name)).findFirst();
+	static Element findByName(List<Element> elts, String name) {
+		Optional<Element> result = elts.stream().filter(elt -> elt.getAttributeValue("name").equals(name)).findFirst();
 		return result.isPresent() ? result.get() : null;
 	}
 }
