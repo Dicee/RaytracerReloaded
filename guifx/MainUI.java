@@ -1,5 +1,6 @@
 package guifx;
 
+import guifx.generics.SceneElementTab;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
@@ -8,31 +9,26 @@ import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
 import static javafx.application.Application.setUserAgentStylesheet;
 import javafx.event.ActionEvent;
-import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import utils.ObservableProperties;
 
-/**
- *
- * @author David Courtinot
- */
 public class MainUI extends Application {
 	
 	private static final Properties				properties			= new Properties();
@@ -40,6 +36,9 @@ public class MainUI extends Application {
 	
 	private static final int					PREFERRED_SKIN		= 0;
 	private static final int					PREFERRED_LANGUAGE	= 1;
+	
+	public static final double					PREFERRED_WIDTH		= 1100;
+	public static final double					PREFERRED_HEIGHT	= 600;
 
 	private final MenuItem[]					preferences			= new MenuItem[2];
 	
@@ -51,28 +50,79 @@ public class MainUI extends Application {
 		//Loading localised texts and descriptions
 		loadLocalizedTexts(properties.getProperty(properties.getProperty("defaultLanguage")));			
 		
-        VBox root       = new VBox(0);
+        VBox root       = new VBox();
         MenuBar menuBar = setMenuBar();        
-        VBox header     = setHeader(menuBar);
+        setHeader(root,menuBar);		
 		
-		HBox center     = new HBox(10);
-		ToolBar tb = new ContextToolBar("Tools",new Button("Coucobhu"),new Button("Cou"),new Button("Coou"),new Button("Coucdrou"),new Button("Coucoggeu"),new Button("Cojou"));
-		tb.setOrientation(Orientation.VERTICAL);
-		tb.setMinHeight(900);
+		TabPane tabPane = new TabPane();
+		setObjectsPane(tabPane);		
+		setSourcesPane(tabPane);		
+		setViewsPane(tabPane);		
+		setTexturesPane(tabPane);		
 		
+		VBox.setVgrow(tabPane,Priority.ALWAYS);		
+        root.getChildren().addAll(tabPane);		
 		
-		center.getChildren().add(tb);		
-		
-		
-		AnchorPane pane = new AnchorPane(center);
-		
-        root.getChildren().addAll(header,pane);
-        
-		//WHITESMOKE
-        Scene scene = new Scene(root,1100,600,Color.WHITESMOKE);
+        Scene scene = new Scene(root,PREFERRED_WIDTH,PREFERRED_HEIGHT,Color.WHITESMOKE);
         primaryStage.setTitle("Raytracer Reloaded");
         primaryStage.setScene(scene);
-        primaryStage.show();    
+        primaryStage.show(); 
+	}
+	
+	private void setObjectsPane(TabPane tabPane) {
+		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("objects"),
+				strings.getObservableProperty("tools"));
+		
+		Button create     = getButton("createIcon","create");
+		Button edit       = getButton("editIcon","edit");
+		Button trash      = getButton("trashIcon","trash");
+		Button resize     = getButton("resizeIcon","resize");
+		Button translate  = getButton("translateIcon","translate");		
+		Button rotate     = getButton("rotateIcon","rotate");
+		Button showOrHide = getButton("showOrHideIcon","showOrHide");		
+		
+		tab.getToolBarItems().addAll(create,edit,trash,resize,translate,rotate,showOrHide);
+		tabPane.getTabs().add(tab);
+	}
+	
+	private void setSourcesPane(TabPane tabPane) {
+		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("sources"),
+				strings.getObservableProperty("tools"));
+		
+		Button create     = getButton("createIcon","create");
+		Button edit       = getButton("editIcon","edit");
+		Button trash      = getButton("trashIcon","trash");
+		Button translate  = getButton("translateIcon","translate");			
+		
+		tab.getToolBarItems().addAll(create,edit,trash,translate);		
+		tabPane.getTabs().add(tab);
+	}
+	
+	private void setViewsPane(TabPane tabPane) {
+		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("views"),
+				strings.getObservableProperty("tools"));
+		
+		Button create     = getButton("createIcon","create");
+		Button edit       = getButton("editIcon","edit");
+		Button trash      = getButton("trashIcon","trash");
+		Button resize     = getButton("resizeIcon","resize");
+		Button translate  = getButton("translateIcon","translate");		
+		Button rotate     = getButton("rotateIcon","rotate");		
+		
+		tab.getToolBarItems().addAll(create,edit,trash,resize,translate,rotate);
+		tabPane.getTabs().add(tab);
+	}
+	
+	private void setTexturesPane(TabPane tabPane) {
+		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("textures"),
+				strings.getObservableProperty("tools"));
+		
+		Button create     = getButton("createIcon","create");
+		Button edit       = getButton("editIcon","resize");
+		Button trash      = getButton("trashIcon","trash");		
+		
+		tab.getToolBarItems().addAll(create,edit,trash);		
+		tabPane.getTabs().add(tab);
 	}
 
 	private void loadProperties() {
@@ -224,31 +274,23 @@ public class MainUI extends Application {
 		}
 	}
 	
-	private VBox setHeader(MenuBar menuBar) {
-        VBox header              = new VBox();
-        ImageView resizeIcon     = new ImageView(
-                new Image(getClass().getResourceAsStream(properties.getProperty("resizeIcon"))));
-        ImageView translateIcon  = new ImageView(
-                new Image(getClass().getResourceAsStream(properties.getProperty("translateIcon"))));
-        ImageView trashIcon      = new ImageView(
-                new Image(getClass().getResourceAsStream(properties.getProperty("trashIcon"))));
-        ImageView showOrHideIcon = new ImageView(
-                new Image(getClass().getResourceAsStream(properties.getProperty("showOrHideIcon"))));
-        
-        Button resize     = new Button("",resizeIcon);
-        Button translate  = new Button("",translateIcon);
-		Button showOrHide = new Button("",showOrHideIcon);
-        Button trash      = new Button("",trashIcon); 
-		
-		resize    .textProperty().bind(strings.getObservableProperty("resize"));
-		translate .textProperty().bind(strings.getObservableProperty("translate"));
-		showOrHide.textProperty().bind(strings.getObservableProperty("showOrHide"));
-		trash     .textProperty().bind(strings.getObservableProperty("trash"));
-        
-        ToolBar tb = new ToolBar(resize,translate,showOrHide,trash);
+	private void setHeader(Pane root, MenuBar menuBar) {
+        VBox header         = new VBox();        
+        Button computeScene = getButton("computeSceneIcon","computeScene");
+        Button editScene    = getButton("editSceneIcon","editScene");         
+        ToolBar tb          = new ToolBar(editScene,computeScene);		
         header.getChildren().addAll(menuBar,tb);
-        return header;
-    }	
+		root.getChildren().add(header);
+    }		
+	
+	private Button getButton(String iconPropertyName, String textPropertyName) {
+		ImageView icon = new ImageView(
+                new Image(getClass().getResourceAsStream(properties.getProperty(iconPropertyName))));
+		Button button = new Button("",icon);
+		button.setStyle("-fx-alignment:top-left;-fx-graphic-text-gap:10px");
+		button.textProperty().bind(strings.getObservableProperty(textPropertyName));
+		return button;
+	}
 	
 	public static void main(String[] args) {
 		launch(args);
