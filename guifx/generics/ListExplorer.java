@@ -6,14 +6,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
-public class ListExplorer<E> extends HBox {
-	private final ListView<E> listView;
+public class ListExplorer<T> extends HBox {
+	private final ListView<T> listView;
 	private final TextArea test;
 	
 	public ListExplorer() {
 		super(2);
 		test = new TextArea("salut");
 		listView = new ListView();
+		
 		getChildren().addAll(listView,test);
 		
 		test.setMaxWidth(Double.MAX_VALUE);
@@ -24,7 +25,7 @@ public class ListExplorer<E> extends HBox {
 		HBox.setHgrow(test,Priority.ALWAYS);
 	}
 	
-	public ListView<E> getListView() {
+	public ListView<T> getListView() {
 		return listView;
 	}
 }

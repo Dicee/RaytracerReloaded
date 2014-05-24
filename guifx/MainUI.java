@@ -1,8 +1,15 @@
 package guifx;
 
 import guifx.generics.SceneElementTab;
+import guifx.generics.Tools;
+import guifx.generics.impl.ObjectsTab;
+import guifx.generics.impl.ScreensTab;
+import guifx.generics.impl.SourcesTab;
+import guifx.generics.impl.TexturesTab;
+import impl.org.controlsfx.i18n.Localization;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 import java.util.Properties;
 import javafx.application.Application;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
@@ -12,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -41,9 +47,11 @@ public class MainUI extends Application {
 	public static final double					PREFERRED_HEIGHT	= 600;
 
 	private final MenuItem[]					preferences			= new MenuItem[2];
+	private Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage)  {
+		this.primaryStage = primaryStage;
 		//Loading preferences and program constants
 		loadProperties();	
 		
@@ -66,62 +74,60 @@ public class MainUI extends Application {
         Scene scene = new Scene(root,PREFERRED_WIDTH,PREFERRED_HEIGHT,Color.WHITESMOKE);
         primaryStage.setTitle("Raytracer Reloaded");
         primaryStage.setScene(scene);
-        primaryStage.show(); 
+        primaryStage.show(); 		
 	}
 	
 	private void setObjectsPane(TabPane tabPane) {
-		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("objects"),
-				strings.getObservableProperty("tools"));
+		SceneElementTab tab = new ObjectsTab(strings.getObservableProperty("objects"),
+				strings.getObservableProperty("tools"));		
 		
-		Button create     = getButton("createIcon","create");
-		Button edit       = getButton("editIcon","edit");
-		Button trash      = getButton("trashIcon","trash");
-		Button resize     = getButton("resizeIcon","resize");
-		Button translate  = getButton("translateIcon","translate");		
-		Button rotate     = getButton("rotateIcon","rotate");
-		Button showOrHide = getButton("showOrHideIcon","showOrHide");		
+		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
+		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
+		tab.addTool(getButton("trashIcon","trash"),Tools.DELETE);
+		tab.addTool(getButton("resizeIcon","resize"),Tools.RESIZE);
+		tab.addTool(getButton("translateIcon","translate"),Tools.TRANSLATE);
+		tab.addTool(getButton("rotateIcon","rotate"),Tools.ROTATE);
+		tab.addTool(getButton("showOrHideIcon","showOrHide"),Tools.SHOW_HIDE);
 		
-		tab.getToolBarItems().addAll(create,edit,trash,resize,translate,rotate,showOrHide);
 		tabPane.getTabs().add(tab);
 	}
 	
 	private void setSourcesPane(TabPane tabPane) {
-		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("sources"),
+		SceneElementTab tab = new SourcesTab(strings.getObservableProperty("sources"),
 				strings.getObservableProperty("tools"));
 		
-		Button create     = getButton("createIcon","create");
-		Button edit       = getButton("editIcon","edit");
-		Button trash      = getButton("trashIcon","trash");
-		Button translate  = getButton("translateIcon","translate");			
+		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
+		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
+		tab.addTool(getButton("trashIcon","trash"),Tools.DELETE);
+		tab.addTool(getButton("translateIcon","translate"),Tools.TRANSLATE);
+		tab.addTool(getButton("rotateIcon","rotate"),Tools.ROTATE);
+		tab.addTool(getButton("showOrHideIcon","showOrHide"),Tools.SHOW_HIDE);			
 		
-		tab.getToolBarItems().addAll(create,edit,trash,translate);		
 		tabPane.getTabs().add(tab);
 	}
 	
 	private void setViewsPane(TabPane tabPane) {
-		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("views"),
+		SceneElementTab tab = new ScreensTab(strings.getObservableProperty("views"),
 				strings.getObservableProperty("tools"));
 		
-		Button create     = getButton("createIcon","create");
-		Button edit       = getButton("editIcon","edit");
-		Button trash      = getButton("trashIcon","trash");
-		Button resize     = getButton("resizeIcon","resize");
-		Button translate  = getButton("translateIcon","translate");		
-		Button rotate     = getButton("rotateIcon","rotate");		
+		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
+		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
+		tab.addTool(getButton("trashIcon","trash"),Tools.DELETE);
+		tab.addTool(getButton("resizeIcon","resize"),Tools.RESIZE);
+		tab.addTool(getButton("translateIcon","translate"),Tools.TRANSLATE);
+		tab.addTool(getButton("rotateIcon","rotate"),Tools.ROTATE);
 		
-		tab.getToolBarItems().addAll(create,edit,trash,resize,translate,rotate);
 		tabPane.getTabs().add(tab);
 	}
 	
 	private void setTexturesPane(TabPane tabPane) {
-		SceneElementTab tab = new SceneElementTab(strings.getObservableProperty("textures"),
+		SceneElementTab tab = new TexturesTab(strings.getObservableProperty("textures"),
 				strings.getObservableProperty("tools"));
 		
-		Button create     = getButton("createIcon","create");
-		Button edit       = getButton("editIcon","resize");
-		Button trash      = getButton("trashIcon","trash");		
+		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
+		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
+		tab.addTool(getButton("trashIcon","trash"),Tools.DELETE);
 		
-		tab.getToolBarItems().addAll(create,edit,trash);		
 		tabPane.getTabs().add(tab);
 	}
 
@@ -223,13 +229,17 @@ public class MainUI extends Application {
 		preferences[PREFERRED_LANGUAGE] = selectedMenu;
 		
 		french.setOnAction((ActionEvent ev) -> {
-			if (french != preferences[PREFERRED_LANGUAGE])
+			if (french != preferences[PREFERRED_LANGUAGE]) {
 				loadLocalizedTexts(properties.getProperty("FR"));
+				Localization.setLocale(new Locale("fr","FR"));
+			}
 			changePreference(french,PREFERRED_LANGUAGE,checkedIcon);
 		});   
 		english.setOnAction((ActionEvent ev) -> {
-			if (english != preferences[PREFERRED_LANGUAGE])
+			if (english != preferences[PREFERRED_LANGUAGE]) {
 				loadLocalizedTexts(properties.getProperty("EN"));
+				Localization.setLocale(new Locale("en","UK"));				
+			}
 			changePreference(english,PREFERRED_LANGUAGE,checkedIcon);			
 		});
 		return chooseLanguage;
