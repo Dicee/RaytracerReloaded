@@ -1,20 +1,27 @@
-package guifx.generics.impl;
+package guifx.generics.impl.tabs;
 
+import static guifx.MainUI.strings;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
+import guifx.generics.impl.factories.ScreenFactory;
 import java.util.Arrays;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import scene.Screen;
 
 public class ScreensTab extends SceneElementTab<Screen> {
-	public ScreensTab(StringProperty titleProperty, StringProperty toolbarTitleProperty) {
-		super(titleProperty, toolbarTitleProperty);
+	public ScreensTab() {
+		super(strings.getObservableProperty("views"),strings.getObservableProperty("tools"),
+				new ScreenFactory());
 	}
 
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
+		switch (type) {
+			case CREATE :
+				return (ActionEvent ev) -> factory.show();
+			default :
+		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
 				type,ScreensTab.class.getName()));
 	}

@@ -15,9 +15,12 @@ import javafx.scene.layout.HBox;
 public abstract class SceneElementTab<T> extends Tab {
 	private final ContextToolBar toolbar;
 	protected final ListExplorer<T> listExplorer;
+	protected final GraphicFactory<T> factory;
 	
-	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty) {
+	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty, 
+			GraphicFactory<T> factory) {
 		super();
+		this.factory      = factory;
 		this.toolbar      = new ContextToolBar(toolbarTitleProperty,110);
 		this.listExplorer = new ListExplorer<>();
 		textProperty().bind(titleProperty);		

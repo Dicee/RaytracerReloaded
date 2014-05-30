@@ -2,10 +2,10 @@ package guifx;
 
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
-import guifx.generics.impl.ObjectsTab;
-import guifx.generics.impl.ScreensTab;
-import guifx.generics.impl.SourcesTab;
-import guifx.generics.impl.TexturesTab;
+import guifx.generics.impl.tabs.ObjectsTab;
+import guifx.generics.impl.tabs.ScreensTab;
+import guifx.generics.impl.tabs.SourcesTab;
+import guifx.generics.impl.tabs.TexturesTab;
 import impl.org.controlsfx.i18n.Localization;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,8 +37,8 @@ import utils.ObservableProperties;
 
 public class MainUI extends Application {
 	
-	private static final Properties				properties			= new Properties();
-	private static final ObservableProperties	strings				= new ObservableProperties();
+	public static final Properties				properties			= new Properties();
+	public static final ObservableProperties	strings				= new ObservableProperties();
 	
 	private static final int					PREFERRED_SKIN		= 0;
 	private static final int					PREFERRED_LANGUAGE	= 1;
@@ -78,8 +78,7 @@ public class MainUI extends Application {
 	}
 	
 	private void setObjectsPane(TabPane tabPane) {
-		SceneElementTab tab = new ObjectsTab(strings.getObservableProperty("objects"),
-				strings.getObservableProperty("tools"));		
+		SceneElementTab tab = new ObjectsTab();		
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
@@ -93,8 +92,7 @@ public class MainUI extends Application {
 	}
 	
 	private void setSourcesPane(TabPane tabPane) {
-		SceneElementTab tab = new SourcesTab(strings.getObservableProperty("sources"),
-				strings.getObservableProperty("tools"));
+		SceneElementTab tab = new SourcesTab();
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
@@ -107,8 +105,7 @@ public class MainUI extends Application {
 	}
 	
 	private void setViewsPane(TabPane tabPane) {
-		SceneElementTab tab = new ScreensTab(strings.getObservableProperty("views"),
-				strings.getObservableProperty("tools"));
+		SceneElementTab tab = new ScreensTab();
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
@@ -121,8 +118,7 @@ public class MainUI extends Application {
 	}
 	
 	private void setTexturesPane(TabPane tabPane) {
-		SceneElementTab tab = new TexturesTab(strings.getObservableProperty("textures"),
-				strings.getObservableProperty("tools"));
+		SceneElementTab tab = new TexturesTab();
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
