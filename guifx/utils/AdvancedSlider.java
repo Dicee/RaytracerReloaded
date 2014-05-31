@@ -51,6 +51,10 @@ public class AdvancedSlider extends HBox {
 		slider.setMajorTickUnit(scale*slider.getMajorTickUnit());
 	}
 	
+	public void setDisableSlider(boolean b) {
+		slider.setDisable(b);
+	}
+	
 	public void setMajorTickUnit(double d) {
 		slider.setMajorTickUnit(d);
 	}
