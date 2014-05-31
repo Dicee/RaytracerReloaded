@@ -1,4 +1,4 @@
-package utils;
+package guifx.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,6 +76,11 @@ public class ObservableProperties extends Properties {
 		@Override
 		public String getName() {
 			return name;
-		}			
+		}		
+		
+		@Override
+		public String toString() {
+			return bean.getProperty(name);
+		}
 	}
 }

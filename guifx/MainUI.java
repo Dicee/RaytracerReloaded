@@ -15,6 +15,7 @@ import javafx.application.Application;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
 import static javafx.application.Application.setUserAgentStylesheet;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -33,7 +34,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import utils.ObservableProperties;
+import guifx.utils.ObservableProperties;
 
 public class MainUI extends Application {
 	
@@ -72,9 +73,10 @@ public class MainUI extends Application {
         root.getChildren().addAll(tabPane);		
 		
         Scene scene = new Scene(root,PREFERRED_WIDTH,PREFERRED_HEIGHT,Color.WHITESMOKE);
+		primaryStage.setOnCloseRequest(ev -> Platform.exit());
         primaryStage.setTitle("Raytracer Reloaded");
         primaryStage.setScene(scene);
-        primaryStage.show(); 		
+        primaryStage.show(); 
 	}
 	
 	private void setObjectsPane(TabPane tabPane) {
