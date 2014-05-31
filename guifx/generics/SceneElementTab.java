@@ -1,6 +1,7 @@
 package guifx.generics;
 
 import guifx.MainUI;
+import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,10 +13,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 
-public abstract class SceneElementTab<T> extends Tab {
+public abstract class SceneElementTab<T> extends Tab implements Consumer<T> {
 	private final ContextToolBar toolbar;
 	protected final ListExplorer<T> listExplorer;
 	protected final GraphicFactory<T> factory;
+	protected int index = -1;
+	protected boolean editMode;
 	
 	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty, 
 			GraphicFactory<T> factory) {
@@ -24,6 +27,7 @@ public abstract class SceneElementTab<T> extends Tab {
 		this.toolbar      = new ContextToolBar(toolbarTitleProperty,110);
 		this.listExplorer = new ListExplorer<>();
 		textProperty().bind(titleProperty);		
+		factory.setConsumer(this);
 		
 		toolbar.setOrientation(Orientation.VERTICAL);
 		listExplorer.setPrefWidth(2*MainUI.PREFERRED_WIDTH);

@@ -1,4 +1,4 @@
-package guifx.generics.impl.factories;
+package guifx.generics.impl.factories.view;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,7 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import objects.Object3D;
 
-public class Object3DFactory extends GraphicFactory<Object3D> {
+public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	private static final double PREFERRED_WIDTH = 610;
 	private static final double PREFERRED_HEIGHT = 400;
 	private static final String[] typesProperties
@@ -47,10 +48,15 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 	private Slider alphaSlider, betaSlider;
 	private final RadioButton finite = new RadioButton(), infinite = new RadioButton();
 	private final ToggleGroup group = new ToggleGroup();
+	private final ComboBox<StringProperty> typeChoice;
 	
-	public Object3DFactory() {
-		super(strings.getObservableProperty("createObjectTitle"),
-			strings.getObservableProperty("createAction"),PREFERRED_WIDTH,PREFERRED_HEIGHT);
+	public Object3DFXFactory() {
+		this(null);
+	}
+	
+	public Object3DFXFactory(Consumer<Object3D> consumer) {
+		super(strings.getObservableProperty("createObjectTitle"),strings.getObservableProperty("createAction"),
+			consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
 		this.commonCaracteristics.textProperty().bind(strings.getObservableProperty("commonCaracteristicsLabel"));
 		this.specificities       .textProperty().bind(strings.getObservableProperty("specificitiesLabel"));
 		setCommonCaracteristics();
@@ -60,7 +66,7 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 		for (String propertyName : typesProperties)
 			types.add(strings.getObservableProperty(propertyName));
 		
-		ComboBox typeChoice = setTypeChoice(types);
+		typeChoice          = setTypeChoice(types);
 		Label    comboLabel = new Label();
 		HBox     header     = new HBox(12,comboLabel,typeChoice);  
 		comboLabel.textProperty().bind(strings.getObservableProperty("objectTypeLabel"));
@@ -75,8 +81,12 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 	}
 	
 	@Override
-	public Object3D create(Class<? extends Object3D> targetClass, Object... args) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	protected Object3D create() {
+		String selection = typeChoice.getSelectionModel().getSelectedItem().getName();
+		switch (selection) {
+			case "sphere" :
+		}
+		return null;
 	}
 	
 	private void setCommonCaracteristics() {
@@ -117,10 +127,10 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 		group.getToggles().addAll(finite,infinite);
 		group.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> ov,
 			Toggle oldToggle, Toggle newToggle) -> {
-				Node spec = newToggle == infinite ? showNoSpecificities() : showAngleSpecificities();
-				specificities.setContent(new VBox(10,showPlaneSurfaceSpecifities(false),spec));
+				Node spec = newToggle == infinite ? noSpecificities() : angleSpecificities();
+				specificities.setContent(new VBox(10,planeSurfaceSpecifities(false),spec));
 			});
-		showAngleSpecificities();
+		angleSpecificities();
 	}
 
 	private ComboBox<StringProperty> setTypeChoice(List<StringProperty> types) {
@@ -129,29 +139,27 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 				StringProperty newValue) -> {
 			StringProperty ratio = strings.getObservableProperty("heightRayRatio");
 			switch (newValue.getName()) {
-				case "sphere"         : showNoSpecificities();              break;
-				case "cube"           : showNoSpecificities();              break;
-				case "parallelepiped" : showAngleSpecificities();           break;
-				case "cylinder"       : showLengthRatioSpecifities(ratio);  break;
-				case "cone"           : showLengthRatioSpecifities(ratio);  break;
-				default               : showPlaneSurfaceSpecifities(true);  break;
+				case "sphere"         : show(noSpecificities());              break;
+				case "cube"           : show(noSpecificities());              break;
+				case "parallelepiped" : show(parallelepipedSpecificities());  break;
+				case "cylinder"       : show(lengthRatioSpecifities(ratio));  break;
+				case "cone"           : show(lengthRatioSpecifities(ratio));  break;
+				default               : show(planeSurfaceSpecifities(true));  break;
 			}
 		});
 		typeChoice.getSelectionModel().selectFirst();
-				
 		return typeChoice;
 	}
 
-	private Node showNoSpecificities() {
+	private Node noSpecificities() {
 		Label label = new Label();
 		label.textProperty().bind(strings.getObservableProperty("noSpecifitiesLabel"));
 		label.setFont(GraphicFactory.subtitlesFont);
 		label.setPadding(new Insets(5,5,5,5));
-		specificities.setContent(label);
 		return label;
 	}
 
-	private Node showAngleSpecificities() {
+	private Node angleSpecificities() {
 		Label anglesLabel = new Label();
 		Label alphaLabel  = new Label("Alpha");
 		Label betaLabel   = new Label("Beta");
@@ -159,10 +167,10 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 		Label betaValue   = new Label("0 °");
 		anglesLabel.textProperty().bind(strings.getObservableProperty("anglesLabel"));
 		anglesLabel.setFont(subtitlesFont);
-		alphaLabel.setFont(subtitlesFont);
-		betaLabel.setFont(subtitlesFont);
-		alphaLabel.setPrefWidth(40);
-		betaLabel.setPrefWidth(40);
+		alphaLabel .setFont(subtitlesFont);
+		betaLabel  .setFont(subtitlesFont);
+		alphaLabel .setPrefWidth(40);
+		betaLabel  .setPrefWidth(40);
 		
 		alphaSlider              = new Slider(0,180,90);
 		betaSlider               = new Slider(0,180,90);	
@@ -186,23 +194,31 @@ public class Object3DFactory extends GraphicFactory<Object3D> {
 		HBox beta    = new HBox(10,betaLabel,betaSlider,betaValue);
 		VBox content = new VBox(10/*,anglesLabel*/,alpha,beta);		
 		content.setPadding(new Insets(5,5,5,5));
-		
-		specificities.setContent(content);
 		return content;
 	}
 
-	private Node showLengthRatioSpecifities(StringProperty ratioLabelText) {
-		specificities.setContent(lengthRatioField = new DoubleConstraintField(10,ratioLabelText));
+	private Node lengthRatioSpecifities(StringProperty ratioLabelText) {
+		lengthRatioField = new DoubleConstraintField(10,ratioLabelText);
 		lengthRatioField.setPadding(new Insets(5,5,5,5));
-		return specificities;
+		return lengthRatioField;
 	}
 
-	private Node showPlaneSurfaceSpecifities(boolean select) {	
+	private Node planeSurfaceSpecifities(boolean select) {	
 		if (select) group.selectToggle(infinite);
 		HBox buttons = new HBox(10,infinite,finite);
-		Node content = select ? new VBox(10,buttons,showNoSpecificities()) : buttons;
+		Node content = select ? new VBox(10,buttons,noSpecificities()) : buttons;
 		buttons.setPadding(new Insets(5,5,5,5));
-		specificities.setContent(content);
 		return content;
+	}
+
+	private Node parallelepipedSpecificities() {
+		VBox content = new VBox(10,
+				angleSpecificities(),
+				lengthRatioSpecifities(strings.getObservableProperty("widthLengthRatio")));
+		return content;
+	}
+	
+	private void show(Node content) {
+		specificities.setContent(content);
 	}
 }

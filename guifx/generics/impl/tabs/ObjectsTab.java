@@ -3,7 +3,7 @@ package guifx.generics.impl.tabs;
 import static guifx.MainUI.strings;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
-import guifx.generics.impl.factories.Object3DFactory;
+import guifx.generics.impl.factories.view.Object3DFXFactory;
 import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,14 +12,16 @@ import objects.Object3D;
 public class ObjectsTab extends SceneElementTab<Object3D> {
 	public ObjectsTab() {
 		super(strings.getObservableProperty("objects"),strings.getObservableProperty("tools"),
-				new Object3DFactory());
+				new Object3DFXFactory());
 	}
 
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
 			case CREATE :
-				return (ActionEvent ev) -> factory.show();
+				return (ActionEvent ev) -> { factory.show(); editMode = false; };
+			case EDIT :
+				return (ActionEvent ev) -> { factory.show(); editMode = true; };
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
@@ -30,5 +32,13 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	protected boolean isSupported(Tools type) {
 		return Arrays.asList(Tools.CREATE,Tools.EDIT,Tools.DELETE,
 				Tools.ROTATE,Tools.SHOW_HIDE,Tools.TRANSLATE,Tools.RESIZE).contains(type);
+	}
+	
+	@Override
+	public void accept(Object3D item) {
+		if (!editMode) 
+			getItems().add(++index,item);
+		else 
+			getItems().get(index).copy(item);
 	}
 }

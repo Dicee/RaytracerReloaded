@@ -14,6 +14,10 @@ public class Cone extends WrappedObject {
 	protected Vector3D ex;
 	protected double baseRay;
 	
+	public Cone (Point center, double h, double r, Texture texture) {
+		this(center.translate(new Vector3D(0,0,-h/2)),center.translate(new Vector3D(0,0,h/2)),r,texture);
+	}
+	
 	/**
 	 * 
 	 * @param C
@@ -25,18 +29,15 @@ public class Cone extends WrappedObject {
 	public Cone (Point C, Point S, double r, Texture texture) {
 		super(texture);
 		
-		boolean verifNull    = C == null || S == null;		
 		boolean verifNombres = r <= 0;
 		boolean verifPoints  = C.equals(S); 
 		
-		if (verifNull || verifNombres || verifPoints) {
-			String err1 = "at least one of the points is null";
-			String err2 = "r should be > 0";
-			String err3 = "C and S should verify !C.equals(S)";
+		if (verifNombres || verifPoints) {
+			String err1 = "r should be > 0";
+			String err2 = "C and S should verify !C.equals(S)";
 			String msg  = "";
-			msg = verifNull    ? "\n. " + err1 + msg : msg;
-			msg = verifNombres ? "\n. " + err2 + msg : msg;
-			msg = verifPoints  ? "\n. " + err3 + msg : msg;
+			msg = verifNombres ? "\n. " + err1 + msg : msg;
+			msg = verifPoints  ? "\n. " + err2 + msg : msg;
 			
 			throw new IllegalArgumentException(msg);
 		}

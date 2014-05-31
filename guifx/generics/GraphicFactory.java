@@ -1,6 +1,7 @@
 package guifx.generics;
 
 import static guifx.MainUI.strings;
+import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -28,15 +29,23 @@ public abstract class GraphicFactory<T> {
 	protected Stage primaryStage;
 	protected final AnchorPane root;
 	protected final Button create;
+	
+	public Consumer<T> consumer;
 
 	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty) {
-		this(titleProperty,actionProperty,PREFERRED_WIDTH,PREFERRED_HEIGHT);
+		this(titleProperty,actionProperty,null,PREFERRED_WIDTH,PREFERRED_HEIGHT);
 	}
 	
-	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, double width, double height) {
-		primaryStage = new Stage(StageStyle.DECORATED);
-		Button close = new Button();
-		create       = new Button();
+	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, Consumer<T> consumer) {
+		this(titleProperty,actionProperty,consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
+	}
+	
+	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, Consumer<T> consumer,
+			double width, double height) {
+		this.consumer = consumer;
+		primaryStage  = new Stage(StageStyle.DECORATED);
+		Button close  = new Button();
+		create        = new Button();
 		close .textProperty().bind(strings.getObservableProperty("closeAction"));
 		create.textProperty().bind(actionProperty);
 		
@@ -44,10 +53,13 @@ public abstract class GraphicFactory<T> {
 		root        = new AnchorPane(footer);
 		root.setBackground(new Background(new BackgroundFill(Paint.valueOf(backgroundStyle),
 				new CornerRadii(0,false),Insets.EMPTY)));
-		close.setOnAction(ev -> hide());
 		
 		AnchorPane.setBottomAnchor(footer,15d);
 		AnchorPane.setRightAnchor(footer,25d);
+		
+		//Event handling
+		create.setOnAction(ev -> { this.consumer.accept(create()); hide(); } );
+		close .setOnAction(ev -> hide());
 		
 		javafx.scene.Scene scene = new Scene(root,width,height,Color.WHITESMOKE);
         primaryStage.titleProperty().bind(titleProperty);
@@ -55,7 +67,13 @@ public abstract class GraphicFactory<T> {
 		primaryStage.setResizable(false);
 	}
 	
-	public abstract T create(Class<? extends T> targetClass, Object... args);
+	protected abstract T create();
+	
+	public void setConsumer(Consumer<T> consumer) {
+		if (consumer == null)
+			throw new NullPointerException();
+		this.consumer = consumer;
+	}
 	
 	public final void show() {
 		primaryStage.show();
