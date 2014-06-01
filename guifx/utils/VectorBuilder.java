@@ -7,10 +7,13 @@ import java.util.function.Predicate;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.controlsfx.dialog.Dialogs;
+import utils.math.Point;
 import utils.math.Vector3D;
 
 public class VectorBuilder extends ConstraintForm {
+	public static Object errorReturn = null;
 	private final TextField xField, yField, zField;
+	private boolean enabled = true;
 	
 	public VectorBuilder() {
 		this(new Predicate[] { });
@@ -27,7 +30,7 @@ public class VectorBuilder extends ConstraintForm {
 		getChildren().addAll(new Label("X :"),xField,new Label("Y :"),yField,new Label("Z :"),zField);
 	}	
 
-	public Vector3D getVector() {
+	private double[] getValues() {
 		try {
 			double x = Double.parseDouble(xField.getText());
 			double y = Double.parseDouble(yField.getText());
@@ -38,7 +41,7 @@ public class VectorBuilder extends ConstraintForm {
 				if (!coords.stream().allMatch(predicate))
 					throw new ConstraintsException();
 			});
-			return new Vector3D(x,y,z);
+			return new double[] { x,y,z };
 		} catch (NumberFormatException nfe) {
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
@@ -54,5 +57,21 @@ public class VectorBuilder extends ConstraintForm {
 				showError();
 			return null;
 		}
+	}
+	
+	public Vector3D getVector() {
+		double[] values = getValues();
+		if (values == null)
+			return null;
+		else 
+			return new Vector3D(values[0],values[1],values[2]);
+	}
+	
+	public Point getPoint() {
+		double[] values = getValues();
+		if (values == null)
+			return null;
+		else 
+			return new Point(values[0],values[1],values[2]);
 	}
 }

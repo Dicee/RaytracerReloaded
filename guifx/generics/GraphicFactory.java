@@ -30,18 +30,19 @@ public abstract class GraphicFactory<T> {
 	protected final AnchorPane root;
 	protected final Button create;
 	
-	public Consumer<T> consumer;
+	public Consumer<NamedObject<T>> consumer;
 
 	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty) {
 		this(titleProperty,actionProperty,null,PREFERRED_WIDTH,PREFERRED_HEIGHT);
 	}
 	
-	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, Consumer<T> consumer) {
+	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, 
+			Consumer<NamedObject<T>> consumer) {
 		this(titleProperty,actionProperty,consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
 	}
 	
-	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, Consumer<T> consumer,
-			double width, double height) {
+	public GraphicFactory(StringProperty titleProperty, StringProperty actionProperty, 
+			Consumer<NamedObject<T>> consumer, double width, double height) {
 		this.consumer = consumer;
 		primaryStage  = new Stage(StageStyle.DECORATED);
 		Button close  = new Button();
@@ -58,7 +59,13 @@ public abstract class GraphicFactory<T> {
 		AnchorPane.setRightAnchor(footer,25d);
 		
 		//Event handling
-		create.setOnAction(ev -> { this.consumer.accept(create()); hide(); } );
+		create.setOnAction(ev -> { 
+			NamedObject<T> element = create();
+			if (element != null) {
+				this.consumer.accept(element); 
+				hide(); 
+			}
+		} );
 		close .setOnAction(ev -> hide());
 		
 		javafx.scene.Scene scene = new Scene(root,width,height,Color.WHITESMOKE);
@@ -67,15 +74,17 @@ public abstract class GraphicFactory<T> {
 		primaryStage.setResizable(false);
 	}
 	
-	protected abstract T create();
+	protected abstract NamedObject<T> create();
+	public abstract void clear();
 	
-	public void setConsumer(Consumer<T> consumer) {
+	public void setConsumer(Consumer<NamedObject<T>> consumer) {
 		if (consumer == null)
 			throw new NullPointerException();
 		this.consumer = consumer;
 	}
 	
 	public final void show() {
+		clear();
 		primaryStage.show();
 	}
 	

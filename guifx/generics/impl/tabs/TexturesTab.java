@@ -1,9 +1,9 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
-import guifx.generics.impl.factories.view.TextureFXFactory;
 import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,8 +11,7 @@ import objects.Texture;
 
 public class TexturesTab extends SceneElementTab<Texture> {
 	public TexturesTab() {
-		super(strings.getObservableProperty("textures"),strings.getObservableProperty("tools"),
-				new TextureFXFactory());
+		super(strings.getObservableProperty("textures"),strings.getObservableProperty("tools"));
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class TexturesTab extends SceneElementTab<Texture> {
 	}
 	
 	@Override
-	public void accept(Texture item) {
+	public void accept(NamedObject<Texture> item) {
 		
 	}
 }

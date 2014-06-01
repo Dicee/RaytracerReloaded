@@ -2,16 +2,15 @@ package guifx.utils;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Predicate;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import org.controlsfx.dialog.Dialogs;
 
 public class DoubleConstraintField extends ConstraintForm {
+	public static final double errorReturn = Double.POSITIVE_INFINITY;
+	
 	private final TextField field;
 	
 	public DoubleConstraintField(StringProperty name) {
@@ -47,14 +46,14 @@ public class DoubleConstraintField extends ConstraintForm {
 				masthead(strings.getProperty("anErrorOccurredMessage")).
 				message(strings.getProperty("numberFormatException")).
 				showError();
-			return Double.NaN;
+			return errorReturn;
 		} catch (ConstraintsException ce) {
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
 				masthead(strings.getProperty("anErrorOccurredMessage")).
 				message(strings.getProperty("constraintsError")).
 				showError();
-			return Double.NaN;
+			return errorReturn;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.view.SourceFXFactory;
@@ -12,8 +13,7 @@ import scene.Source;
 
 public class SourcesTab extends SceneElementTab<Source> {
 	public SourcesTab() {
-		super(strings.getObservableProperty("sources"),strings.getObservableProperty("tools"),
-				new SourceFXFactory());
+		super(strings.getObservableProperty("sources"),strings.getObservableProperty("tools"));
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class SourcesTab extends SceneElementTab<Source> {
 	}
 	
 	@Override
-	public void accept(Source item) {
+	public void accept(NamedObject<Source> item) {
 		
 	}
 }

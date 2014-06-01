@@ -13,21 +13,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 
-public abstract class SceneElementTab<T> extends Tab implements Consumer<T> {
+public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedObject<T>> {
 	private final ContextToolBar toolbar;
 	protected final ListExplorer<T> listExplorer;
-	protected final GraphicFactory<T> factory;
+	protected GraphicFactory<T> factory;
 	protected int index = -1;
 	protected boolean editMode;
 	
-	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty, 
-			GraphicFactory<T> factory) {
+	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty) {
 		super();
-		this.factory      = factory;
 		this.toolbar      = new ContextToolBar(toolbarTitleProperty,110);
 		this.listExplorer = new ListExplorer<>();
 		textProperty().bind(titleProperty);		
-		factory.setConsumer(this);
 		
 		toolbar.setOrientation(Orientation.VERTICAL);
 		listExplorer.setPrefWidth(2*MainUI.PREFERRED_WIDTH);
@@ -58,7 +55,11 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<T> {
 	protected abstract EventHandler<ActionEvent> doAction(Tools type);
 	protected abstract boolean isSupported(Tools type);
 	
-	public ObservableList<T> getItems() {
+	public ObservableList<NamedObject<T>> getItems() {
 		return listExplorer.getListView().getItems();
+	}
+	
+	protected void addItem(int index, NamedObject<T> item) {
+
 	}
 }

@@ -2,6 +2,7 @@ package guifx.generics.impl.factories.view;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
+import guifx.generics.NamedObject;
 import java.util.function.Consumer;
 import scene.Screen;
 
@@ -10,13 +11,18 @@ public class ScreenFXFactory extends GraphicFactory<Screen> {
 		this(null);
 	}
 	
-	public ScreenFXFactory(Consumer<Screen> consumer) {
+	public ScreenFXFactory(Consumer<NamedObject<Screen>> consumer) {
 		super(strings.getObservableProperty("createScreenTitle"),strings.getObservableProperty("createAction"),
 				consumer);
 	}
 	
 	@Override
-	protected Screen create() {
+	protected NamedObject<Screen> create() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
+	@Override
+	public void clear() {
+		
 	}
 }

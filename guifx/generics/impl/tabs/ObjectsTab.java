@@ -1,6 +1,7 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.view.Object3DFXFactory;
@@ -11,17 +12,22 @@ import objects.Object3D;
 
 public class ObjectsTab extends SceneElementTab<Object3D> {
 	public ObjectsTab() {
-		super(strings.getObservableProperty("objects"),strings.getObservableProperty("tools"),
-				new Object3DFXFactory());
+		super(strings.getObservableProperty("objects"),strings.getObservableProperty("tools"));
 	}
 
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
 			case CREATE :
-				return (ActionEvent ev) -> { factory.show(); editMode = false; };
+				return (ActionEvent ev) -> { 
+					showGraphicFactory();
+					editMode = false; 
+				};
 			case EDIT :
-				return (ActionEvent ev) -> { factory.show(); editMode = true; };
+				return (ActionEvent ev) -> { 
+					showGraphicFactory();
+					editMode = true; 
+				};
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
@@ -35,10 +41,14 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	}
 	
 	@Override
-	public void accept(Object3D item) {
+	public void accept(NamedObject<Object3D> item) {
 		if (!editMode) 
 			getItems().add(++index,item);
 		else 
-			getItems().get(index).copy(item);
+			getItems().get(index).bean.copy(item.bean);
+	}
+	
+	private void showGraphicFactory() {
+		(factory = new Object3DFXFactory(this)).show();
 	}
 }

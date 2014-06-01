@@ -1,6 +1,7 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.view.ScreenFXFactory;
@@ -11,8 +12,7 @@ import scene.Screen;
 
 public class ScreensTab extends SceneElementTab<Screen> {
 	public ScreensTab() {
-		super(strings.getObservableProperty("views"),strings.getObservableProperty("tools"),
-				new ScreenFXFactory());
+		super(strings.getObservableProperty("views"),strings.getObservableProperty("tools"));
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class ScreensTab extends SceneElementTab<Screen> {
 	}
 	
 	@Override
-	public void accept(Screen item) {
+	public void accept(NamedObject<Screen> item) {
 		
 	}
 }
