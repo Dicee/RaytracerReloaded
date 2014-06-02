@@ -354,4 +354,9 @@ public class Cylinder extends Object3D
 		r         *= facteur;
 		baseCenter = baseCenter.translate(v.multScal(h/2));
 	}
+	
+	@Override
+	public String getName() {
+		return "cylinder";
+	}
 }

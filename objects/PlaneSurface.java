@@ -11,6 +11,10 @@ public class PlaneSurface extends Object3D {
 
 	protected Point a,b,c;
 	
+	public PlaneSurface(double z, Texture texture) {
+		this(new Point(1,0,z),new Point(0,1,z),new Point(0,0,z),texture);
+	}
+	
 	/**
 	 * 
 	 * @param a
@@ -29,11 +33,7 @@ public class PlaneSurface extends Object3D {
 		  this.b = b;
 		  this.c = c;
 	}
-	
-	public PlaneSurface(double z, Texture texture) {
-		this(new Point(1,0,z),new Point(0,1,z),new Point(0,0,z),texture);
-	}
-	
+
 	@Override
 	public void rotateX(double u) {
 		a = a.rotateX(u);
@@ -182,6 +182,11 @@ public class PlaneSurface extends Object3D {
 	@Override
 	protected void checkedResize(double factor) {
 		//Nothing to do since the plane surface is unlimited
+	}
+	
+	@Override
+	public String getName() {
+		return "infinitePlaneSurface";
 	}
 }
 

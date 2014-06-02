@@ -62,7 +62,6 @@ public class XMLSceneLoader {
 	private static List<Screen> xmlToScreens(Element viewsElt) {
 		return mapAndCollect(elt -> {
 			List<Element> points  = elt.getChildren("Vector");
-			//points.stream().map(p -> p.getAttributeValue("name")).forEach(System.out::println);
 			Point         A       = xmlToPoint(findByName(points,"A"));
 			Point         B       = xmlToPoint(findByName(points,"B"));
 			Point         C       = xmlToPoint(findByName(points,"C"));

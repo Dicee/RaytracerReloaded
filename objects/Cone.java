@@ -381,4 +381,9 @@ public class Cone extends WrappedObject {
 		texture = cone.getTexture();
 		ex      = new Vector3D(cone.getAdaptedBase()[0]);
 	}
+
+	@Override
+	public String getName() {
+		return "cone";
+	}
 }

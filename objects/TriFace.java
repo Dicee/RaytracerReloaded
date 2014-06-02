@@ -89,4 +89,9 @@ public class TriFace extends Face {
 		Vector3D w = new Vector3D(a,c);
 		return a.translate(Vector3D.linearCombination(v,w,0.5,0.5));
 	}
+	
+	@Override
+	public String getName() {
+		return "triFace";
+	}
 }

@@ -1,7 +1,6 @@
 package utils.math;
 
-public class CustomMath {
-	
+public final class CustomMath {
 	public static Vector3D[] canonicBase = { new Vector3D(1,0,0),new Vector3D(0,1,0),new Vector3D(0,0,1) };
 	
 	public static double det(double[] c0, double[] c1, double[] c2) {
@@ -64,5 +63,10 @@ public class CustomMath {
 	
 	public static int signum(double d) {
 		return d < 0 ? -1 : d == 0 ? 0 : 1;
+	}
+	
+	public static int compare(double x, double y) {
+		double d = Math.abs(x - y);
+		return d < Vector3D.epsilon ? 0 : Double.compare(x,y);
 	}
 }

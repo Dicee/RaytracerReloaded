@@ -12,4 +12,8 @@ public abstract class Face extends PlaneSurface {
 	public Face(Point a, Point b, Point c, Texture texture) {
 		super(a,b,c,texture);
 	}
+	
+	protected Face(double z, Texture texture) { 
+		super(z,texture);
+	}
 }

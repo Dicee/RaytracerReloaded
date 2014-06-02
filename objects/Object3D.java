@@ -147,5 +147,6 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	}
 
 	public abstract void copy(Object clone);
+	public abstract String getName();
 }
 

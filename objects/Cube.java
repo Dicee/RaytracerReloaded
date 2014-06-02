@@ -7,8 +7,7 @@ import utils.math.CustomMath;
 import utils.math.Point;
 import utils.math.Vector3D;
 
-public class Cube extends MeshedObject 
-{
+public class Cube extends MeshedObject {
 	private Point O,X,Y,Z;
 	
 	/**
@@ -18,7 +17,7 @@ public class Cube extends MeshedObject
 	 * @param texture
 	 * @throws IllegalArgumentException if a <= 0
 	 */
-	public Cube (Point center, double a, Texture texture) {
+	public Cube(Point center, double a, Texture texture) {
 		super(texture);
 		
 		if (a <= 0)
@@ -189,5 +188,10 @@ public class Cube extends MeshedObject
 		double a    = O.distance(X) + Vector3D.epsilon;
 		
 		return Math.abs(x) <= a/2 && Math.abs(y) <= a/2 && Math.abs(z) <= a/2;
+	}
+	
+	@Override
+	public String getName() {
+		return "cube";
 	}
 }

@@ -96,7 +96,7 @@ public class Sphere extends Object3D {
 	
 	@Override
 	public String toString() {
-		return  "      SPHERE\n"        + "\n" +
+		return  "      Sphere"        + "\n" +
 				"      Centre :   " + c + "\n" +
 				"      Rayon :   "  + r + "\n" +
 				"\n" + super.toString();				
@@ -167,6 +167,11 @@ public class Sphere extends Object3D {
 	@Override
 	protected void checkedResize(double factor) {
 		r *= factor;
+	}
+	
+	@Override
+	public String getName() {
+		return "sphere";
 	}
 }
 

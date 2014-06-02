@@ -1,5 +1,7 @@
 package objects;
 
+import utils.math.CustomMath;
+import static utils.math.CustomMath.compare;
 import utils.math.Point;
 import utils.math.Vector3D;
 
@@ -8,6 +10,22 @@ public class QuadFace extends Face {
 	public QuadFace(Point a, Point b, Point c, Texture texture)	{
 		super(a,b,c,texture);
 	}	
+	
+	public QuadFace(Point center, double height, double width, double alpha, Texture texture) {
+		super(center.z,texture);
+		
+		if (compare(height,0) == 0 || compare(width,0) == 0 || alpha < 0)
+			throw new IllegalArgumentException();
+		
+		Vector3D[] canonicBase = CustomMath.canonicBase;
+		Vector3D   ex          = canonicBase[0].multScal(Math.cos(alpha)).sum(
+									canonicBase[2].multScal(Math.sin(alpha))).multScal(width/2);
+		Vector3D   ez          = canonicBase[2].multScal(height/2);
+		
+		a                      = center.translate(ex.opposed()).translate(ez.opposed());
+		b                      = center.translate(ex)          .translate(ez.opposed());
+		c                      = center.translate(ex)          .translate(ez)          ;
+	}
 
 	@Override
 	public Point intersection(Point p, Vector3D incidentRay) {
@@ -54,5 +72,10 @@ public class QuadFace extends Face {
 		Vector3D v = new Vector3D(a,b);
 		Vector3D w = new Vector3D(a,c);
 		return a.translate(Vector3D.linearCombination(v,w,0.5,0.5));
+	}
+	
+	@Override
+	public String getName() {
+		return "quadFace";
 	}
 }
