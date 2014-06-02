@@ -1,4 +1,4 @@
-package guifx.generics.impl.factories.view;
+package guifx.generics.impl.factories;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
@@ -19,10 +19,5 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	@Override
 	protected NamedObject<Texture> create() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-	
-	@Override
-	public void clear() {
-		
 	}
 }

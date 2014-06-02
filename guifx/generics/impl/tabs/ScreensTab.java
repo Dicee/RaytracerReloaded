@@ -1,10 +1,11 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
-import guifx.generics.impl.factories.view.ScreenFXFactory;
+import guifx.generics.impl.factories.ScreenFXFactory;
 import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,5 +38,10 @@ public class ScreensTab extends SceneElementTab<Screen> {
 	@Override
 	public void accept(NamedObject<Screen> item) {
 		
+	}
+	
+	@Override
+	protected GraphicFactory<Screen> newFactory() {
+		return new ScreenFXFactory(this);
 	}
 }

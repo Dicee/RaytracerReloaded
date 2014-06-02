@@ -1,9 +1,11 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
+import guifx.generics.impl.factories.TextureFXFactory;
 import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,5 +37,10 @@ public class TexturesTab extends SceneElementTab<Texture> {
 	@Override
 	public void accept(NamedObject<Texture> item) {
 		
+	}
+	
+	@Override
+	protected GraphicFactory<Texture> newFactory() {
+		return new TextureFXFactory(this);
 	}
 }

@@ -1,4 +1,4 @@
-package guifx.generics.impl.factories.view;
+package guifx.generics.impl.factories;
 
 import static objects.Object3DFactory.*;
 import static guifx.MainUI.strings;
@@ -167,11 +167,6 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		Vector3D result = orientationChooser.getSelectedValues();
 		failure       = result == OrientationChooser.errorReturn;
 		return result;
-	}
-	
-	@Override
-	public void clear() {
-		
 	}
 	
 	private void setCommonCaracteristics() {

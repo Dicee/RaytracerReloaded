@@ -1,10 +1,11 @@
 package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
+import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
-import guifx.generics.impl.factories.view.Object3DFXFactory;
+import guifx.generics.impl.factories.Object3DFXFactory;
 import java.util.Arrays;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,12 +21,13 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 		switch (type) {
 			case CREATE :
 				return (ActionEvent ev) -> { 
-					showGraphicFactory();
+					showGraphicFactory(strings.getObservableProperty("createAction"));
 					editMode = false; 
 				};
 			case EDIT :
 				return (ActionEvent ev) -> { 
-					showGraphicFactory();
+					
+					showGraphicFactory(strings.getObservableProperty("editAction"));
 					editMode = true; 
 				};
 			default :
@@ -48,7 +50,8 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 			getItems().get(index).bean.copy(item.bean);
 	}
 	
-	private void showGraphicFactory() {
-		(factory = new Object3DFXFactory(this)).show();
+	@Override
+	protected GraphicFactory<Object3D> newFactory() {
+		return new Object3DFXFactory(this);
 	}
 }

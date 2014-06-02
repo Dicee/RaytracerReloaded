@@ -54,6 +54,13 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	
 	protected abstract EventHandler<ActionEvent> doAction(Tools type);
 	protected abstract boolean isSupported(Tools type);
+	protected abstract GraphicFactory<T> newFactory();
+	
+	protected void showGraphicFactory(StringProperty sp) {
+		factory = newFactory();
+		factory.textProperty().bind(sp);
+		factory.show();
+	}
 	
 	public ObservableList<NamedObject<T>> getItems() {
 		return listExplorer.getListView().getItems();

@@ -20,10 +20,12 @@ public class Source implements XMLable, Translatable, Cloneable {
 		this.pos   = pos;
 	}	
 		
+	@Override
 	public Point getCenter() {
 		return pos;
 	}
 
+	@Override
 	public void translate(Vector3D v) {
 		pos.translate(v);		
 	}	

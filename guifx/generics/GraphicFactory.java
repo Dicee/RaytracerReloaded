@@ -75,7 +75,6 @@ public abstract class GraphicFactory<T> {
 	}
 	
 	protected abstract NamedObject<T> create();
-	public abstract void clear();
 	
 	public void setConsumer(Consumer<NamedObject<T>> consumer) {
 		if (consumer == null)
@@ -84,11 +83,14 @@ public abstract class GraphicFactory<T> {
 	}
 	
 	public final void show() {
-		clear();
 		primaryStage.show();
 	}
 	
 	public final void hide() {
 		primaryStage.hide();
+	}
+	
+	public StringProperty textProperty() {
+		return create.textProperty();
 	}
 }
