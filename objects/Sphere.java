@@ -135,7 +135,7 @@ public class Sphere extends Object3D {
 	}
 	
 	@Override
-	public void copy(Object clone) {
+	public void copy(Object3D clone) {
 		Sphere s = (Sphere) clone;			
 		c.setLocation(s.c);
 		r        = s.r;

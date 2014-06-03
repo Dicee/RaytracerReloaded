@@ -44,7 +44,7 @@ public class Cylinder extends Object3D
 	}
 
 	@Override
-	public void copy(Object clone) {		
+	public void copy(Object3D clone) {		
 		Cylinder cylindre = (Cylinder) clone;
 		Point[] centers   =  cylindre.getBasesCenters();
 		

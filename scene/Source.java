@@ -10,8 +10,9 @@ import utils.math.Vector3D;
 import XML.XMLable;
 import XML.basicTypes.XMLColor;
 import XML.basicTypes.XMLVector;
+import utils.Copiable;
 
-public class Source implements XMLable, Translatable, Cloneable {
+public class Source implements XMLable, Translatable, Cloneable, Copiable<Source> {
 	public Color color;
 	public Point pos;
 
@@ -30,12 +31,13 @@ public class Source implements XMLable, Translatable, Cloneable {
 		pos.translate(v);		
 	}	
 	
-	public void copy(Object clone) {
-		Source s = (Source) clone;			
+	@Override
+	public void copy(Source s) {
 		pos.setLocation(s.pos);
 		color = new Color(s.color.getRed(),s.color.getGreen(),s.color.getBlue());
 	}
 	
+	@Override
 	public Source clone() {
 		return new Source(new Color(color.getRed(),color.getGreen(),color.getBlue()),pos.clone());
 	}

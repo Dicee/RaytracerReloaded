@@ -373,7 +373,7 @@ public class Cone extends WrappedObject {
 		return new Cone(baseCenter,vertice,baseRay,texture.clone());
 	}
 	
-	public void copy(Object clone) {
+	public void copy(Object3D clone) {
 		Cone cone = (Cone) clone;	
 		baseCenter.setLocation(cone.baseCenter);
 		vertice.setLocation(cone.vertice);

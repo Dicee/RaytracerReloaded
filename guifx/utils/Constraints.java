@@ -1,15 +1,16 @@
 package guifx.utils;
 
-import java.util.function.Predicate;
+import javafx.beans.property.StringProperty;
 
 public class Constraints {
 	private static final double eps = 0.01d;
 	
-	public static class UpperBound implements Predicate<Double> {
+	public static class UpperBound extends Constraint<Double> {
 		private final double max;
 		
-		public UpperBound(double max) {
-			this.max = max;
+		public UpperBound(StringProperty sp, double max) {
+			super(sp);
+			this.max    = max;
 		}
 		
 		@Override
@@ -18,10 +19,11 @@ public class Constraints {
 		}
 	}
 	
-	public static class LowerBound implements Predicate<Double> {
+	public static class LowerBound extends Constraint<Double> {
 		private final double min;
 		
-		public LowerBound(int coordinate, double min) {
+		public LowerBound(StringProperty sp, double min) {
+			super(sp);
 			this.min = min;
 		}
 		
@@ -31,10 +33,11 @@ public class Constraints {
 		}
 	}
 	
-	public static class Boundaries implements Predicate<Double> {
+	public static class Boundaries extends Constraint<Double> {
 		private final double min, max;
 		
-		public Boundaries(double min, double max) {
+		public Boundaries(StringProperty sp, double min, double max) {
+			super(sp);
 			this.min = min;
 			this.max = max;
 		}

@@ -2,11 +2,12 @@ package objects;
 
 import utils.math.Translatable;
 import XML.XMLable;
+import utils.Copiable;
 import utils.math.Point;
 import utils.math.Rotatable;
 import utils.math.Vector3D;
 
-public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable {	
+public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable, Copiable<Object3D> {	
 	
 	protected Texture texture;	
 	private boolean   shown;
@@ -146,7 +147,6 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 		return patternRepeat;
 	}
 
-	public abstract void copy(Object clone);
 	public abstract String getName();
 }
 

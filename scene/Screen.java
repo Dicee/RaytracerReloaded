@@ -18,8 +18,9 @@ import utils.math.Vector3D;
 import XML.XMLable;
 import XML.basicTypes.XMLInteger;
 import XML.basicTypes.XMLVector;
+import utils.Copiable;
 
-public class Screen implements XMLable, Translatable, Rotatable {	
+public class Screen implements XMLable, Translatable, Rotatable, Copiable<Screen> {	
 	private int				density;
 	private double			Xsize;
 	private double			Ysize;
@@ -190,5 +191,14 @@ public class Screen implements XMLable, Translatable, Rotatable {
 		result.addContent(new XMLVector("C",pts[2]));
 		result.addContent(new XMLInteger("density",density));
 		return result;
+	}
+
+	@Override
+	public void copy(Screen screen) {
+		containingPlane.copy(screen.containingPlane);
+		pView   = screen.pView.clone();
+		density = screen.density;
+		Xsize   = screen.Xsize;
+		Ysize   = screen.Ysize;
 	}
 }

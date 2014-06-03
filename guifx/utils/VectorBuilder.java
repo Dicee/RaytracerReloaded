@@ -3,7 +3,6 @@ package guifx.utils;
 import static guifx.MainUI.strings;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.controlsfx.dialog.Dialogs;
@@ -13,13 +12,12 @@ import utils.math.Vector3D;
 public class VectorBuilder extends ConstraintForm {
 	public static Object errorReturn = null;
 	private final TextField xField, yField, zField;
-	private boolean enabled = true;
 	
 	public VectorBuilder() {
-		this(new Predicate[] { });
+		this(new Constraint[] { });
 	}
 	
-	public VectorBuilder(Predicate<Double>... constraints) {
+	public VectorBuilder(Constraint<Double>... constraints) {
 		super(5,constraints);
 		this.xField      = new TextField();
 		this.yField      = new TextField();
@@ -39,7 +37,7 @@ public class VectorBuilder extends ConstraintForm {
 			List<Double> coords = Arrays.asList(x,y,z);
 			constraints.stream().forEach(predicate -> {
 				if (!coords.stream().allMatch(predicate))
-					throw new ConstraintsException();
+					throw new ConstraintsException(predicate.errorMessage());
 			});
 			return new double[] { x,y,z };
 		} catch (NumberFormatException nfe) {
@@ -53,7 +51,7 @@ public class VectorBuilder extends ConstraintForm {
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
 				masthead(strings.getProperty("anErrorOccurredMessage")).
-				message(strings.getProperty("constraintsError")).
+				message(ce.getMessage()).
 				showError();
 			return null;
 		}

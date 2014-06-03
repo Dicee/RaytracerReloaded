@@ -147,7 +147,7 @@ public class PlaneSurface extends Object3D {
 	}
 	
 	@Override
-	public void copy(Object clone) {
+	public void copy(Object3D clone) {
 		PlaneSurface plan = (PlaneSurface) clone;	
 		Point[] pts       = plan.getPoints();
 		a                 = pts[0].clone();

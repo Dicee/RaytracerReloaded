@@ -54,7 +54,7 @@ public class Parallelepiped extends MeshedObject {
 	}
 	
 	@Override
-	public void copy(Object clone) {
+	public void copy(Object3D clone) {
 		Parallelepiped p = (Parallelepiped) clone;	
 		O                = new Point(p.O);
 		X                = new Point(p.X);

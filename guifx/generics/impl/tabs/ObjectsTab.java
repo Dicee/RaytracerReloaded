@@ -19,17 +19,8 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
-			case CREATE :
-				return (ActionEvent ev) -> { 
-					showGraphicFactory(strings.getObservableProperty("createAction"));
-					editMode = false; 
-				};
-			case EDIT :
-				return (ActionEvent ev) -> { 
-					
-					showGraphicFactory(strings.getObservableProperty("editAction"));
-					editMode = true; 
-				};
+			case CREATE : return defaultCreateAction();
+			case EDIT   : return defaultEditAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
@@ -40,15 +31,7 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	protected boolean isSupported(Tools type) {
 		return Arrays.asList(Tools.CREATE,Tools.EDIT,Tools.DELETE,
 				Tools.ROTATE,Tools.SHOW_HIDE,Tools.TRANSLATE,Tools.RESIZE).contains(type);
-	}
-	
-	@Override
-	public void accept(NamedObject<Object3D> item) {
-		if (!editMode) 
-			getItems().add(++index,item);
-		else 
-			getItems().get(index).bean.copy(item.bean);
-	}
+	}	
 	
 	@Override
 	protected GraphicFactory<Object3D> newFactory() {

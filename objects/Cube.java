@@ -140,11 +140,12 @@ public class Cube extends MeshedObject {
 		return O.translate(u).translate(v).translate(w);
 	}
 	
+	@Override
 	public Object3D clone()	{
 		return new Cube(O,X,Y,Z,texture);
 	}	
 
-	public void copy(Object clone) {
+	public void copy(Object3D clone) {
 		Cube cube   = (Cube) clone;	
 		Point[] pts = cube.getPoints();
 		O           = pts[0];

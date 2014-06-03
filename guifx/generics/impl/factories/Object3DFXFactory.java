@@ -1,9 +1,12 @@
 package guifx.generics.impl.factories;
 
-import static objects.Object3DFactory.*;
 import static guifx.MainUI.strings;
+import static objects.Object3DFactory.*;
 import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
+import guifx.utils.Constraint;
+import guifx.utils.ConstraintForm;
+import guifx.utils.Constraints;
 import guifx.utils.ScaledSlider;
 import guifx.utils.DoubleConstraintField;
 import guifx.utils.LabelledSlider;
@@ -140,7 +143,6 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 			default :
 				failure = true;
 		}
-		//System.out.println("Failure : " + failure);
 		return failure ? null : new NamedObject<>(strings.getObservableProperty(result.getName()),result);
 	}
 	
@@ -213,7 +215,10 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 				if (newToggle == infinite) 
 					spec = doubleValueSpecifities(strings.getObservableProperty("altitude"),0);
 				else {
-					Node ratio = doubleValueSpecifities(strings.getObservableProperty("widthLengthRatio"),0);
+					ConstraintForm ratio = doubleValueSpecifities(strings.getObservableProperty("widthLengthRatio"),0);
+					Constraint<Double> c = new Constraints.
+							LowerBound(strings.getObservableProperty("positiveWidthLengthRatioMessage"),0);
+					ratio.addConstraint(c);
 					spec = new VBox(10,angleSpecificities(0),ratio);
 				}
 				specificities.setContent(new VBox(10,planeSurfaceSpecifities(false),spec));
@@ -227,13 +232,15 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		typeChoice.valueProperty().addListener((ObservableValue<? extends StringProperty> ov, StringProperty oldValue, 
 				StringProperty newValue) -> {
 			StringProperty ratio = strings.getObservableProperty("heightRayRatio");
+			Constraint<Double> ratioConstraint = new Constraints.
+				LowerBound(strings.getObservableProperty("positiveHeightRayRatioMessage"),0);
 			switch (newValue.getName()) {
-				case "sphere"         : show(noSpecificities());                break;
-				case "cube"           : show(noSpecificities());                break;
-				case "parallelepiped" : show(parallelepipedSpecificities());    break;
-				case "cylinder"       : show(doubleValueSpecifities(ratio,0));  break;
-				case "cone"           : show(doubleValueSpecifities(ratio,0));  break;
-				default               : show(planeSurfaceSpecifities(true));    break;
+				case "sphere"         : show(noSpecificities());                                break;
+				case "cube"           : show(noSpecificities());                                break;
+				case "parallelepiped" : show(parallelepipedSpecificities());                    break;
+				case "cylinder"       : show(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
+				case "cone"           : show(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
+				default               : show(planeSurfaceSpecifities(true));                    break;
 			}
 			disableFiniteCaracteristics(newValue.getName().equals("planeSurface") && infinite.isSelected());
 		});
@@ -287,12 +294,18 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		return angleSpecificities(indexes);
 	}
 
-	private Node doubleValueSpecifities(StringProperty ratioLabelText, int i) {
+	private ConstraintForm doubleValueSpecifities(StringProperty ratioLabelText, int i) {
 		doubleValueFields[i] = new DoubleConstraintField(10,ratioLabelText);		
 		doubleValueFields[i].setPadding(new Insets(5,5,5,5));
 		return doubleValueFields[i];
 	}
 
+	private ConstraintForm doubleValueSpecifities(StringProperty ratioLabelText, Constraint<Double> c, int i) {
+		ConstraintForm result = doubleValueSpecifities(ratioLabelText,i);
+		result.addConstraint(c);
+		return result;
+	}
+	
 	private Node planeSurfaceSpecifities(boolean select) {	
 		if (select) infinite.setSelected(true);
 		HBox buttons = new HBox(10,infinite,finite);
@@ -311,6 +324,14 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 				angleSpecificities(0,1),
 				doubleValueSpecifities(strings.getObservableProperty("widthLengthRatio"),0),
 				doubleValueSpecifities(strings.getObservableProperty("widthDepthRatio"),1));
+		
+		Constraint<Double> lengthConstraint = new Constraints.
+			LowerBound(strings.getObservableProperty("positiveWidthLengthRatioMessage"),0);
+		Constraint<Double> depthConstraint = new Constraints.
+			LowerBound(strings.getObservableProperty("positiveWidthDepthRatioMessage"),0);	
+		
+		doubleValueFields[0].addConstraint(lengthConstraint);
+		doubleValueFields[1].addConstraint(depthConstraint);
 		return content;
 	}
 	

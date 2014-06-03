@@ -19,10 +19,8 @@ public class ScreensTab extends SceneElementTab<Screen> {
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
-			case CREATE :
-				return (ActionEvent ev) -> { factory.show(); editMode = false; };
-			case EDIT :
-				return (ActionEvent ev) -> { factory.show(); editMode = true; };
+			case CREATE : return defaultCreateAction();
+			case EDIT   : return defaultEditAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
@@ -33,11 +31,6 @@ public class ScreensTab extends SceneElementTab<Screen> {
 	protected boolean isSupported(Tools type) {
 		return Arrays.asList(Tools.CREATE,Tools.EDIT,Tools.DELETE,
 				Tools.ROTATE,Tools.RESIZE,Tools.TRANSLATE).contains(type);
-	}
-	
-	@Override
-	public void accept(NamedObject<Screen> item) {
-		
 	}
 	
 	@Override

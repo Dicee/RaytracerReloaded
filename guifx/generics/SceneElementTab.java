@@ -1,6 +1,7 @@
 package guifx.generics;
 
 import guifx.MainUI;
+import static guifx.MainUI.strings;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import utils.Copiable;
 
 public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedObject<T>> {
 	private final ContextToolBar toolbar;
@@ -56,6 +58,20 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	protected abstract boolean isSupported(Tools type);
 	protected abstract GraphicFactory<T> newFactory();
 	
+	protected final EventHandler<ActionEvent> defaultCreateAction() {
+		return (ActionEvent ev) -> { 
+			showGraphicFactory(strings.getObservableProperty("createAction"));
+			editMode = false;
+		};
+	}
+	
+	protected final EventHandler<ActionEvent> defaultEditAction() {
+		return (ActionEvent ev) -> { 
+			showGraphicFactory(strings.getObservableProperty("editAction"));
+			editMode = true;
+		};
+	}
+	
 	protected void showGraphicFactory(StringProperty sp) {
 		factory = newFactory();
 		factory.textProperty().bind(sp);
@@ -66,7 +82,11 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 		return listExplorer.getListView().getItems();
 	}
 	
-	protected void addItem(int index, NamedObject<T> item) {
-
+	@Override
+	public void accept(NamedObject<T> item) {
+		if (!editMode) 
+			getItems().add(++index,item);
+		else 
+			((Copiable<T>) getItems().get(index).bean).copy(item.bean);
 	}
 }

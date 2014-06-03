@@ -6,7 +6,6 @@ import guifx.generics.NamedObject;
 import guifx.utils.VectorBuilder;
 import java.awt.Color;
 import java.util.function.Consumer;
-import javafx.geometry.Insets;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -54,7 +53,7 @@ public class SourceFXFactory extends GraphicFactory<Source> {
 	protected NamedObject<Source> create() {
 		NamedObject<Source> result = null;
 		Point p = vectorBuilder.getPoint();
-		if (p != null) {
+		if (p != VectorBuilder.errorReturn) {
 			float R       = (float) colorPicker.getValue().getRed();
 			float G       = (float) colorPicker.getValue().getGreen();
 			float B       = (float) colorPicker.getValue().getBlue();
