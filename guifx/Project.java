@@ -11,6 +11,7 @@ import org.jdom2.Element;
 import scene.Scene;
 import scene.Screen;
 import XML.XMLable;
+import java.util.stream.Collectors;
 
 public class Project implements XMLable {
 	private Scene			scene;
@@ -29,6 +30,12 @@ public class Project implements XMLable {
 		Element sceneElt    = scene.toXML();
 		Element texturesElt = new Element("Textures");
 		Element viewsElt    = new Element("Views");	
+		
+		List<Texture> list  = scene.getObjects().stream().map(object -> object.getTexture()).distinct().collect(Collectors.toList());
+		list.remove(Texture.defaultTexture);
+		textures.removeAll(list);
+		list.addAll(textures);
+		textures = list;
 		
 		int i = 0;
 		for (Texture t : textures) {

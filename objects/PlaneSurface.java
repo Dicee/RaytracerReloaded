@@ -153,7 +153,7 @@ public class PlaneSurface extends Object3D {
 		a                 = pts[0].clone();
 		b                 = pts[1].clone();
 		c                 = pts[2].clone();
-		texture           = plan.texture.clone();
+		texture           = plan.texture;
 	}
 	
 	@Override
@@ -176,7 +176,7 @@ public class PlaneSurface extends Object3D {
 		Vector3D vect = new Vector3D(q.x,q.y,q.z);
 		double u      = vect.dot(i);
 		double v      = vect.dot(j);
-		return texture.Ka((int) (patternRepeat*u),(int) (patternRepeat*v));
+		return texture.Ka((int) (patternRepeat*u),(int) (patternRepeat*v),adapt);
 	}
 
 	@Override

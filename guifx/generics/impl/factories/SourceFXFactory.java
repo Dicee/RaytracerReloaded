@@ -4,7 +4,7 @@ import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
 import guifx.utils.VectorBuilder;
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -57,7 +57,7 @@ public class SourceFXFactory extends GraphicFactory<Source> {
 			float R       = (float) colorPicker.getValue().getRed();
 			float G       = (float) colorPicker.getValue().getGreen();
 			float B       = (float) colorPicker.getValue().getBlue();
-			Source source = new Source(new Color(R,G,B),p);
+			Source source = new Source(new Color(R,G,B,0),p);
 			result        = new NamedObject<>(strings.getObservableProperty("source"),source);
 		}
 		return result;

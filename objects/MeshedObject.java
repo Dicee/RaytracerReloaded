@@ -54,12 +54,19 @@ public abstract class MeshedObject extends WrappedObject {
 		return test;
 	}
 	
+	/**
+	 * 
+	 * @param p
+	 * @throws IllegalArgumentException if p does not belong to the MeshedObject
+	 */
 	@Override
 	public float[] Ka(Point p) {
 		Face face = null;	
 		for (int i=0 ; i<faces.length && face == null ; i++)		
 			if (faces[i].belongs(p))
 				face = faces[i];
-		return face == null ? texture.Ka() : face.Ka(p);
+		if (face == null)
+			throw new IllegalArgumentException();
+		return face.Ka(p);
 	}
 }

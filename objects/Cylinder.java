@@ -54,7 +54,7 @@ public class Cylinder extends Object3D
 		baseCenter = centers[0].clone();
 		r          = cylindre.getRay();
 		ex         = cylindre.getAdaptedBase()[0].clone();
-		texture    = cylindre.texture.clone();
+		texture    = cylindre.texture;
 	}
 	
 	@Override
@@ -281,10 +281,11 @@ public class Cylinder extends Object3D
 		double z     = vect.dot(w);	
 		double theta = y < 0 ? Math.acos(x/r) : Math.acos(x/r);
 	
+		int repeat   = this.repeat ? patternRepeat : 1;
 		if (Math.abs(r*r - x*x - y*y) <= Vector3D.epsilon) 
-			return texture.Ka((int) (patternRepeat*theta/Math.PI*(texture.getWidth()-1)),(int) ((1-z)/h*texture.getHeight()));		
-		else 
-		{
+			return texture.Ka((int) (repeat*theta/Math.PI*(texture.getWidth()-1)),
+				(int) ((1-z)/h*texture.getHeight()),adapt);		
+		else {
 			p     = p.translate(axis.multScal(h-z));
 			vect  = new Vector3D(baseCenter.translate(axis.multScal(h)),p);
 			x     = vect.dot(u);
@@ -293,7 +294,8 @@ public class Cylinder extends Object3D
 			
 			theta    = theta/Math.PI;
 			double R = (x*x + y*y)/(r*r);
-			return texture.Ka((int) (patternRepeat*theta*(texture.getWidth()-1)),(int) ((1-R)*texture.getHeight()));
+			return texture.Ka((int) (repeat*theta*(texture.getWidth()-1)),
+				(int) ((1-R)*texture.getHeight()),adapt);
 		}
 	}
 

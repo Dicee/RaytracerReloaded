@@ -60,7 +60,7 @@ public class Parallelepiped extends MeshedObject {
 		X                = new Point(p.X);
 		Y                = new Point(p.Y);
 		Z                = new Point(p.Z);
-		texture          = p.texture.clone();
+		texture          = p.texture;
 		generateFaces();
 	}
 	

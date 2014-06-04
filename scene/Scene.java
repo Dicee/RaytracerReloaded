@@ -1,6 +1,6 @@
 package scene;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,12 +12,14 @@ import org.jdom2.Element;
 import XML.XMLable;
 import XML.basicTypes.XMLColor;
 import XML.basicTypes.XMLFloat;
+import XML.basicTypes.XMLTextureRef;
+import objects.Texture;
 
 public class Scene implements XMLable, Cloneable {
-	private Color				ambientColor;
-	private ArrayList<Source>	sources;
-	private ArrayList<Object3D>	objects;
-	private double				refraction;
+	private Color			ambientColor;
+	private List<Source>	sources;
+	private List<Object3D>	objects;
+	private double			refraction;
 	
 	public Scene(Color ambientColor, double refraction)	{			
 		this.sources      = new ArrayList<>();
@@ -58,6 +60,7 @@ public class Scene implements XMLable, Cloneable {
 		refraction = indice;
 	}
 
+	@Override
 	public Scene clone() {
 		List<Object3D> obj = objects.stream().map(object -> object.clone()).collect(Collectors.toList());
 		List<Source>   src = sources.stream().map(source -> source.clone()).collect(Collectors.toList());
@@ -70,8 +73,16 @@ public class Scene implements XMLable, Cloneable {
 		result.addContent(new XMLFloat("indice",refraction));
 		result.addContent(new XMLColor("ambient",ambientColor));
 		
+		List<Texture> textures = objects.stream().map(object -> object.getTexture()).distinct().collect(Collectors.toList());
+		textures.remove(Texture.defaultTexture);
+		
 		Element objectsElt = new Element("Objects");
-		objects.stream().forEachOrdered(object -> objectsElt.addContent(object.toXML()));
+		objects.stream().forEachOrdered(object -> { 
+			int index   = textures.indexOf(object.getTexture());
+			Element elt = object.toXML();
+			elt.addContent(index == -1 ? new XMLTextureRef() : new XMLTextureRef(index));
+			objectsElt.addContent(elt); 
+		});
 		
 		Element sourcesElt = new Element("Sources");
 		sources.stream().forEachOrdered(s -> sourcesElt.addContent(s.toXML()));

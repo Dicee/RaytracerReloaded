@@ -139,7 +139,7 @@ public class Sphere extends Object3D {
 		Sphere s = (Sphere) clone;			
 		c.setLocation(s.c);
 		r        = s.r;
-		texture  = s.texture.clone();
+		texture  = s.texture;
 		base[0]  = new Vector3D(s.getAdaptedBase()[0]);
 		base[1]  = new Vector3D(s.getAdaptedBase()[1]);
 	}
@@ -161,7 +161,7 @@ public class Sphere extends Object3D {
 		int rep                  = repeat ? patternRepeat : 1;
 		int u                    = (int) (rep*(0.5 + Math.atan2(res.z,res.x)/(2*Math.PI))*texture.getWidth());
 		int v                    = (int) (rep*(0.5 - Math.asin(res.y)/Math.PI)*texture.getHeight());		
-		return texture.Ka(u,v);
+		return texture.Ka(u,v,adapt);
 	}
 	
 	@Override

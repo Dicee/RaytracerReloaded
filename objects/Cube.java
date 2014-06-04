@@ -36,7 +36,7 @@ public class Cube extends MeshedObject {
 	}
 	
 	public Cube(Point O, Point X, Point Y, Point Z, Texture t) {
-		super(t.clone());
+		super(t);
 		this.O = new Point(O);
 		this.X = new Point(X);
 		this.Y = new Point(Y);
@@ -152,7 +152,7 @@ public class Cube extends MeshedObject {
 		X           = pts[1];
 		Y           = pts[2];
 		Z           = pts[3];
-		texture     = cube.getTexture().clone();
+		texture     = cube.texture;
 		generateFaces();
 	}
 	

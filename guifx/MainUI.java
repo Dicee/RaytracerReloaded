@@ -48,11 +48,9 @@ public class MainUI extends Application {
 	public static final double					PREFERRED_HEIGHT	= 600;
 
 	private final MenuItem[]					preferences			= new MenuItem[2];
-	private Stage primaryStage;
 	
 	@Override
 	public void start(Stage primaryStage)  {
-		this.primaryStage = primaryStage;
 		//Loading preferences and program constants
 		loadProperties();	
 		

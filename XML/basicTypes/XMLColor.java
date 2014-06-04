@@ -1,6 +1,6 @@
 package XML.basicTypes;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 import org.jdom2.Attribute;
 import org.jdom2.Element;
@@ -17,17 +17,17 @@ public class XMLColor extends Element {
 	}
 	
 	public XMLColor(String name, Color c) {
-		this(name,((float) c.getRed())/255,((float) c.getGreen())/255,((float) c.getBlue())/255);
+		this(name,(float) c.getRed(),(float) c.getGreen(),(float) c.getBlue());
 	}
 	
 	public XMLColor(String name, float[] rgb) {
-		this(name,new Color(rgb[0],rgb[1],rgb[2]));
+		this(name,new Color(rgb[0],rgb[1],rgb[2],0));
 	}
 	
 	public static Color xmlToColor(Element elt) {
 		float R = Float.parseFloat(elt.getAttributeValue("R"));
 		float G = Float.parseFloat(elt.getAttributeValue("G"));
 		float B = Float.parseFloat(elt.getAttributeValue("B"));
-		return new Color(R,G,B);
+		return new Color(R,G,B,0);
 	}
 }

@@ -2,7 +2,7 @@ package XML;
 
 import guifx.Project;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +25,8 @@ import utils.math.Point;
 import static XML.basicTypes.XMLVector.xmlToPoint;
 import static XML.basicTypes.XMLColor.xmlToColor;
 import static XML.XMLObjectLoader.xmlToObjects;
+import objects.AdvancedTexture;
+import objects.BasicTexture;
 
 public class XMLSceneLoader {
 	public static Project load(File f) throws JDOMException, IOException {
@@ -86,13 +88,13 @@ public class XMLSceneLoader {
 			String path;
 			if ((path = Ka.getAttributeValue("url")) != null) {
 				try {
-					return new Texture(indice,brillance,reflectance,new File(path),Kr,Kt);
-				} catch (Exception e) {
-					e.printStackTrace();
+					return new AdvancedTexture(indice,brillance,reflectance,Kr,Kt,new File(path));
+				} catch (Throwable t ) {
+					t.printStackTrace();
 					return null;
 				}
 			} else
-				return new Texture(indice,brillance,reflectance,xmlToColor(Ka),Kr,Kt);
+				return new BasicTexture(indice,brillance,reflectance,Kr,Kt,xmlToColor(Ka));
 		},texturesElt,"Texture");
 	}
 

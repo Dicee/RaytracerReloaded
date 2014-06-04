@@ -12,10 +12,10 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	protected Texture texture;	
 	private boolean   shown;
 	protected int	  patternRepeat;
-	protected boolean repeat, adapt;
+	protected boolean repeat, adapt; 
 	
 	public Object3D(Texture texture) {	    
-		this.texture       = texture == null ? Texture.defaultTexture : texture.clone();	
+		this.texture       = texture == null ? Texture.defaultTexture : texture;	
 	  	this.shown         = true;
 	  	this.patternRepeat = 1;
 	  	this.repeat        = true;
@@ -41,7 +41,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 			dot *= -1;
 			normal   = normal.multScal(-1); 
 		}
-		double x         = envIndex / texture.refraction();
+		double x         = envIndex / texture.indice();
 		double radicande = 1 - x*x*(1 - dot*dot);
 		
 		if (radicande < 0 && - radicande > Vector3D.epsilon) 
@@ -49,9 +49,20 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 		return Vector3D.linearCombination(incidentRay,normal,x,dot*x - Math.sqrt(radicande));
 	}	
 	
+	public void resize(double factor) {
+		if (factor <= 0 || factor <= Vector3D.epsilon)
+			throw new IllegalArgumentException("The resizement factor should be > 0");
+		checkedResize(factor);
+	}
+	protected abstract void checkedResize(double factor);
+	
+	@Override
 	public abstract void rotateX( double u);
+	@Override
 	public abstract void rotateY( double u);
+	@Override
 	public abstract void rotateZ( double u);  
+	@Override
 	public abstract void rotateXYZ (double u, double v, double w);
 	
 	public abstract Vector3D normal(Point p);
@@ -67,14 +78,9 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	public abstract Point getCenter();
 	@Override
 	public abstract Object3D clone();
+	public abstract String getName();
 	
-	public void resize(double factor) {
-		if (factor <= 0 || factor <= Vector3D.epsilon)
-			throw new IllegalArgumentException("The resizement factor should be > 0");
-		checkedResize(factor);
-	}
-	protected abstract void checkedResize(double factor);
-		
+	@Override
 	public String toString() {
 	  return String.format("State : %s, Texture : ",isShown() ? "Shown" : "Hided",texture);
 	}
@@ -92,7 +98,6 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	public abstract float[] Ka(Point p);
 	
 	public float[] Kr() {
-		
 	  return texture.Kr();
 	}
 	
@@ -104,7 +109,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	  return texture.reflectance();
 	}
 	
-	public float[] brillance() {
+	public float brillance() {
 	  return texture.brillance();
 	}
 	
@@ -116,17 +121,6 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 		return shown;
 	}
 
-	/**
-	 * 
-	 * @param repeat
-	 * @throws IllegalArgumentException if n <= 0
-	 */
-	public void setPatternRepeat(int n)	{
-		if (n <= 0)
-			throw new IllegalArgumentException();
-		patternRepeat = n;
-	}
-	
 	public boolean repeats() {
 		return repeat;
 	}
@@ -146,7 +140,16 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	public int getPatternRepeat() {
 		return patternRepeat;
 	}
-
-	public abstract String getName();
+	
+	/**
+	 * 
+	 * @param repeat
+	 * @throws IllegalArgumentException if n <= 0
+	 */
+	public void setPatternRepeat(int n)	{
+		if (n <= 0)
+			throw new IllegalArgumentException();
+		patternRepeat = n;
+	}
 }
 

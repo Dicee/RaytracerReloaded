@@ -250,7 +250,6 @@ public class Cone extends WrappedObject {
 	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 */
 	public float[] Ka(Point p) {
-		int repeat   = texture.getPatternRepeat();
 		Vector3D[] b  = getAdaptedBase();
 		
 		/* On va mapper separement la base et la surface laterale :
@@ -267,31 +266,30 @@ public class Cone extends WrappedObject {
 		double  h   = vertice.distance(baseCenter);	    
 	    //On ecarte le sommet qui est un cas particulier
 	    if (p.equals(vertice))
-	    	return texture.Ka(0,0);
+	    	return texture.Ka(0,0,adapt);
 	    
-	    double  z     = new Vector3D(baseCenter,p).dot(b[2]);	    
-	    double  d     = vertice.distance(p);	  
+	    double   z     = new Vector3D(baseCenter,p).dot(b[2]);	    
+	    double   d     = vertice.distance(p);	  
 	    Vector3D vect  = (new Vector3D(vertice,p)).multScal(1/d);
-	    Point   M     = p.translate(vect.multScal(d*(h/(h-z)-1)));
+	    Point    M     = p.translate(vect.multScal(d*(h/(h-z)-1)));
 	    Vector3D pvect = new Vector3D(baseCenter,M);	    
-	    double  xm    = pvect.dot(b[0]);
-	    double  ym    = pvect.dot(b[1]);
-	    double theta  = ym < 0 ? Math.acos(xm/pvect.norm()) : Math.acos(xm/pvect.norm());
+	    double   xm    = pvect.dot(b[0]);
+	    double   ym    = pvect.dot(b[1]);
+	    double   theta = ym < 0 ? Math.acos(xm/pvect.norm()) : Math.acos(xm/pvect.norm());
 	    
-	    if (Math.abs(z) <= Vector3D.epsilon)
-	    {
+		int repeat     = this.repeat ? patternRepeat : 1;
+	    if (Math.abs(z) <= Vector3D.epsilon) {
 	    	Vector3D w = new Vector3D(baseCenter,p);
-	    	double x  = w.dot(b[0]);	    
-	    	double y  = w.dot(b[1]);	
-	    	double R  = (x*x + y*y)/(baseRay*baseRay);
-	    	
-	    	return texture.Ka((int) (repeat*theta/Math.PI*(texture.getWidth()-1)),(int) ((1-R)*texture.getHeight()));
+	    	double x   = w.dot(b[0]);	    
+	    	double y   = w.dot(b[1]);	
+	    	double R   = (x*x + y*y)/(baseRay*baseRay);
+	    	return texture.Ka((int) (repeat*theta/Math.PI*(texture.getWidth() - 1)),
+				(int) ((1-R)*texture.getHeight()),adapt);
 	    }
-	    else 
-	    {
+	    else {
 	    	double lmax = Math.sqrt(baseRay*baseRay + h*h);
 	    	return texture.Ka((int) (repeat*theta/Math.PI*(texture.getWidth()-1)),
-	    			(int) (p.distance(vertice)/lmax*texture.getHeight()));
+	    		(int) (p.distance(vertice)/lmax*texture.getHeight()),adapt);
 	    }
 	}
 
@@ -369,8 +367,9 @@ public class Cone extends WrappedObject {
 		return baseCenter.translate(v);
 	}
 	
+	@Override
 	public Object3D clone()	{
-		return new Cone(baseCenter,vertice,baseRay,texture.clone());
+		return new Cone(baseCenter,vertice,baseRay,texture);
 	}
 	
 	public void copy(Object3D clone) {

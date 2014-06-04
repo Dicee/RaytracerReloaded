@@ -1,6 +1,6 @@
 package scene;
 
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 import org.jdom2.Element;
 
@@ -34,12 +34,12 @@ public class Source implements XMLable, Translatable, Cloneable, Copiable<Source
 	@Override
 	public void copy(Source s) {
 		pos.setLocation(s.pos);
-		color = new Color(s.color.getRed(),s.color.getGreen(),s.color.getBlue());
+		color = s.color;
 	}
 	
 	@Override
 	public Source clone() {
-		return new Source(new Color(color.getRed(),color.getGreen(),color.getBlue()),pos.clone());
+		return new Source(color,pos.clone());
 	}
 
 	@Override
