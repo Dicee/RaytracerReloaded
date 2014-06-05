@@ -17,7 +17,7 @@ public abstract class Texture implements XMLable {
 	}
 	
 	protected double indice;
-	protected float brillance;
+	protected float brilliance;
 	protected float[] reflectance; 
 	protected float[] Kr;
 	protected float[] Kt;
@@ -27,14 +27,14 @@ public abstract class Texture implements XMLable {
 	}
 	
 	public Texture(double indice, float brillance, float[] reflectance, float[] Kr, float[] Kt) {
-		if (indice < 1 || intervalle(brillance,5,300) || testParam(reflectance,0,1) || 
+		if (indice < 1 || !intervalle(brillance,5,300) || testParam(reflectance,0,1) || 
 				testParam(Kr,0,1) || testParam(Kt,0,1)) 
 			throw new IllegalArgumentException();		
      
 		this.Kr          = roundInIntervalle(Kr,0,1);
 		this.Kt          = roundInIntervalle(Kt,0,1);
 		this.indice      = indice;
-		this.brillance   = roundInIntervalle(brillance,5,300);
+		this.brilliance   = roundInIntervalle(brillance,5,300);
 		this.reflectance = roundInIntervalle(reflectance,0,1);
 	}
 	 
@@ -70,7 +70,7 @@ public abstract class Texture implements XMLable {
 	}
 
 	public float brillance() {
-		return brillance;
+		return brilliance;
 	}
 
 	public float[] reflectance() {
@@ -94,7 +94,7 @@ public abstract class Texture implements XMLable {
 	public Element toXML() {	
 		Element result = new Element("Texture");
 		result.addContent(new XMLFloat("indice",indice));
-		result.addContent(new XMLFloat("brillance",brillance));
+		result.addContent(new XMLFloat("brillance",brilliance));
 		result.addContent(new XMLColor("reflectance",reflectance));
 		result.addContent(getKaXML());
 		result.addContent(new XMLColor("Kr",Kr));

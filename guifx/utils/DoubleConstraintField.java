@@ -18,7 +18,6 @@ public class DoubleConstraintField extends ConstraintForm {
 	
 	public DoubleConstraintField(int hgap, StringProperty name, Constraint<Double>... constraints) {
 		this(hgap,constraints);
-		
 		Label nameLabel = new Label();
 		nameLabel.textProperty().bind(name);
 		nameLabel.setFont(GraphicFactory.subtitlesFont);
