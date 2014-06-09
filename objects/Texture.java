@@ -3,6 +3,7 @@ package objects;
 import XML.XMLable;
 import XML.basicTypes.XMLColor;
 import XML.basicTypes.XMLFloat;
+import java.util.Arrays;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 
@@ -27,8 +28,8 @@ public abstract class Texture implements XMLable {
 	}
 	
 	public Texture(double indice, float brillance, float[] reflectance, float[] Kr, float[] Kt) {
-		if (indice < 1 || intervalle(brillance,5,300) || testParam(reflectance,0,1) || 
-				testParam(Kr,0,1) || testParam(Kt,0,1)) 
+		if (indice < 1 || !intervalle(brillance,5,300) || !testParam(reflectance,0,1) || 
+				!testParam(Kr,0,1) || !testParam(Kt,0,1)) 
 			throw new IllegalArgumentException();		
      
 		this.Kr          = roundInIntervalle(Kr,0,1);
@@ -39,12 +40,12 @@ public abstract class Texture implements XMLable {
 	}
 	 
 	protected final boolean testParam(float[] param, float inf, float sup) {
-		return !(param.length == 3 && intervalle(param[0],inf,sup) && 
-			intervalle(param[1],inf,sup) && intervalle(param[2],inf,sup));
+		return param.length == 3 && intervalle(param[0],inf,sup) && 
+			intervalle(param[1],inf,sup) && intervalle(param[2],inf,sup);
 	 }
 
 	protected final boolean intervalle(float value, float lowerBound, float upperBound) {
-		return (value >= lowerBound - epsilon && value <= upperBound + epsilon);
+		return value >= lowerBound - epsilon && value <= upperBound + epsilon;
 	}
   
 	protected final float[] roundInIntervalle(float[] arr, float inf, float sup) {
@@ -103,4 +104,5 @@ public abstract class Texture implements XMLable {
 	}
 	
 	protected abstract Element getKaXML();
+	public abstract String getName();
 }

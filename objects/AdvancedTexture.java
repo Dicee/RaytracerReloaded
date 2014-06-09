@@ -57,4 +57,9 @@ public class AdvancedTexture extends Texture {
 	public int getWidth() {
 		return texture.getWidth();
 	}
+	
+	@Override
+	public String getName() {
+		return "advancedTexture";
+	}
 }

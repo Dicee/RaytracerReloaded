@@ -6,6 +6,7 @@ import guifx.generics.NamedObject;
 import guifx.utils.Constraints;
 import guifx.utils.DoubleConstraintField;
 import java.io.File;
+import java.io.IOException;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ColorPicker;
@@ -16,6 +17,8 @@ import javafx.scene.layout.HBox;
 import objects.Texture;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -27,7 +30,11 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import objects.AdvancedTexture;
+import objects.BasicTexture;
+import org.controlsfx.dialog.Dialogs;
 
 public class TextureFXFactory extends GraphicFactory<Texture> {
     private static final double PREFERRED_WIDTH = 450;
@@ -55,6 +62,11 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	private final RadioButton basic = new RadioButton(), advanced = new RadioButton();
 	private TextField path;
 	private File currentDir = null;
+	
+	/**
+	 * boolean used for data validation
+	 */
+	private boolean failure;
 
 	public TextureFXFactory() {
 		this(null);
@@ -77,7 +89,41 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	
 	@Override
 	protected NamedObject<Texture> create() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		failure                = false;
+		double refractiveIndex = getDoubleFieldValue(REFRACTIVE_INDEX);
+		double brilliance      = getDoubleFieldValue(BRILLIANCE);
+		
+		if (failure)
+			return null;
+		
+		Texture texture   = null;
+		Color KrValue     = colorPickers[Kr].getValue();
+		Color KtValue     = colorPickers[Kt].getValue();
+		Color reflectance = colorPickers[REFLECTANCE].getValue();
+		if (basic.isSelected()) {
+			texture = new BasicTexture(refractiveIndex,(float) brilliance,reflectance,KrValue, 
+				KtValue,colorPickers[Ka].getValue());
+		} else {
+			try {
+				texture = new AdvancedTexture(refractiveIndex,(float) brilliance,reflectance,KrValue,
+					KtValue,new File(path.getText()));
+			} catch (IOException e) {
+				Dialogs.create().owner(root).
+					title(strings.getProperty("error")).
+					masthead(strings.getProperty("anErrorOccurredMessage")).
+					message(strings.getProperty("unfoundFileErrorMessage")).
+					showError();
+			}
+		}
+		return texture == null ? null : new NamedObject<>(strings.getObservableProperty(texture.getName()),texture);
+	}
+	
+	private double getDoubleFieldValue(int i) {
+		if (failure)
+			return DoubleConstraintField.errorReturn;		
+		double result = fields[i].getValue();
+		failure      = result == DoubleConstraintField.errorReturn;
+		return result;
 	}
 	
 	private HBox doubleConstraintField(int i, String errorPropertyName, double min) {
@@ -103,7 +149,7 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	
 	private Node[] setFields() {
 		Node refractiveIndex = doubleConstraintField(REFRACTIVE_INDEX,"refractiveIndexErrorMessage",1);
-		Node brilliance      = doubleConstraintField(BRILLIANCE,"brillianceErrorMessage",0);
+		Node brilliance      = doubleConstraintField(BRILLIANCE,"brillianceErrorMessage",5);
 		Node KrNode          = colorPickers[Kr]          = new ColorPicker();
 		Node KtNode          = colorPickers[Kt]          =  new ColorPicker();
 		Node reflectance     = colorPickers[REFLECTANCE] =  new ColorPicker();
@@ -153,7 +199,15 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 			FileChooser chooser = new FileChooser();
 			if (currentDir != null)
 				chooser.setInitialDirectory(currentDir);
-			chooser.showOpenDialog(null);
+			
+			String imageFiles = strings.getProperty("imageFiles");
+			chooser.getExtensionFilters().add(new FileChooser.
+				ExtensionFilter(imageFiles + " (*.png, *.jpg...)", "*.png","*.jpg","*.jpeg","*.JPG"));
+			File selectedFile = chooser.showOpenDialog(null);
+			if (selectedFile != null) {
+				currentDir = selectedFile.getParentFile();
+				path.setText(selectedFile.getAbsolutePath());
+			}
 		});
 		
 		VBox content = new VBox(10,pathLabel,path,browse);

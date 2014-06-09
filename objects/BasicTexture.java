@@ -10,7 +10,7 @@ public class BasicTexture extends Texture {
 	public BasicTexture(double indice, float brillance, Color reflectance, Color Kr, Color Kt, Color Ka) {
 		super(indice,brillance,reflectance,Kr,Kt);
 		float[] arr = toArr(Ka);
-		if (testParam(arr,0,1)) 
+		if (!testParam(arr,0,1)) 
 			throw new IllegalArgumentException();		
 		this.Ka = roundInIntervalle(arr,0,1);
 	}
@@ -33,5 +33,10 @@ public class BasicTexture extends Texture {
 	@Override
 	public int getWidth() {
 		return 0;
+	}
+	
+	@Override
+	public String getName() {
+		return "basicTexture";
 	}
 }
