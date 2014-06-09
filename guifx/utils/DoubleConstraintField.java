@@ -9,7 +9,6 @@ import org.controlsfx.dialog.Dialogs;
 
 public class DoubleConstraintField extends ConstraintForm {
 	public static final double errorReturn = Double.POSITIVE_INFINITY;
-	
 	private final TextField field;
 	
 	public DoubleConstraintField(StringProperty name) {

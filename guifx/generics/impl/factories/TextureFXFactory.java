@@ -5,6 +5,7 @@ import guifx.generics.GraphicFactory;
 import guifx.generics.NamedObject;
 import guifx.utils.Constraints;
 import guifx.utils.DoubleConstraintField;
+import java.io.File;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.ColorPicker;
@@ -13,30 +14,47 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import objects.Texture;
-import guifx.utils.HLabelledNode;
+import java.util.Arrays;
+import java.util.List;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class TextureFXFactory extends GraphicFactory<Texture> {
-    private static final double PREFERRED_WIDTH = 610;
-	private static final double PREFERRED_HEIGHT = 400;
+    private static final double PREFERRED_WIDTH = 450;
+	private static final double PREFERRED_HEIGHT = 250;
 	/**
 	 * ColorPicker(s) nums
 	 */
 	private static final int Ka = 0;
 	private static final int Kr = 1;
 	private static final int Kt = 2;
-	private static final int reflectance = 3;
+	private static final int REFLECTANCE = 3;
 
 	/**
 	 * DoubleConstraintField(s) nums
 	 */
-	private static final int indice = 0;
-	private static final int brilliance = 1;
+	private static final int REFRACTIVE_INDEX = 0;
+	private static final int BRILLIANCE = 1;
 
 	private final TitledPane commonCaracteristics = new TitledPane();
 	private final TitledPane specificities = new TitledPane();
 
 	private final ColorPicker[] colorPickers = new ColorPicker[4];
 	private final DoubleConstraintField[] fields = new DoubleConstraintField[2];
+	
+	private final RadioButton basic = new RadioButton(), advanced = new RadioButton();
+	private TextField path;
+	private File currentDir = null;
 
 	public TextureFXFactory() {
 		this(null);
@@ -45,45 +63,123 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	public TextureFXFactory(Consumer<NamedObject<Texture>> consumer) {
 		super(strings.getObservableProperty("createTextureTitle"),strings.getObservableProperty("createAction"),
 			consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
+	
+		BorderPane mainPane = new BorderPane();
+		mainPane.setLeft(setCommonCaracteristics());
+		mainPane.setRight(setBasicSpecificities());
+		mainPane.setTop(setToggleGroup());
+		root.getChildren().add(mainPane);
 		
-		GridPane gridPane = new GridPane();
-		
-		gridPane.add(labelledField(indice,"indiceLabel","refractiveIndexErrorMessage",1),0,0);
-        gridPane.add(labelledField(brilliance,"brillianceLabel","brillianceErrorMessage",0),1,0);
-        gridPane.add(labelledColorPicker(Kr,"Kr"),0,1);
-        System.out.println(colorPickers[Kr]);
-        //gridPane.add(labelledColorPicker(Kt,"Kt"),1,1);
-        //gridPane.add(labelledColorPicker(reflectance,strings.getObservableProperty("reflectanceLabel")),1,2);
-		root.getChildren().add(gridPane);
-		
-		AnchorPane.setTopAnchor(gridPane,20d);
-		AnchorPane.setLeftAnchor(gridPane,30d);
-		AnchorPane.setRightAnchor(gridPane,30d);
+		AnchorPane.setTopAnchor(mainPane,20d);
+		AnchorPane.setLeftAnchor(mainPane,30d);
+		AnchorPane.setRightAnchor(mainPane,30d);
 	}
 	
 	@Override
 	protected NamedObject<Texture> create() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
-
-	private HBox labelledColorPicker(int i, String name) {
-		return new HLabelledNode<>(10,
-			colorPickers[i] = new ColorPicker(),
-            name,
-			subtitlesFont);
-	}
-    
-    private HBox labelledColorPicker(int i, StringProperty nameProperty) {
-		return new HLabelledNode<>(10,
-			colorPickers[i] = new ColorPicker(),
-            nameProperty,
-			subtitlesFont);
-	}
-
-	private final HBox labelledField(int i, String propertyName, String errorPropertyName, double min) {
-		StringProperty text  = strings.getObservableProperty(propertyName); 
+	
+	private HBox doubleConstraintField(int i, String errorPropertyName, double min) {
 		StringProperty error = strings.getObservableProperty(errorPropertyName);
 		fields[i]            = new DoubleConstraintField(new Constraints.LowerBound(error,min));
-		return new HLabelledNode<>(10,fields[i],text,subtitlesFont);
+		return fields[i];
+	}
+	
+	private Node[] setLabels() {
+		Label refractiveIndex = new Label();
+		Label brilliance      = new Label();
+		Label Kr              = new Label("Kr");
+		Label Kt              = new Label("Kt");
+		Label reflectance     = new Label();
+		refractiveIndex.textProperty().bind(strings.getObservableProperty("indiceLabel"));
+		brilliance.textProperty().bind(strings.getObservableProperty("brillianceLabel"));
+		reflectance.textProperty().bind(strings.getObservableProperty("reflectanceLabel"));
+		
+		List<Label> labels    = Arrays.asList(refractiveIndex,brilliance,Kr,Kt,reflectance);
+		labels.stream().forEach(label -> label.setFont(subtitlesFont));
+		return (Node[]) labels.toArray();
+	}
+	
+	private Node[] setFields() {
+		Node refractiveIndex = doubleConstraintField(REFRACTIVE_INDEX,"refractiveIndexErrorMessage",1);
+		Node brilliance      = doubleConstraintField(BRILLIANCE,"brillianceErrorMessage",0);
+		Node KrNode          = colorPickers[Kr]          = new ColorPicker();
+		Node KtNode          = colorPickers[Kt]          =  new ColorPicker();
+		Node reflectance     = colorPickers[REFLECTANCE] =  new ColorPicker();
+		return new Node[] { refractiveIndex,brilliance,KrNode,KtNode,reflectance };
+	}
+
+	private Node setCommonCaracteristics() {
+		GridPane gridPane = new GridPane();
+		gridPane.addColumn(0,setLabels());
+		gridPane.addColumn(1,setFields());
+		gridPane.setHgap(10);
+		gridPane.setVgap(5);
+		gridPane.setPadding(new Insets(5,5,5,5));
+		
+		commonCaracteristics.setContent(gridPane);
+		commonCaracteristics.setCollapsible(false);
+		commonCaracteristics.textProperty().bind(strings.getObservableProperty("commonCaracteristicsLabel"));
+		commonCaracteristics.setFocusTraversable(false);
+		
+		return commonCaracteristics;
+	}
+
+	private Node setBasicSpecificities() {
+		Label KaNode = new Label("Ka");
+		KaNode.setFont(subtitlesFont);
+		
+		HBox content = new HBox(10,KaNode,colorPickers[Ka] = new ColorPicker());
+		content.setPadding(new Insets(5));
+		
+		specificities.textProperty().bind(strings.getObservableProperty("specificitiesLabel"));
+		specificities.setCollapsible(false);
+		specificities.setFocusTraversable(false);
+		specificities.setContent(content);
+		
+		return specificities;
+	}
+	
+	private Node setAdvancedSpecificities() {
+		path            = new TextField();
+		Label pathLabel = new Label();
+		Button browse   = new Button();
+		pathLabel.textProperty().bind(strings.getObservableProperty("pathLabel"));
+		pathLabel.setFont(subtitlesFont);
+		browse.textProperty().bind(strings.getObservableProperty("browseLabel"));
+		
+		browse.setOnAction(ev -> {
+			FileChooser chooser = new FileChooser();
+			if (currentDir != null)
+				chooser.setInitialDirectory(currentDir);
+			chooser.showOpenDialog(null);
+		});
+		
+		VBox content = new VBox(10,pathLabel,path,browse);
+		content.setPadding(new Insets(5));
+		
+		specificities.setContent(content);
+		return specificities;
+	}
+
+	private Node setToggleGroup() {
+		ToggleGroup group = new ToggleGroup();
+		basic   .textProperty().bind(strings.getObservableProperty("basicTextureLabel"));
+		advanced.textProperty().bind(strings.getObservableProperty("advancedTextureLabel"));
+		group.getToggles().addAll(basic,advanced);
+		group.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> ov,
+			Toggle oldToggle, Toggle newToggle) -> {
+				Node spec;
+				if (newToggle == basic) 
+					setBasicSpecificities();
+				else 
+					setAdvancedSpecificities();
+			});
+		group.selectToggle(basic);
+		
+		HBox result = new HBox(10,basic,advanced);
+		result.setPadding(new Insets(5));
+		return result;
 	}
 }

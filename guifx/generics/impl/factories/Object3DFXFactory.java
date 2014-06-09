@@ -93,10 +93,10 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	
 	@Override
 	protected NamedObject<Object3D> create() {
-		failure                  = false;
-		Object3D       result    = null;
-		Point          center    = getCenter();
-		Vector3D       rotation  = getOrientation();
+		failure            = false;
+		Object3D result    = null;
+		Point    center    = getCenter();
+		Vector3D rotation  = getOrientation();
 		
 		if (failure)
 			return null;
