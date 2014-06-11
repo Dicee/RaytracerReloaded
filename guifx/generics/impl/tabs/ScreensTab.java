@@ -2,7 +2,7 @@ package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
+import utils.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.ScreenFXFactory;
@@ -21,6 +21,7 @@ public class ScreensTab extends SceneElementTab<Screen> {
 		switch (type) {
 			case CREATE : return defaultCreateAction();
 			case EDIT   : return defaultEditAction();
+            case DELETE : return defaultDeleteAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",

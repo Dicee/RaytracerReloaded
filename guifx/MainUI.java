@@ -1,11 +1,7 @@
 package guifx;
 
-import guifx.generics.SceneElementTab;
-import guifx.generics.Tools;
-import guifx.generics.impl.tabs.ObjectsTab;
-import guifx.generics.impl.tabs.ScreensTab;
-import guifx.generics.impl.tabs.SourcesTab;
-import guifx.generics.impl.tabs.TexturesTab;
+import guifx.generics.*;
+import guifx.generics.impl.tabs.*;
 import impl.org.controlsfx.i18n.Localization;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,12 +15,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCharacterCombination;
@@ -34,7 +25,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import guifx.utils.ObservableProperties;
+import objects.Texture;
+import utils.ObservableProperties;
 
 public class MainUI extends Application {
 	
@@ -62,10 +54,10 @@ public class MainUI extends Application {
         setHeader(root,menuBar);		
 		
 		TabPane tabPane = new TabPane();
-		setObjectsPane(tabPane);		
 		setSourcesPane(tabPane);		
 		setViewsPane(tabPane);		
-		setTexturesPane(tabPane);		
+		SceneElementTab<Texture> textureTab = setTexturesPane(tabPane);	
+        setObjectsPane(tabPane,textureTab);
 		
 		VBox.setVgrow(tabPane,Priority.ALWAYS);		
         root.getChildren().addAll(tabPane);		
@@ -77,8 +69,8 @@ public class MainUI extends Application {
         primaryStage.show(); 
 	}
 	
-	private void setObjectsPane(TabPane tabPane) {
-		SceneElementTab tab = new ObjectsTab();		
+	private void setObjectsPane(TabPane tabPane, SceneElementTab<Texture> texturesTab) {
+		SceneElementTab tab = new ObjectsTab(texturesTab);		
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
@@ -88,7 +80,7 @@ public class MainUI extends Application {
 		tab.addTool(getButton("rotateIcon","rotate"),Tools.ROTATE);
 		tab.addTool(getButton("showOrHideIcon","showOrHide"),Tools.SHOW_HIDE);
 		
-		tabPane.getTabs().add(tab);
+		tabPane.getTabs().add(0,tab);
 	}
 	
 	private void setSourcesPane(TabPane tabPane) {
@@ -117,14 +109,15 @@ public class MainUI extends Application {
 		tabPane.getTabs().add(tab);
 	}
 	
-	private void setTexturesPane(TabPane tabPane) {
-		SceneElementTab tab = new TexturesTab();
+	private SceneElementTab<Texture> setTexturesPane(TabPane tabPane) {
+		SceneElementTab<Texture> tab = new TexturesTab();
 		
 		tab.addTool(getButton("createIcon","create"),Tools.CREATE);
 		tab.addTool(getButton("editIcon","edit"),Tools.EDIT);
 		tab.addTool(getButton("trashIcon","trash"),Tools.DELETE);
 		
 		tabPane.getTabs().add(tab);
+        return tab;
 	}
 
 	private void loadProperties() {

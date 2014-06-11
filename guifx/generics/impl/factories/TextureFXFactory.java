@@ -2,9 +2,10 @@ package guifx.generics.impl.factories;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
+import utils.NamedObject;
 import guifx.utils.Constraints;
 import guifx.utils.DoubleConstraintField;
+import guifx.utils.TextureID;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -17,8 +18,6 @@ import javafx.scene.layout.HBox;
 import objects.Texture;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -38,7 +37,7 @@ import org.controlsfx.dialog.Dialogs;
 
 public class TextureFXFactory extends GraphicFactory<Texture> {
     private static final double PREFERRED_WIDTH = 450;
-	private static final double PREFERRED_HEIGHT = 250;
+	private static final double PREFERRED_HEIGHT = 260;
 	/**
 	 * ColorPicker(s) nums
 	 */
@@ -115,7 +114,7 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 					showError();
 			}
 		}
-		return texture == null ? null : new NamedObject<>(strings.getObservableProperty(texture.getName()),texture);
+		return texture == null ? null : new TextureID(texture);
 	}
 	
 	private double getDoubleFieldValue(int i) {

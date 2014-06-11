@@ -1,5 +1,7 @@
 package guifx.generics;
 
+import static guifx.MainUI.strings;
+import utils.NamedObject;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -7,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
+import org.controlsfx.dialog.Dialogs;
 
 public class ListExplorer<T> extends HBox {
 	private final ListView<NamedObject<T>> listView;
@@ -28,15 +31,19 @@ public class ListExplorer<T> extends HBox {
 					@Override
 					public void updateItem(NamedObject<T> item, boolean empty) {
 						super.updateItem(item,empty);
-						if (item != null) 
-							textProperty().bind(item.nameProperty());
+                        System.out.println("coucou  " + item + " " + empty);
+						if (!empty && item != null) 
+                           textProperty().bind(item.nameProperty());
+                        else {
+                            textProperty().unbind();
+                            setText("");
+                        }
+                            
 					}
 				};
 				return cell;
 			}
 		});
-		
-
 		HBox.setMargin(test,new Insets(0,1,0,0));
 		HBox.setMargin(listView,new Insets(1,0,1,1));
 		HBox.setHgrow(test,Priority.ALWAYS);
@@ -45,4 +52,20 @@ public class ListExplorer<T> extends HBox {
 	public ListView<NamedObject<T>> getListView() {
 		return listView;
 	}
+    
+    public void removeSelectedItem() {
+        NamedObject<T> item = listView.getSelectionModel().getSelectedItem();
+        if (item != null) 
+            listView.getItems().remove(item);
+        else 
+            Dialogs.create().owner(this).
+				title(strings.getProperty("error")).
+				masthead(strings.getProperty("anErrorOccurredMessage")).
+				message(strings.getProperty("noSelectedItemMessage")).
+				showError();
+    }
+    
+    public int getSelectedIndex() {
+        return listView.getSelectionModel().getSelectedIndex();
+    }
 }

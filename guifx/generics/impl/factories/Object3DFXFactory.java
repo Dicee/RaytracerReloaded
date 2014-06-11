@@ -3,7 +3,7 @@ package guifx.generics.impl.factories;
 import static guifx.MainUI.strings;
 import static objects.Object3DFactory.*;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
+import utils.NamedObject;
 import guifx.utils.Constraint;
 import guifx.utils.ConstraintForm;
 import guifx.utils.Constraints;
@@ -11,6 +11,7 @@ import guifx.utils.ScaledSlider;
 import guifx.utils.DoubleConstraintField;
 import guifx.utils.LabelledSlider;
 import guifx.utils.OrientationChooser;
+import guifx.utils.TextureID;
 import guifx.utils.VectorBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,32 +20,40 @@ import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import objects.Object3D;
+import objects.Texture;
 import utils.math.Point;
 import utils.math.Vector3D;
 
 public class Object3DFXFactory extends GraphicFactory<Object3D> {
-	private static final double PREFERRED_WIDTH = 610;
-	private static final double PREFERRED_HEIGHT = 400;
+	private static final double PREFERRED_WIDTH = 640;
+	private static final double PREFERRED_HEIGHT = 450;
 	private static final String[] typesProperties
 			= {"sphere", "planeSurface", "cube", "parallelepiped", "cone", "cylinder"};
+    
+    private final ObservableList<NamedObject<Texture>> textures;
 
 	private final OrientationChooser orientationChooser = new OrientationChooser();
 	private final ScaledSlider scale = new ScaledSlider(0,100,1);
 	private final TitledPane commonCaracteristics = new TitledPane();
 	private final TitledPane specificities = new TitledPane();
+	private final TitledPane textureCaracteristics = new TitledPane();
 	private final VectorBuilder centerBuilder = new VectorBuilder();
 	
 	/**
@@ -53,26 +62,36 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	private final DoubleConstraintField[] doubleValueFields = new DoubleConstraintField[2];
 	private final LabelledSlider[] angleSliders = new LabelledSlider[3];
 	private final RadioButton finite = new RadioButton(), infinite = new RadioButton();
-	private final ToggleGroup group = new ToggleGroup();
 	private final ComboBox<StringProperty> typeChoice;
+    
+    /**
+	 * Texture fields
+	 */
+	private final Slider patternRepeat = new Slider();
+	private final RadioButton repeat = new RadioButton(), noRepeat = new RadioButton();
+	private final RadioButton adapt = new RadioButton(), noAdapt = new RadioButton();
+	private final ComboBox<NamedObject<Texture>> textureIds = new ComboBox<>();
 	
 	/**
 	 * boolean used for data validation
 	 */
 	private boolean failure;
 	
-	public Object3DFXFactory() {
-		this(null);
+	public Object3DFXFactory(ObservableList<NamedObject<Texture>> textures) {
+		this(null,textures);
 	}
 	
-	public Object3DFXFactory(Consumer<NamedObject<Object3D>> consumer) {
+	public Object3DFXFactory(Consumer<NamedObject<Object3D>> consumer, ObservableList<NamedObject<Texture>> textures) {
 		super(strings.getObservableProperty("createObjectTitle"),strings.getObservableProperty("createAction"),
 			consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
-		this.commonCaracteristics.textProperty().bind(strings.getObservableProperty("commonCaracteristicsLabel"));
-		this.specificities       .textProperty().bind(strings.getObservableProperty("specificitiesLabel"));
+        this.textures = textures;
+		this.commonCaracteristics .textProperty().bind(strings.getObservableProperty("commonCaracteristicsLabel"));
+		this.specificities        .textProperty().bind(strings.getObservableProperty("specificitiesLabel"));
+        this.textureCaracteristics.textProperty().bind(strings.getObservableProperty("textureCaracteristicsLabel"));
 		setCommonCaracteristics();
 		setSpecificities();
-		
+        setTextureFields();
+        
 		List<StringProperty> types = new ArrayList<>();
 		for (String propertyName : typesProperties)
 			types.add(strings.getObservableProperty(propertyName));
@@ -81,14 +100,22 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		Label    comboLabel = new Label();
 		HBox     header     = new HBox(12,comboLabel,typeChoice);  
 		comboLabel.textProperty().bind(strings.getObservableProperty("objectTypeLabel"));
-		root.getChildren().addAll(header,commonCaracteristics,specificities);
-		
-		AnchorPane.setTopAnchor(header,20d);
-		AnchorPane.setLeftAnchor(header,30d);
-		AnchorPane.setTopAnchor(commonCaracteristics,60d);
-		AnchorPane.setLeftAnchor(commonCaracteristics,30d);
-		AnchorPane.setTopAnchor(specificities,60d);
-		AnchorPane.setRightAnchor(specificities,30d);
+        
+        GridPane gridPane = new GridPane();
+        gridPane.add(commonCaracteristics,0,0,1,2);
+        gridPane.addColumn(1,textureCaracteristics,specificities);
+        gridPane.setHgap(10);
+        gridPane.setVgap(5);
+        gridPane.setPadding(new Insets(10));
+        
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(header);
+        borderPane.setCenter(gridPane);        
+        root.getChildren().add(borderPane);
+        
+        AnchorPane.setLeftAnchor(borderPane,30d);
+		AnchorPane.setTopAnchor(borderPane,10d);
+		AnchorPane.setRightAnchor(borderPane,30d);
 	}
 	
 	@Override
@@ -207,7 +234,8 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		//Initialisation of the RadioButton(s) text and event handling
 		finite  .textProperty().bind(strings.getObservableProperty("finiteLabel"));
 		infinite.textProperty().bind(strings.getObservableProperty("infiniteLabel"));
-				
+			
+        ToggleGroup group = new ToggleGroup();
 		group.getToggles().addAll(finite,infinite);
 		group.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> ov,
 			Toggle oldToggle, Toggle newToggle) -> {
@@ -227,6 +255,51 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		angleSpecificities();
 	}
 
+    public final void setTextureFields() {
+        ToggleGroup adaptGroup = new ToggleGroup();
+        adaptGroup.getToggles().addAll(adapt,noRepeat);
+        Label adaptLabel   = new Label();
+        Label noAdaptLabel = new Label();
+        adaptLabel  .textProperty().bind(strings.getObservableProperty("adaptLabel"));
+        noAdaptLabel.textProperty().bind(strings.getObservableProperty("noAdaptLabel"));
+        
+        ToggleGroup repeatGroup = new ToggleGroup();
+        repeatGroup.getToggles().addAll(repeat,noRepeat);
+        Label repeatLabel   = new Label();
+        Label noRepeatLabel = new Label();
+        repeatLabel  .textProperty().bind(strings.getObservableProperty("repeatLabel"));
+        noRepeatLabel.textProperty().bind(strings.getObservableProperty("noRepeatLabel"));
+        
+        Label patternRepeatLabel = new Label();
+        patternRepeatLabel.textProperty().bind(strings.getObservableProperty("patternRepeatLabel"));
+        patternRepeat.setMin(1);
+        patternRepeat.setMax(8);
+        patternRepeat.setValue(1);
+		patternRepeat.setMajorTickUnit(1);
+        patternRepeat.setShowTickLabels(true);
+        patternRepeat.setShowTickMarks(true);
+        
+        Label idsLabel = new Label();
+        idsLabel.textProperty().bind(strings.getObservableProperty("textureIdsLabel"));
+        textureIds.setItems(textures);
+        
+        Arrays.asList(patternRepeatLabel,idsLabel).stream().forEach(label -> label.setFont(subtitlesFont));
+        
+        GridPane content = new GridPane();
+        content.addRow(2,adaptLabel,adapt,noAdaptLabel,noAdapt);
+        content.addRow(3,repeatLabel,repeat,noRepeatLabel,noRepeat);
+        content.add(idsLabel,0,0,1,1);
+        content.add(textureIds,1,0,3,1);
+        content.add(patternRepeatLabel,0,1,1,1);
+        content.add(patternRepeat,1,1,3,1);
+        content.setPadding(new Insets(5));
+        content.setHgap(5);
+        content.setVgap(10);
+        
+        textureCaracteristics.setContent(content);
+        textureCaracteristics.setFocusTraversable(false);
+    }
+    
 	private ComboBox<StringProperty> setTypeChoice(List<StringProperty> types) {
 		ComboBox<StringProperty> typeChoice = new ComboBox(FXCollections.observableList(types));
 		typeChoice.valueProperty().addListener((ObservableValue<? extends StringProperty> ov, StringProperty oldValue, 

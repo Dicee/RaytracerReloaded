@@ -3,7 +3,7 @@ package guifx.generics.impl.factories;
 import static guifx.utils.DoubleConstraintField.errorReturn;
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
+import utils.NamedObject;
 import guifx.utils.Constraint;
 import guifx.utils.Constraints;
 import guifx.utils.DoubleConstraintField;

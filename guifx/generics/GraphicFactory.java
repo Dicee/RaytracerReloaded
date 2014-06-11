@@ -1,5 +1,6 @@
 package guifx.generics;
 
+import utils.NamedObject;
 import static guifx.MainUI.strings;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;

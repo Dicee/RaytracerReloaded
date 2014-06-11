@@ -1,5 +1,6 @@
 package guifx.generics;
 
+import utils.NamedObject;
 import guifx.MainUI;
 import static guifx.MainUI.strings;
 import java.util.function.Consumer;
@@ -71,6 +72,10 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 			editMode = true;
 		};
 	}
+    
+    protected final EventHandler<ActionEvent> defaultDeleteAction() {
+		return (ActionEvent ev) -> listExplorer.removeSelectedItem();
+	}
 	
 	protected void showGraphicFactory(StringProperty sp) {
 		factory = newFactory();
@@ -85,7 +90,7 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	@Override
 	public void accept(NamedObject<T> item) {
 		if (!editMode) 
-			getItems().add(++index,item);
+			getItems().add(listExplorer.getSelectedIndex() + 1,item);
 		else 
 			((Copiable<T>) getItems().get(index).bean).copy(item.bean);
 	}

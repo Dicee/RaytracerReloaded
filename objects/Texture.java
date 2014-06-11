@@ -3,7 +3,6 @@ package objects;
 import XML.XMLable;
 import XML.basicTypes.XMLColor;
 import XML.basicTypes.XMLFloat;
-import java.util.Arrays;
 import javafx.scene.paint.Color;
 import org.jdom2.Element;
 

@@ -2,7 +2,7 @@ package guifx.generics.impl.factories;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
+import utils.NamedObject;
 import guifx.utils.VectorBuilder;
 import javafx.scene.paint.Color;
 import java.util.function.Consumer;

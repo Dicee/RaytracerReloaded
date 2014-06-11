@@ -2,18 +2,23 @@ package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import guifx.generics.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.Object3DFXFactory;
 import java.util.Arrays;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import objects.Object3D;
+import objects.Texture;
+import utils.NamedObject;
 
 public class ObjectsTab extends SceneElementTab<Object3D> {
-	public ObjectsTab() {
+    private final ObservableList<NamedObject<Texture>> textures;
+    
+	public ObjectsTab(SceneElementTab<Texture> texturesTab) {
 		super(strings.getObservableProperty("objects"),strings.getObservableProperty("tools"));
+        this.textures = texturesTab.getItems();
 	}
 
 	@Override
@@ -21,6 +26,7 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 		switch (type) {
 			case CREATE : return defaultCreateAction();
 			case EDIT   : return defaultEditAction();
+            case DELETE : return defaultDeleteAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",
@@ -35,6 +41,6 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	
 	@Override
 	protected GraphicFactory<Object3D> newFactory() {
-		return new Object3DFXFactory(this);
+		return new Object3DFXFactory(this,textures);
 	}
 }
