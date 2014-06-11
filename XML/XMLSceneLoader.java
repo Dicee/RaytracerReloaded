@@ -1,6 +1,6 @@
 package XML;
 
-import guifx.Project;
+import scene.Project;
 
 import javafx.scene.paint.Color;
 import java.io.File;

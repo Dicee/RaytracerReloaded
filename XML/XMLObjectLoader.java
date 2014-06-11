@@ -40,7 +40,7 @@ public class XMLObjectLoader {
 					format("Unknown object \"%s\"",elt.getName()));		
 		}
 		String id = elt.getChild("TextureRef").getAttributeValue("id");
-		result.setTexture(id.equals("default") ? Texture.defaultTexture : textures.get(Integer.parseInt(id)));
+		result.setTexture(id.equals("default") ? Texture.DEFAULT_TEXTURE : textures.get(Integer.parseInt(id)));
 		return result;
 	}
 

@@ -141,11 +141,11 @@ public class Cylinder extends Object3D
 		Vector3D b0 = baseAdaptee[0];
 		Vector3D b1 = baseAdaptee[1], b2 = baseAdaptee[2];
 		PlaneSurface planBase1 = new PlaneSurface(baseCenter,baseCenter.translate(b0),baseCenter.translate(b1),
-									          Texture.defaultTexture);
+									          Texture.DEFAULT_TEXTURE);
 		PlaneSurface planBase2 = new PlaneSurface(baseCenter.translate(b2.multScal(h)),
 											  baseCenter.translate(b0).translate(b2.multScal(h)),
 											  baseCenter.translate(b1).translate(b2.multScal(h)),
-											  Texture.defaultTexture);		
+											  Texture.DEFAULT_TEXTURE);		
 		//Recherche sur les bases
 		Point inter1 = null;
 		Point inter2 = null;

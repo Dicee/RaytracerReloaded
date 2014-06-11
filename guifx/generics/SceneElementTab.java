@@ -22,6 +22,7 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	protected GraphicFactory<T> factory;
 	protected int index = -1;
 	protected boolean editMode;
+    protected boolean openedFactory = false;
 	
 	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty) {
 		super();
@@ -61,15 +62,21 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	
 	protected final EventHandler<ActionEvent> defaultCreateAction() {
 		return (ActionEvent ev) -> { 
-			showGraphicFactory(strings.getObservableProperty("createAction"));
-			editMode = false;
+            if (!openedFactory) {
+                showGraphicFactory(strings.getObservableProperty("createAction"));
+                editMode      = false;
+                openedFactory = true;
+            }
 		};
 	}
 	
 	protected final EventHandler<ActionEvent> defaultEditAction() {
 		return (ActionEvent ev) -> { 
-			showGraphicFactory(strings.getObservableProperty("editAction"));
-			editMode = true;
+            if (!openedFactory) {
+                showGraphicFactory(strings.getObservableProperty("editAction"));
+                editMode      = true;
+                openedFactory = true;
+            }
 		};
 	}
     
@@ -89,9 +96,12 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
 	
 	@Override
 	public void accept(NamedObject<T> item) {
-		if (!editMode) 
-			getItems().add(listExplorer.getSelectedIndex() + 1,item);
-		else 
-			((Copiable<T>) getItems().get(index).bean).copy(item.bean);
+        if (item != null) {
+            if (!editMode) 
+                getItems().add(listExplorer.getSelectedIndex() + 1,item);
+            else 
+                ((Copiable<T>) getItems().get(index).bean).copy(item.bean);
+        }
+        openedFactory = false;
 	}
 }

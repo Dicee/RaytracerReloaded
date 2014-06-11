@@ -75,6 +75,7 @@ public abstract class GraphicFactory<T> {
         primaryStage.titleProperty().bind(titleProperty);
         primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(ev -> hide());
 	}
 	
 	protected abstract NamedObject<T> create();
@@ -91,6 +92,7 @@ public abstract class GraphicFactory<T> {
 	
 	public final void hide() {
 		primaryStage.hide();
+        consumer.accept(null);
 	}
 	
 	public StringProperty textProperty() {

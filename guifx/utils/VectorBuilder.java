@@ -10,7 +10,7 @@ import utils.math.Point;
 import utils.math.Vector3D;
 
 public class VectorBuilder extends ConstraintForm {
-	public static Object errorReturn = null;
+	public static Object ERROR_RETURN = null;
 	private final TextField xField, yField, zField;
 	
 	public VectorBuilder() {

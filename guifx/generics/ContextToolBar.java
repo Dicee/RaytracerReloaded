@@ -1,6 +1,5 @@
 package guifx.generics;
 
-import javafx.beans.Observable;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,7 +26,7 @@ public class ContextToolBar extends ToolBar {
 		widthProperty().addListener(obs -> resizeItems());		
 	}
 	
-	public final void resizeItems() {
+	private final void resizeItems() {
 		double maxWidth  = getPrefWidth();
 		Button[] buttons = new Button[getItems().size() - 1];
 		int i            = 0;
@@ -37,6 +36,7 @@ public class ContextToolBar extends ToolBar {
 				maxWidth     = Math.max(maxWidth,b.prefWidth(b.getHeight()));	
 				buttons[i++] = b;
 			}
+        maxWidth = Math.max(maxWidth,title.prefWidth(title.getHeight()));
 		for (Button b : buttons) 
 			b.setPrefWidth(maxWidth);
 		title.setMaxWidth(maxWidth);

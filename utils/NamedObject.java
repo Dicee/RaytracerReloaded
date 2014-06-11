@@ -1,7 +1,5 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.beans.property.StringProperty;
 
 public class NamedObject<T> {

@@ -1,6 +1,6 @@
 package XML;
 
-import guifx.Project;
+import scene.Project;
 
 import java.io.BufferedWriter;
 import java.io.File;

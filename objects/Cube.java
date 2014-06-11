@@ -112,7 +112,7 @@ public class Cube extends MeshedObject {
 	}
 
 	public Object3D getWrappingObject() {		
-		return new Sphere(getCenter(),Math.sqrt(3)*getSideLength()/2,Texture.defaultTexture);
+		return new Sphere(getCenter(),Math.sqrt(3)*getSideLength()/2,Texture.DEFAULT_TEXTURE);
 	}
 
 	public void translate(Vector3D v) {

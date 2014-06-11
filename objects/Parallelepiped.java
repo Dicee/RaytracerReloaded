@@ -87,7 +87,7 @@ public class Parallelepiped extends MeshedObject {
 	@Override
 	public Object3D getWrappingObject() {	
 		double d = Math.max(Math.max(O.distance(X),O.distance(Y)),O.distance(Z));
-		return new Sphere(getCenter(),3*Math.sqrt(3)*d/2,Texture.defaultTexture);
+		return new Sphere(getCenter(),3*Math.sqrt(3)*d/2,Texture.DEFAULT_TEXTURE);
 	}
 	
 	@Override

@@ -8,12 +8,12 @@ import org.jdom2.Element;
 
 public abstract class Texture implements XMLable {
 	public static final float epsilon = (float) 0.01;
-	public static final Texture defaultTexture;
+	public static final Texture DEFAULT_TEXTURE;
 	
 	static {
 	  Color c0   = new Color(0.5,0.5,0.5,0);
 	  Color c1   = new Color(0,0,1,0);
-	  defaultTexture = new BasicTexture(1,5,c0,c0,c0,c1);
+	  DEFAULT_TEXTURE = new BasicTexture(1,5,c0,c0,c0,c1);
 	}
 	
 	protected double indice;

@@ -1,6 +1,6 @@
 package guifx.generics.impl.factories;
 
-import static guifx.utils.DoubleConstraintField.errorReturn;
+import static guifx.utils.DoubleConstraintField.ERROR_RETURN;
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
@@ -79,9 +79,9 @@ public class ScreenFXFactory extends GraphicFactory<Screen> {
 		NamedObject<Screen> result = null;
 		Vector3D orientation       = orientationChooser.getSelectedValues();
 		double   width             = widthField.getValue();
-		double   height            = width == errorReturn ? errorReturn : heightField.getValue();
+		double   height            = width == ERROR_RETURN ? ERROR_RETURN : heightField.getValue();
 		
-		if (width != errorReturn && height != errorReturn) {
+		if (width != ERROR_RETURN && height != ERROR_RETURN) {
 			Vector3D ex     = new Vector3D(width,0,0);
 			Vector3D ez     = new Vector3D(0,0,height);
 			Point    O      = new Point(- width/2,0,- height/2);

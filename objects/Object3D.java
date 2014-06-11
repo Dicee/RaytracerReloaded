@@ -15,7 +15,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	protected boolean repeat, adapt; 
 	
 	public Object3D(Texture texture) {	    
-		this.texture       = texture == null ? Texture.defaultTexture : texture;	
+		this.texture       = texture == null ? Texture.DEFAULT_TEXTURE : texture;	
 	  	this.shown         = true;
 	  	this.patternRepeat = 1;
 	  	this.repeat        = true;

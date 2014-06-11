@@ -31,7 +31,6 @@ public class ListExplorer<T> extends HBox {
 					@Override
 					public void updateItem(NamedObject<T> item, boolean empty) {
 						super.updateItem(item,empty);
-                        System.out.println("coucou  " + item + " " + empty);
 						if (!empty && item != null) 
                            textProperty().bind(item.nameProperty());
                         else {

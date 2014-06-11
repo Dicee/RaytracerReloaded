@@ -56,7 +56,7 @@ public class Cone extends WrappedObject {
 		
 	@Override
 	public Object3D getWrappingObject() {
-		return new Sphere(baseCenter,Math.max(baseRay,baseCenter.distance(vertice)),Texture.defaultTexture);
+		return new Sphere(baseCenter,Math.max(baseRay,baseCenter.distance(vertice)),Texture.DEFAULT_TEXTURE);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class Cone extends WrappedObject {
 		Vector3D b1 = baseAdaptee[1], b2 = baseAdaptee[2];
 		
 		PlaneSurface planBase = new PlaneSurface(baseCenter,baseCenter.translate(b0),baseCenter.translate(b1),
-				Texture.defaultTexture);
+				Texture.DEFAULT_TEXTURE);
 		
 		Point intersection = planBase.intersection(p,rayonIncident);
 		if (intersection != null && intersection.distance(baseCenter) <= Vector3D.epsilon + baseRay) 
@@ -308,7 +308,7 @@ public class Cone extends WrappedObject {
 			return true;
 		
 		PlaneSurface plan = new PlaneSurface(baseCenter.translate(b[0]),baseCenter.translate(b[1]),baseCenter,
-					Texture.defaultTexture);
+					Texture.DEFAULT_TEXTURE);
 		return x*x + y*y <= Vector3D.epsilon + baseRay*baseRay && plan.belongs(p); 	
 	}
 	

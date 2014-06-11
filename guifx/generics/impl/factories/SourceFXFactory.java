@@ -53,7 +53,7 @@ public class SourceFXFactory extends GraphicFactory<Source> {
 	protected NamedObject<Source> create() {
 		NamedObject<Source> result = null;
 		Point p = vectorBuilder.getPoint();
-		if (p != VectorBuilder.errorReturn) {
+		if (p != VectorBuilder.ERROR_RETURN) {
 			float R       = (float) colorPicker.getValue().getRed();
 			float G       = (float) colorPicker.getValue().getGreen();
 			float B       = (float) colorPicker.getValue().getBlue();

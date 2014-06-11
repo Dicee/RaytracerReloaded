@@ -119,9 +119,9 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 	
 	private double getDoubleFieldValue(int i) {
 		if (failure)
-			return DoubleConstraintField.errorReturn;		
+			return DoubleConstraintField.ERROR_RETURN;		
 		double result = fields[i].getValue();
-		failure      = result == DoubleConstraintField.errorReturn;
+		failure      = result == DoubleConstraintField.ERROR_RETURN;
 		return result;
 	}
 	

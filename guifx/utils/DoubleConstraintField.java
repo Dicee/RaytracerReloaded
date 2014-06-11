@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import org.controlsfx.dialog.Dialogs;
 
 public class DoubleConstraintField extends ConstraintForm {
-	public static final double errorReturn = Double.POSITIVE_INFINITY;
+	public static final double ERROR_RETURN = Double.POSITIVE_INFINITY;
 	private final TextField field;
 	
 	public DoubleConstraintField(StringProperty name) {
@@ -37,6 +37,14 @@ public class DoubleConstraintField extends ConstraintForm {
 		getChildren().add(field);
 	}
 	
+    public void setValue(double d) {
+        constraints.stream().forEach(predicate -> {
+			if (!predicate.test(d))
+				throw new ConstraintsException(predicate.errorMessage());
+		});
+        field.setText(d + "");
+    }
+    
 	public double getValue() {
 		try {
 			double d = Double.parseDouble(field.getText());
@@ -51,14 +59,14 @@ public class DoubleConstraintField extends ConstraintForm {
 				masthead(strings.getProperty("anErrorOccurredMessage")).
 				message(strings.getProperty("numberFormatException")).
 				showError();
-			return errorReturn;
+			return ERROR_RETURN;
 		} catch (ConstraintsException ce) {
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
 				masthead(strings.getProperty("anErrorOccurredMessage")).
 				message(ce.getMessage()).
 				showError();
-			return errorReturn;
+			return ERROR_RETURN;
 		}
 	}
 }

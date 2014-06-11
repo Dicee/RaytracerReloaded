@@ -4,15 +4,7 @@ import static guifx.MainUI.strings;
 import static objects.Object3DFactory.*;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
-import guifx.utils.Constraint;
-import guifx.utils.ConstraintForm;
-import guifx.utils.Constraints;
-import guifx.utils.ScaledSlider;
-import guifx.utils.DoubleConstraintField;
-import guifx.utils.LabelledSlider;
-import guifx.utils.OrientationChooser;
-import guifx.utils.TextureID;
-import guifx.utils.VectorBuilder;
+import guifx.utils.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,18 +15,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import objects.Object3D;
 import objects.Texture;
@@ -44,8 +26,8 @@ import utils.math.Vector3D;
 public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	private static final double PREFERRED_WIDTH = 640;
 	private static final double PREFERRED_HEIGHT = 450;
-	private static final String[] typesProperties
-			= {"sphere", "planeSurface", "cube", "parallelepiped", "cone", "cylinder"};
+	private static final String[] typesProperties = 
+        {"sphere", "planeSurface", "cube", "parallelepiped", "cone", "cylinder"};
     
     private final ObservableList<NamedObject<Texture>> textures;
 
@@ -128,25 +110,28 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		if (failure)
 			return null;
 		
+        NamedObject<Texture> t = textureIds.getSelectionModel().getSelectedItem();
+        Texture texture        = t == null ? Texture.DEFAULT_TEXTURE : t.bean;
+        
 		String selection = typeChoice.getSelectionModel().getSelectedItem().getName();
 		switch (selection) {
 			case "sphere"       :
-				result = createSphere(scale.getValue(),center,rotation.x,rotation.y,rotation.z,null);
+				result = createSphere(scale.getValue(),center,rotation.x,rotation.y,rotation.z,texture);
 				break;
 			case "cube"         :
-				result = createCube(scale.getValue(),center,rotation.x,rotation.y,rotation.z,null);
+				result = createCube(scale.getValue(),center,rotation.x,rotation.y,rotation.z,texture);
 				break;
 			case "cone"         :
 				double ratio = getDoubleFieldValue(0);
 				if (!failure)
 					result = createCone(scale.getValue(),center,rotation.x,rotation.y,rotation.z,
-						ratio,null);
+						ratio,texture);
 				break;
 			case "cylinder"     :
 				ratio = getDoubleFieldValue(0);
 				if (!failure)
 					result = createCylinder(scale.getValue(),center,rotation.x,rotation.y,rotation.z,
-						ratio,null);
+						ratio,texture);
 				break;
 			case "parallelepiped" :
 				double heightRatio = getDoubleFieldValue(0);
@@ -155,16 +140,16 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 				double beta        = angleSliders[1].getValue();
 				if (!failure) 
 					result = createParallelepiped(scale.getValue(),center,rotation.x,rotation.y,rotation.z,
-						heightRatio,depthRatio,alpha,beta,null);
+						heightRatio,depthRatio,alpha,beta,texture);
 				break;
 			case "planeSurface" :
 				double d = getDoubleFieldValue(0);
 				if (infinite.isSelected() && !failure) 
-					result = createInfiniteSurface(d,rotation.x,rotation.y,rotation.z,null);
+					result = createInfiniteSurface(d,rotation.x,rotation.y,rotation.z,texture);
 				else if (!failure) {
 					alpha  = angleSliders[0].getValue();
 					result = createQuadFace(scale.getValue(),center,rotation.x,rotation.y,rotation.z, 
-							d,alpha,null);
+							d,alpha,texture);
 				}
 				break;	
 			default :
@@ -178,15 +163,15 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 			return null;		
 		
 		Point result = centerBuilder.getPoint();
-		failure      = result == VectorBuilder.errorReturn;
+		failure      = result == VectorBuilder.ERROR_RETURN;
 		return result;
 	}
 	
 	private double getDoubleFieldValue(int i) {
 		if (failure)
-			return DoubleConstraintField.errorReturn;		
+			return DoubleConstraintField.ERROR_RETURN;		
 		double result = doubleValueFields[i].getValue();
-		failure       = result == DoubleConstraintField.errorReturn;
+		failure       = result == DoubleConstraintField.ERROR_RETURN;
 		return result;
 	}
 	
@@ -258,6 +243,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
     public final void setTextureFields() {
         ToggleGroup adaptGroup = new ToggleGroup();
         adaptGroup.getToggles().addAll(adapt,noRepeat);
+        adapt.setSelected(true);
         Label adaptLabel   = new Label();
         Label noAdaptLabel = new Label();
         adaptLabel  .textProperty().bind(strings.getObservableProperty("adaptLabel"));
@@ -265,6 +251,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
         
         ToggleGroup repeatGroup = new ToggleGroup();
         repeatGroup.getToggles().addAll(repeat,noRepeat);
+        repeat.setSelected(true);
         Label repeatLabel   = new Label();
         Label noRepeatLabel = new Label();
         repeatLabel  .textProperty().bind(strings.getObservableProperty("repeatLabel"));
@@ -298,6 +285,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
         
         textureCaracteristics.setContent(content);
         textureCaracteristics.setFocusTraversable(false);
+        textureCaracteristics.setCollapsible(false);
     }
     
 	private ComboBox<StringProperty> setTypeChoice(List<StringProperty> types) {
