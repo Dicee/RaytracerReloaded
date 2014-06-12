@@ -24,9 +24,10 @@ public class ObjectsTab extends SceneElementTab<Object3D> {
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
-			case CREATE : return defaultCreateAction();
-			case EDIT   : return defaultEditAction();
-            case DELETE : return defaultDeleteAction();
+			case CREATE    : return defaultCreateAction();
+			case EDIT      : return defaultEditAction();
+            case DELETE    : return defaultDeleteAction();
+            case SHOW_HIDE : return defaultShowOrHideAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",

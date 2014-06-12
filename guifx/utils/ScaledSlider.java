@@ -7,9 +7,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 
 public class ScaledSlider extends HBox {
-	private final Slider slider;
-	private final Button prev, next;
-	private double scale = 1;
+	private final Slider	slider;
+	private final Button	prev, next;
+	private double			scale	= 1;
 	
 	public ScaledSlider(double min, double max, double value) {
 		super(10);

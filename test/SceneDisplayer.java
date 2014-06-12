@@ -1,5 +1,7 @@
 package test;
 
+import guifx.utils.FXPainter;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -76,7 +79,7 @@ public class SceneDisplayer extends Application {
         scene.setObjects(Arrays.asList(sphere,cube));
         
         Raytracer raytracer = new Raytracer(scene,screen);
-        raytracer.render(0);
+        /*raytracer.render(0);
         
         screen.save(new File("test.png"),"png");
         
@@ -95,7 +98,9 @@ public class SceneDisplayer extends Application {
         frame.setContentPane(new ImagePane(img));
         frame.setSize(400,400);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
+        
+        new FXPainter(raytracer).render();
         //System.out.println(ImageIO.write(img, "png",new File("test.png")));
     }
     

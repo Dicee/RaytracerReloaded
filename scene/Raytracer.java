@@ -13,12 +13,13 @@ import static java.lang.Math.*;
 import java.util.ArrayList;
 
 public class Raytracer {
-	protected Scene scene;	
-	protected Screen screen;
-	protected int lines, columns;
-	protected List<Object3D> objects;
-    protected List<Painter> painters = new ArrayList<>();
- 	
+	protected Scene				scene;
+	protected Screen			screen;
+	public int					lines, columns;
+	protected List<Object3D>	objects;
+	protected List<Painter>		painters	= new ArrayList<>();
+	private List<Source>		sources;
+
 	public Raytracer(Scene scene, Screen screen) {
 	  	this.screen  = screen;
 		this.scene   = scene;
@@ -28,6 +29,9 @@ public class Raytracer {
             filter(object -> object.isShown()).
             sorted((Object3D o1, Object3D o2) -> Integer.compare(o2.getPriority(),o1.getPriority())).
             collect(Collectors.toList());
+        this.sources = scene.getSources().stream().
+        	filter(source -> source.isShown()).
+        	collect(Collectors.toList());
 	}
     
     public void addPainter(Painter painter) {
@@ -127,7 +131,7 @@ public class Raytracer {
         
         //Then, we determine the specular and diffuse components
         Color diffSpecComp = Color.BLACK;
-		for (Source source : scene.getSources()) {
+		for (Source source : sources) {
 			if (isEnlighted(source,intersection)) {					
 				Color diffuseComp  = b1 == 1 ? diffuseComponent (intersection,source,obj) : Color.BLACK;
 				Color specularComp = b2 == 1 ? specularComponent(intersection,source,obj) : Color.BLACK;

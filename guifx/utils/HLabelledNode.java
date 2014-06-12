@@ -7,8 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
 public class HLabelledNode<T extends Node> extends HBox {
-	public final T node;
-	public final Label label;
+	public final T		node;
+	public final Label	label;
 
 	private HLabelledNode(int hgap, T node) {
 		super(hgap);

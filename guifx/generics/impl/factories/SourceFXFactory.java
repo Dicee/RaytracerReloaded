@@ -14,11 +14,11 @@ import scene.Source;
 import utils.math.Point;
 
 public class SourceFXFactory extends GraphicFactory<Source> {
-	private static final double PREFERRED_WIDTH = 450;
-	private static final double PREFERRED_HEIGHT = 110;	
-	
-	private final VectorBuilder vectorBuilder = new VectorBuilder();
-	private final ColorPicker colorPicker = new ColorPicker();
+	private static final double	PREFERRED_WIDTH		= 450;
+	private static final double	PREFERRED_HEIGHT	= 110;
+
+	private final VectorBuilder	vectorBuilder		= new VectorBuilder();
+	private final ColorPicker	colorPicker			= new ColorPicker();
 	
 	public SourceFXFactory() {
 		this(null);

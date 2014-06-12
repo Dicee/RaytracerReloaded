@@ -24,40 +24,43 @@ import utils.math.Point;
 import utils.math.Vector3D;
 
 public class Object3DFXFactory extends GraphicFactory<Object3D> {
-	private static final double PREFERRED_WIDTH = 640;
-	private static final double PREFERRED_HEIGHT = 450;
-	private static final String[] typesProperties = 
-        {"sphere", "planeSurface", "cube", "parallelepiped", "cone", "cylinder"};
-    
-    private final ObservableList<NamedObject<Texture>> textures;
+	private static final double							PREFERRED_WIDTH			= 640;
+	private static final double							PREFERRED_HEIGHT		= 450;
+	private static final String[]						typesProperties			= { "sphere", "planeSurface", "cube",
+																					"parallelepiped", "cone", "cylinder" };
 
-	private final OrientationChooser orientationChooser = new OrientationChooser();
-	private final ScaledSlider scale = new ScaledSlider(0,100,1);
-	private final TitledPane commonCaracteristics = new TitledPane();
-	private final TitledPane specificities = new TitledPane();
-	private final TitledPane textureCaracteristics = new TitledPane();
-	private final VectorBuilder centerBuilder = new VectorBuilder();
-	
+	private final ObservableList<NamedObject<Texture>>	textures;
+
+	private final OrientationChooser					orientationChooser		= new OrientationChooser();
+	private final ScaledSlider							scale					= new ScaledSlider(0,100,1);
+	private final TitledPane							commonCaracteristics	= new TitledPane();
+	private final TitledPane							specificities			= new TitledPane();
+	private final TitledPane							textureCaracteristics	= new TitledPane();
+	private final VectorBuilder							centerBuilder			= new VectorBuilder();
+
 	/**
 	 * Specific fields
 	 */
-	private final DoubleConstraintField[] doubleValueFields = new DoubleConstraintField[2];
-	private final LabelledSlider[] angleSliders = new LabelledSlider[3];
-	private final RadioButton finite = new RadioButton(), infinite = new RadioButton();
-	private final ComboBox<StringProperty> typeChoice;
-    
-    /**
+	private final DoubleConstraintField[]				doubleValueFields		= new DoubleConstraintField[2];
+	private final LabelledSlider[]						angleSliders			= new LabelledSlider[3];
+	private final RadioButton							finite					= new RadioButton(),
+			infinite = new RadioButton();
+	private final ComboBox<StringProperty>				typeChoice;
+
+	/**
 	 * Texture fields
 	 */
-	private final Slider patternRepeat = new Slider();
-	private final RadioButton repeat = new RadioButton(), noRepeat = new RadioButton();
-	private final RadioButton adapt = new RadioButton(), noAdapt = new RadioButton();
-	private final ComboBox<NamedObject<Texture>> textureIds = new ComboBox<>();
-	
+	private final Slider								patternRepeat			= new Slider();
+	private final RadioButton							repeat					= new RadioButton(),
+			noRepeat = new RadioButton();
+	private final RadioButton							adapt					= new RadioButton(),
+			noAdapt = new RadioButton();
+	private final ComboBox<NamedObject<Texture>>		textureIds				= new ComboBox<>();
+
 	/**
 	 * boolean used for data validation
 	 */
-	private boolean failure;
+	private boolean										failure;
 	
 	public Object3DFXFactory(ObservableList<NamedObject<Texture>> textures) {
 		this(null,textures);
@@ -154,6 +157,12 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 				break;	
 			default :
 				failure = true;
+		}
+		
+		if (!failure) {
+			result.setAdapt(adapt.isSelected());
+			result.setRepeat(repeat.isSelected());
+			result.setPatternRepeat((int) patternRepeat.getValue());
 		}
 		return failure ? null : new NamedObject<>(strings.getObservableProperty(result.getName()),result);
 	}
@@ -289,7 +298,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
     }
     
 	private ComboBox<StringProperty> setTypeChoice(List<StringProperty> types) {
-		ComboBox<StringProperty> typeChoice = new ComboBox(FXCollections.observableList(types));
+		ComboBox<StringProperty> typeChoice = new ComboBox<>(FXCollections.observableList(types));
 		typeChoice.valueProperty().addListener((ObservableValue<? extends StringProperty> ov, StringProperty oldValue, 
 				StringProperty newValue) -> {
 			StringProperty ratio = strings.getObservableProperty("heightRayRatio");

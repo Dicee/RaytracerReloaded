@@ -2,15 +2,15 @@ package guifx.generics.impl.tabs;
 
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
-import utils.NamedObject;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.SourceFXFactory;
+
 import java.util.Arrays;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import scene.Source;
-
 
 public class SourcesTab extends SceneElementTab<Source> {
 	public SourcesTab() {
@@ -20,9 +20,10 @@ public class SourcesTab extends SceneElementTab<Source> {
 	@Override
 	protected EventHandler<ActionEvent> doAction(Tools type) {
 		switch (type) {
-			case CREATE : return defaultCreateAction();
-			case EDIT   : return defaultEditAction();
-            case DELETE : return defaultDeleteAction();
+			case CREATE    : return defaultCreateAction();
+			case EDIT      : return defaultEditAction();
+            case DELETE    : return defaultDeleteAction();
+            case SHOW_HIDE : return defaultShowOrHideAction();
 			default :
 		}
 		return (ActionEvent ev) -> System.out.println(String.format("%s not yet implemented by the type %s",

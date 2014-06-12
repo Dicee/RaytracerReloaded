@@ -4,17 +4,19 @@ import javafx.scene.paint.Color;
 
 import org.jdom2.Element;
 
+import utils.Copiable;
+import utils.Hidable;
 import utils.math.Point;
 import utils.math.Translatable;
 import utils.math.Vector3D;
 import XML.XMLable;
 import XML.basicTypes.XMLColor;
 import XML.basicTypes.XMLVector;
-import utils.Copiable;
 
-public class Source implements XMLable, Translatable, Cloneable, Copiable<Source> {
+public class Source implements XMLable, Translatable, Cloneable, Copiable<Source>, Hidable {
 	public Color color;
 	public Point pos;
+	private boolean shown = true;
 
 	public Source(Color color, Point pos) {
 		this.color = color;
@@ -48,6 +50,16 @@ public class Source implements XMLable, Translatable, Cloneable, Copiable<Source
 		result.addContent(new XMLVector("pos",pos));
 		result.addContent(new XMLColor("color",color));
 		return result;
+	}
+
+	@Override
+	public void setShown(boolean shown) {
+		this.shown = shown;
+	}
+
+	@Override
+	public boolean isShown() {
+		return shown;
 	}
 }
 

@@ -5,12 +5,13 @@ import guifx.generics.GraphicFactory;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
 import org.controlsfx.dialog.Dialogs;
 
 public class DoubleConstraintField extends ConstraintForm {
-	public static final double ERROR_RETURN = Double.POSITIVE_INFINITY;
-	private final TextField field;
-	
+	public static final double	ERROR_RETURN	= Double.POSITIVE_INFINITY;
+	private final TextField		field;
+
 	public DoubleConstraintField(StringProperty name) {
 		this(10,name,new Constraint[] { });
 	}

@@ -12,8 +12,8 @@ import javafx.util.Callback;
 import org.controlsfx.dialog.Dialogs;
 
 public class ListExplorer<T> extends HBox {
-	private final ListView<NamedObject<T>> listView;
-	private final TextArea test;
+	private final ListView<NamedObject<T>>	listView;
+	private final TextArea					test;
 	
 	public ListExplorer() {
 		super(2);
@@ -66,5 +66,9 @@ public class ListExplorer<T> extends HBox {
     
     public int getSelectedIndex() {
         return listView.getSelectionModel().getSelectedIndex();
+    }
+    
+    public T getSelectedItem() {
+        return listView.getSelectionModel().getSelectedItem().bean;
     }
 }

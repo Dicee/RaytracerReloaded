@@ -11,8 +11,8 @@ public abstract class Texture implements XMLable {
 	public static final Texture DEFAULT_TEXTURE;
 	
 	static {
-	  Color c0   = new Color(0.5,0.5,0.5,0);
-	  Color c1   = new Color(0,0,1,0);
+	  Color c0   = new Color(0.5,0.5,0.5,1);
+	  Color c1   = new Color(0,0,1,1);
 	  DEFAULT_TEXTURE = new BasicTexture(1,5,c0,c0,c0,c1);
 	}
 	

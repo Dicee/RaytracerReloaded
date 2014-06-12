@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+  <Textures />
+  <Scene>
+    <Float name="indice" value="1.0" />
+    <Color name="ambient" R="0.6" G="0.0" B="0.0" />
+    <Objects>
+      <Sphere>
+        <Double name="ray" value="30" />
+        <Vector name="center" X="0.0" Y="0.0" Z="0.0" />
+        <TextureRef id="default" />
+      </Sphere>
+    </Objects>
+    <Sources>
+      <Source>
+        <Vector name="pos" X="30.0" Y="150.0" Z="20.0" />
+        <Color name="color" R="0.5019608" G="0.7019608" B="0.5019608" />
+      </Source>
+    </Sources>
+  </Scene>
+  <Views>
+    <Screen>
+      <Vector name="pointOfView" X="0.0" Y="400.0" Z="0.0" />
+      <Vector name="A" X="65.0" Y="0.0" Z="-65.0" />
+      <Vector name="B" X="-65.0" Y="0.0" Z="-65.0" />
+      <Vector name="C" X="-65.0" Y="0.0" Z="65.0" />
+      <Integer name="density" value="4" />
+    </Screen>
+  </Views>
+</Project>

@@ -7,8 +7,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 
 public class LabelledSlider extends HBox {
-	private final Label label;
-	private final Slider slider;
+	private final Label		label;
+	private final Slider	slider;
 	
 	public LabelledSlider(int hgap, double min, double max, double value, String format) {
 		this("",hgap,min,max,value,format);

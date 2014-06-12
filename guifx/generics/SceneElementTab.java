@@ -1,9 +1,10 @@
 package guifx.generics;
 
-import utils.NamedObject;
-import guifx.MainUI;
 import static guifx.MainUI.strings;
+import guifx.MainUI;
+
 import java.util.function.Consumer;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,14 +16,16 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import utils.Copiable;
+import utils.Hidable;
+import utils.NamedObject;
 
 public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedObject<T>> {
-	private final ContextToolBar toolbar;
-	protected final ListExplorer<T> listExplorer;
-	protected GraphicFactory<T> factory;
-	protected int index = -1;
-	protected boolean editMode;
-    protected boolean openedFactory = false;
+	private final ContextToolBar	toolbar;
+	protected final ListExplorer<T>	listExplorer;
+	protected GraphicFactory<T>		factory;
+	protected int					index			= -1;
+	protected boolean				editMode;
+	protected boolean				openedFactory	= false;
 	
 	public SceneElementTab(StringProperty titleProperty, StringProperty toolbarTitleProperty) {
 		super();
@@ -82,6 +85,16 @@ public abstract class SceneElementTab<T> extends Tab implements Consumer<NamedOb
     
     protected final EventHandler<ActionEvent> defaultDeleteAction() {
 		return (ActionEvent ev) -> listExplorer.removeSelectedItem();
+	}
+    
+    protected final EventHandler<ActionEvent> defaultShowOrHideAction() {
+		return (ActionEvent ev) -> { 
+			T item = listExplorer.getSelectedItem();
+			if (item != null) {
+				Hidable hidable = (Hidable) item;
+				hidable.setShown(!hidable.isShown());
+			}
+		};
 	}
 	
 	protected void showGraphicFactory(StringProperty sp) {

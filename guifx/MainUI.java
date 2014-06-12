@@ -1,12 +1,16 @@
 package guifx;
 
-import XML.XMLProjectBuilder;
-import scene.Project;
-import XML.XMLSceneLoader;
-import guifx.generics.*;
+import static guifx.MainUI.strings;
+import guifx.generics.SceneElementTab;
+import guifx.generics.Tools;
 import guifx.generics.impl.factories.SceneFXFactory;
-import guifx.generics.impl.tabs.*;
+import guifx.generics.impl.tabs.ObjectsTab;
+import guifx.generics.impl.tabs.ScreensTab;
+import guifx.generics.impl.tabs.SourcesTab;
+import guifx.generics.impl.tabs.TexturesTab;
+import guifx.utils.FXPainter;
 import impl.org.controlsfx.i18n.Localization;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,16 +18,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.stream.Collectors;
+
 import javafx.application.Application;
-import static javafx.application.Application.STYLESHEET_CASPIAN;
-import static javafx.application.Application.STYLESHEET_MODENA;
-import static javafx.application.Application.setUserAgentStylesheet;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCharacterCombination;
@@ -36,12 +43,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import objects.Object3D;
 import objects.Texture;
+
 import org.controlsfx.dialog.Dialogs;
 import org.jdom2.JDOMException;
+
+import scene.Project;
+import scene.Raytracer;
 import scene.Screen;
 import scene.Source;
 import utils.NamedObject;
 import utils.ObservableProperties;
+import XML.XMLProjectBuilder;
+import XML.XMLSceneLoader;
 
 public class MainUI extends Application {
 	
@@ -106,6 +119,7 @@ public class MainUI extends Application {
     private void load() {
         File file = chooseFile(strings.getProperty("xmlFiles"),false,"*.xml");
         if (file != null) {
+        	clearAll();
             try {
                 project = XMLSceneLoader.load(file);
                 scene.copy(project.getScene());
@@ -153,16 +167,17 @@ public class MainUI extends Application {
             }
         }
     }
+    
+    private void refreshScene() {
+        scene.setObjects(collectNamedObjects(objectsTab.getItems()));
+        scene.setSources(collectNamedObjects(sourcesTab.getItems()));
+    }
 
     private void refreshProject() {
-        List<Object3D> objects  = collectNamedObjects(objectsTab.getItems());
-        List<Source>   sources  = collectNamedObjects(sourcesTab.getItems());
+    	refreshScene();
         List<Screen>   screens  = collectNamedObjects(screensTab.getItems());
         List<Texture>  textures = collectNamedObjects(texturesTab.getItems());
-        
-        scene.setObjects(objects);
-        scene.setSources(sources);
-        project = new Project(scene,screens,textures);
+        project                 = new Project(scene,screens,textures);
     }
     
     private <T> List<T> collectNamedObjects(ObservableList<NamedObject<T>> objects) {
@@ -182,7 +197,6 @@ public class MainUI extends Application {
 			
 		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(filterName,extensions));
 		File selectedFile = save ? chooser.showSaveDialog(null) : chooser.showOpenDialog(null);
-        //selectedFile      = selectedFile == null ? null : new File(selectedFile.getAbsolutePath())
         currentFile       = selectedFile == null ? currentFile : selectedFile;
         return selectedFile;
     }
@@ -412,8 +426,6 @@ public class MainUI extends Application {
         header.getChildren().addAll(menuBar,tb);
 		root  .getChildren().add(header);
         
-        //final Consumer<NamedObject<Scene>> consumer = namedObject ->
-                
         editScene.setOnAction(ev -> {
             if (!sceneParametersOpenned) {
                 sceneParametersOpenned = true;
@@ -424,7 +436,29 @@ public class MainUI extends Application {
                 },scene).show();
             }
         });
+        computeScene.setOnAction(ev -> { 
+        	switch (screensTab.getItems().size()) {
+        		case 0  :
+        			Dialogs.create().owner(primaryStage).
+    					title(strings.getProperty("error")).
+    					masthead(strings.getProperty("anErrorOccurredMessage")).
+    					message(strings.getProperty("noAvailableScreenMessage")).
+    					showError();
+        			break;
+        		case 1  :
+        			openFXPainter(screensTab.getItems().get(0).bean);
+        		default : break;
+        	}
+        });
     }		
+	
+	private void openFXPainter(Screen screen) {
+		//new Thread(() -> {
+			refreshScene();
+			FXPainter painter = new FXPainter(new Raytracer(scene,screen));
+			painter.render();
+		//}).start();
+	}
        
 	private Button getButton(String iconPropertyName, String textPropertyName) {
 		ImageView icon = new ImageView(

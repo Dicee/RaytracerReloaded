@@ -20,16 +20,14 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public abstract class GraphicFactory<T> {
-	private static final double PREFERRED_WIDTH  = 500;
-	private static final double PREFERRED_HEIGHT = 300;
-	public static final Font subtitlesFont = Font.font(null,FontWeight.BOLD,13);
-	
-	/*private static final String backgroundStyle  = 
-			"linear-gradient(#b9b9b9 0%,#eeeeee 86%,#909090 87%,#dddddd 100%)";*/
-	private static final String backgroundStyle  = "linear-gradient(#f9f9f9,#e9e9e9)";
-	protected Stage primaryStage;
-	protected final AnchorPane root;
-	protected final Button create;
+	private static final double		PREFERRED_WIDTH		= 500;
+	private static final double		PREFERRED_HEIGHT	= 300;
+	public static final Font		subtitlesFont		= Font.font(null,FontWeight.BOLD,13);
+
+	private static final String		backgroundStyle		= "linear-gradient(#f9f9f9,#e9e9e9)";
+	protected Stage					primaryStage;
+	protected final AnchorPane		root;
+	protected final Button			create;
 	
 	public Consumer<NamedObject<T>> consumer;
 

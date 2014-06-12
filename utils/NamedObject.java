@@ -3,8 +3,8 @@ package utils;
 import javafx.beans.property.StringProperty;
 
 public class NamedObject<T> {
-	public T bean;
-	private final StringProperty name;
+	public T						bean;
+	private final StringProperty	name;
 	
 	public NamedObject(StringProperty name, T bean) {
 		this.bean = bean;

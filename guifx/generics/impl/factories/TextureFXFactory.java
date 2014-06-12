@@ -36,36 +36,36 @@ import objects.BasicTexture;
 import org.controlsfx.dialog.Dialogs;
 
 public class TextureFXFactory extends GraphicFactory<Texture> {
-    private static final double PREFERRED_WIDTH = 450;
-	private static final double PREFERRED_HEIGHT = 260;
+	private static final double				PREFERRED_WIDTH			= 450;
+	private static final double				PREFERRED_HEIGHT		= 260;
 	/**
 	 * ColorPicker(s) nums
 	 */
-	private static final int Ka = 0;
-	private static final int Kr = 1;
-	private static final int Kt = 2;
-	private static final int REFLECTANCE = 3;
+	private static final int				Ka						= 0;
+	private static final int				Kr						= 1;
+	private static final int				Kt						= 2;
+	private static final int				REFLECTANCE				= 3;
 
 	/**
 	 * DoubleConstraintField(s) nums
 	 */
-	private static final int REFRACTIVE_INDEX = 0;
-	private static final int BRILLIANCE = 1;
+	private static final int				REFRACTIVE_INDEX		= 0;
+	private static final int				BRILLIANCE				= 1;
 
-	private final TitledPane commonCaracteristics = new TitledPane();
-	private final TitledPane specificities = new TitledPane();
+	private final TitledPane				commonCaracteristics	= new TitledPane();
+	private final TitledPane				specificities			= new TitledPane();
 
-	private final ColorPicker[] colorPickers = new ColorPicker[4];
-	private final DoubleConstraintField[] fields = new DoubleConstraintField[2];
-	
-	private final RadioButton basic = new RadioButton(), advanced = new RadioButton();
-	private TextField path;
-	private File currentDir = null;
-	
+	private final ColorPicker[]				colorPickers			= new ColorPicker[4];
+	private final DoubleConstraintField[]	fields					= new DoubleConstraintField[2];
+
+	private final RadioButton				basic					= new RadioButton(), advanced = new RadioButton();
+	private TextField						path;
+	private File							currentDir				= null;
+
 	/**
 	 * boolean used for data validation
 	 */
-	private boolean failure;
+	private boolean							failure;
 
 	public TextureFXFactory() {
 		this(null);

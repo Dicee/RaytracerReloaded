@@ -14,11 +14,11 @@ import scene.Scene;
 import utils.NamedObject;
 
 public class SceneFXFactory extends GraphicFactory<scene.Scene> {
-    private static final double     PREFERRED_WIDTH  = 320;
-	private static final double     PREFERRED_HEIGHT = 110;
-    
-    private ColorPicker             colorPicker;
-    private DoubleConstraintField   refractiveIndex;
+	private static final double		PREFERRED_WIDTH		= 320;
+	private static final double		PREFERRED_HEIGHT	= 110;
+
+	private ColorPicker				colorPicker;
+	private DoubleConstraintField   refractiveIndex;
     
     public SceneFXFactory(Consumer<NamedObject<Scene>> consumer, Scene scene) {
         super(strings.getObservableProperty("editScene"),strings.getObservableProperty("editAction"),consumer,

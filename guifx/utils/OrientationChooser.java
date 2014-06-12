@@ -12,9 +12,9 @@ import javafx.scene.layout.VBox;
 import utils.math.Vector3D;
 
 public class OrientationChooser extends VBox {
-	public static Vector3D errorReturn = null;
-	private final Slider sx,sy,sz;
-	private final Label xValue,yValue,zValue;
+	public static Vector3D	errorReturn	= null;
+	private final Slider	sx, sy, sz;
+	private final Label		xValue, yValue, zValue;
 	
 	public OrientationChooser() {
 		super(5);

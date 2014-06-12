@@ -2,8 +2,8 @@ package utils.math;
 
 public final class Vector3D {
 
-	public final static double epsilon = 0.00001;
-	public double x, y, z;
+	public final static double	epsilon	= 0.00001;
+	public double				x, y, z;
 
 	public Vector3D(Vector3D v) {
 		this(v.x,v.y,v.z);

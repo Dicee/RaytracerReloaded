@@ -8,9 +8,9 @@ import javafx.beans.value.ObservableValue;
 import objects.Texture;
 
 public class TextureID extends NamedObject<Texture> {
-    private static int currentID = 0;
-    public final int id;
-    private final StringProperty nameIDProperty;
+	private static int				currentID	= 0;
+	public final int				id;
+	private final StringProperty	nameIDProperty;
    
     public static final int currentID() {
         return currentID;

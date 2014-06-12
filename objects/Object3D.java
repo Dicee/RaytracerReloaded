@@ -1,13 +1,14 @@
 package objects;
 
-import utils.math.Translatable;
-import XML.XMLable;
 import utils.Copiable;
+import utils.Hidable;
 import utils.math.Point;
 import utils.math.Rotatable;
+import utils.math.Translatable;
 import utils.math.Vector3D;
+import XML.XMLable;
 
-public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable, Copiable<Object3D> {	
+public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable, Copiable<Object3D>, Hidable {	
 	
 	protected Texture texture;	
 	private boolean   shown;

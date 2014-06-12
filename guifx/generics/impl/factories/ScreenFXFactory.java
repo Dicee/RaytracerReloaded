@@ -22,12 +22,12 @@ import utils.math.Point;
 import utils.math.Vector3D;
 
 public class ScreenFXFactory extends GraphicFactory<Screen> {
-	private static final double PREFERRED_WIDTH = 540;
-	private static final double PREFERRED_HEIGHT = 285;
-	
-	private final OrientationChooser orientationChooser;
-	private final DoubleConstraintField heightField, widthField;
-	private final VectorBuilder pViewBuilder;	
+	private static final double			PREFERRED_WIDTH		= 540;
+	private static final double			PREFERRED_HEIGHT	= 285;
+
+	private final OrientationChooser	orientationChooser;
+	private final DoubleConstraintField	heightField, widthField;
+	private final VectorBuilder			pViewBuilder;	
 	
 	public ScreenFXFactory() {
 		this(null);
@@ -85,7 +85,7 @@ public class ScreenFXFactory extends GraphicFactory<Screen> {
 			Vector3D ex     = new Vector3D(width,0,0);
 			Vector3D ez     = new Vector3D(0,0,height);
 			Point    O      = new Point(- width/2,0,- height/2);
-			Screen   screen = new Screen(O.translate(ex),O,O.translate(ez),new Point());
+			Screen   screen = new Screen(O.translate(ex),O,O.translate(ez),pViewBuilder.getPoint());
 			screen.rotateXYZ(orientation.x,orientation.y,orientation.z);
 			result          = new NamedObject<>(strings.getObservableProperty("screen"),screen);
 		}
