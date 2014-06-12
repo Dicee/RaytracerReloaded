@@ -1,6 +1,6 @@
 package utils.math;
 
-public class Vector3D {
+public final class Vector3D {
 
 	public final static double epsilon = 0.00001;
 	public double x, y, z;
@@ -21,8 +21,8 @@ public class Vector3D {
 		setLocation(x,y,z);
 	}
 
-	public void setLocation(Point p) {
-		setLocation(p.x,p.y,p.z);
+	public void setLocation(Vector3D v) {
+		setLocation(v.x,v.y,v.z);
 	}
 	
 	public void setLocation(double x, double y, double z) {
@@ -48,7 +48,7 @@ public class Vector3D {
 	}
 
 	public void normalize() {
-		multScal(1/norm());
+		setLocation(scale(1/norm()));
 	}
 
 	public Vector3D sum(Vector3D v) {
@@ -56,15 +56,15 @@ public class Vector3D {
 	}
 	
 	public Vector3D minus(Vector3D v) {
-		return sum(v.multScal(-1));
+		return sum(v.scale(-1));
 	}
 	
 	public Vector3D opposed() {
-		return multScal(-1);
+		return scale(-1);
 	}
 	
 	public static Vector3D linearCombination(Vector3D v, Vector3D w, double lambda, double mu) {
-		return v.multScal(lambda).sum(w.multScal(mu));
+		return v.scale(lambda).sum(w.scale(mu));
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class Vector3D {
 		return minus(other).sqrNorm() <= epsilon;
 	}
 	
-	public Vector3D multScal(double lambda) {
+	public Vector3D scale(double lambda) {
 		return new Vector3D(lambda*x,lambda*y,lambda*z);
 	}
 

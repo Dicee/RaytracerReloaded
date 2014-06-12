@@ -9,7 +9,7 @@ public class BasicTexture extends Texture {
 
 	public BasicTexture(double indice, float brillance, Color reflectance, Color Kr, Color Kt, Color Ka) {
 		super(indice,brillance,reflectance,Kr,Kt);
-		float[] arr = toArr(Ka);
+		float[] arr = colorToArr(Ka);
 		if (!testParam(arr,0,1)) 
 			throw new IllegalArgumentException();		
 		this.Ka = roundInIntervalle(arr,0,1);

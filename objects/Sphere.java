@@ -56,7 +56,7 @@ public class Sphere extends Object3D {
 	
 	@Override
 	public Vector3D normal(Point p)	{
-		return (new Vector3D(c,p)).multScal(1/r);
+		return (new Vector3D(c,p)).scale(1/r);
 	}		
 	
 	@Override
@@ -65,15 +65,14 @@ public class Sphere extends Object3D {
 		Vector3D vect       = new Vector3D(p,c);
 		direction.normalize();
 		
-		double normeVect = vect.norm();
-		double prodScal  = direction.dot(vect);
+		double dot  = direction.dot(vect);
 		
-		double delta = r*r + prodScal*prodScal - normeVect*normeVect;	
+		double delta = r*r + dot*dot - vect.sqrNorm();	
 		double t1 = 0, t2 = 0;
 		
 		if (delta >= 0)	{
-			t2 = prodScal + Math.sqrt(delta);
-			t1 = prodScal - Math.sqrt(delta);
+			t2 = dot + Math.sqrt(delta);
+			t1 = dot - Math.sqrt(delta);
 			
 			t2 = t2 >= 0 ? t2 : 0;
 			t2 = t2 <= Vector3D.epsilon ? 0 : t2;
@@ -81,12 +80,10 @@ public class Sphere extends Object3D {
 			t1 = t1 >= 0 ? t1 : 0;
 			t1 = t1 <= Vector3D.epsilon ? 0 : t1;			
 		}		
-			
-		if (t1 == 0 && t2 ==0) return null;
+		if (t1 == 0 && t2 == 0) return null;
 		else if (t1 == 0) t1 = t2;
 		else if (t2 == 0) t2 = t1;
-		
-		return p.translate(direction.multScal(Math.min(t1,t2)));		
+		return p.translate(direction.scale(Math.min(t1,t2)));		
 	}
 	
 	@Override
@@ -153,7 +150,7 @@ public class Sphere extends Object3D {
 	public float[] Ka(Point p) {
 		Vector3D[] baseAdaptee   = { base[0],base[1],base[0].cross(base[1]) };
 		Vector3D vect            = new Vector3D(p,getCenter());
-		vect                     = vect.multScal(1/vect.norm());
+		vect                     = vect.scale(1/vect.norm());
 		Vector3D[] baseCanonique = { new Vector3D(1,0,0),new Vector3D(0,1,0),new Vector3D(0,0,1) };
 		Matrix passage           = Matrix.transferMatrix(baseAdaptee,baseCanonique);
 		Vector3D res             = passage.mult(vect);			

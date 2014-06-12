@@ -25,11 +25,11 @@ public class Parallelepiped extends MeshedObject {
 			throw new IllegalArgumentException();
 		
 		Vector3D[] canonicBase = CustomMath.canonicBase;
-		Vector3D   ex          = canonicBase[0].multScal(Math.cos(alpha)).sum(
-									canonicBase[2].multScal(Math.sin(alpha))).multScal(width/2);
-		Vector3D   ey          = canonicBase[2].multScal(height/2);
-		Vector3D   ez          = canonicBase[0].multScal(Math.cos(beta)).sum(
-									canonicBase[1].multScal(Math.sin(beta))).multScal(depth/2);
+		Vector3D   ex          = canonicBase[0].scale(Math.cos(alpha)).sum(
+									canonicBase[2].scale(Math.sin(alpha))).scale(width/2);
+		Vector3D   ey          = canonicBase[2].scale(height/2);
+		Vector3D   ez          = canonicBase[0].scale(Math.cos(beta)).sum(
+									canonicBase[1].scale(Math.sin(beta))).scale(depth/2);
 		
 		O                      = center.translate(ex.opposed()).translate(ey.opposed()).translate(ez.opposed());
 		X                      = center.translate(ex)          .translate(ey.opposed()).translate(ez.opposed());
@@ -151,9 +151,9 @@ public class Parallelepiped extends MeshedObject {
 		Vector3D v0 = new Vector3D(O,Y);
 		Vector3D w0 = new Vector3D(O,Z);
 		
-		u0 = u0.multScal(O.distance(X)/2/u0.norm());
-		v0 = v0.multScal(O.distance(Y)/2/v0.norm());
-		w0 = w0.multScal(O.distance(Z)/2/w0.norm());		
+		u0 = u0.scale(O.distance(X)/2/u0.norm());
+		v0 = v0.scale(O.distance(Y)/2/v0.norm());
+		w0 = w0.scale(O.distance(Z)/2/w0.norm());		
 		
 		return O.translate(u0).translate(v0).translate(w0);
 	}
@@ -174,17 +174,17 @@ public class Parallelepiped extends MeshedObject {
 		double  a   = O.distance(X);
 		double  b   = O.distance(this.Y);
 		double  c   = O.distance(Z);
-		Vector3D e1 = (new Vector3D(O,X)).multScal(1/a);
-		Vector3D e2 = (new Vector3D(O,this.Y)).multScal(1/b);
-		Vector3D e3 = (new Vector3D(O,Z)).multScal(1/c);
+		Vector3D e1 = (new Vector3D(O,X)).scale(1/a);
+		Vector3D e2 = (new Vector3D(O,this.Y)).scale(1/b);
+		Vector3D e3 = (new Vector3D(O,Z)).scale(1/c);
 		a          *= facteur;
 		b          *= facteur;
 		c          *= facteur;
 		
-		O = C.translate(e1.multScal(-a/2)).translate(e2.multScal(-b/2)).translate(e3.multScal(-c/2));
-		X = C.translate(e1.multScal( a/2)).translate(e2.multScal(-b/2)).translate(e3.multScal(-c/2));
-		this.Y = C.translate(e1.multScal(-a/2)).translate(e2.multScal( b/2)).translate(e3.multScal(-c/2));
-		Z = C.translate(e1.multScal(-a/2)).translate(e2.multScal(-b/2)).translate(e3.multScal( c/2));
+		O = C.translate(e1.scale(-a/2)).translate(e2.scale(-b/2)).translate(e3.scale(-c/2));
+		X = C.translate(e1.scale( a/2)).translate(e2.scale(-b/2)).translate(e3.scale(-c/2));
+		this.Y = C.translate(e1.scale(-a/2)).translate(e2.scale( b/2)).translate(e3.scale(-c/2));
+		Z = C.translate(e1.scale(-a/2)).translate(e2.scale(-b/2)).translate(e3.scale( c/2));
 		generateFaces();
 	}	
 	

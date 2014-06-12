@@ -27,25 +27,25 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 		double dot      = incidentRay.dot(normal);
 		
 		if (dot < 0) {
-			normal = normal.multScal(-1);
+			normal = normal.scale(-1);
 			dot   *= -1;
 		}
 		return Vector3D.linearCombination(incidentRay,normal,1,-2 * dot); 
 	}
 
-	public Vector3D refractedRay(Point p, Vector3D incidentRay, double envIndex) throws TotalReflection {
+	public Vector3D refractedRay(Point p, Vector3D incidentRay, double envIndex) throws TotalReflectionException {
 		Vector3D normal = this.normal(p);		
 		double   dot    = incidentRay.dot(normal);
 		
 		if (dot < 0) {
 			dot *= -1;
-			normal   = normal.multScal(-1); 
+			normal   = normal.scale(-1); 
 		}
-		double x         = envIndex / texture.indice();
+		double x         = envIndex / texture.refractiveIndex();
 		double radicande = 1 - x*x*(1 - dot*dot);
 		
 		if (radicande < 0 && - radicande > Vector3D.epsilon) 
-			throw new TotalReflection();
+			throw new TotalReflectionException();
 		return Vector3D.linearCombination(incidentRay,normal,x,dot*x - Math.sqrt(radicande));
 	}	
 	
@@ -97,6 +97,10 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	
 	public abstract float[] Ka(Point p);
 	
+    public double refractiveIndex() {
+        return texture.refractiveIndex();
+    }
+    
 	public float[] Kr() {
 	  return texture.Kr();
 	}
@@ -109,7 +113,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	  return texture.reflectance();
 	}
 	
-	public float brillance() {
+	public float brilliance() {
 	  return texture.brillance();
 	}
 	

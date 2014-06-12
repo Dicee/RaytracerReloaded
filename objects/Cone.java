@@ -50,7 +50,7 @@ public class Cone extends WrappedObject {
 	
 	@Override
 	public Vector3D[] getAdaptedBase() {
-		Vector3D uz = (new Vector3D(baseCenter,vertice)).multScal(1/vertice.distance(baseCenter));	
+		Vector3D uz = (new Vector3D(baseCenter,vertice)).scale(1/vertice.distance(baseCenter));	
 		return new Vector3D[] { ex,uz.cross(ex),uz };
 	}
 		
@@ -62,16 +62,16 @@ public class Cone extends WrappedObject {
 	@Override
 	public void rotateX(double u) {
 		Vector3D v = new Vector3D(getCenter(),new Point(0,0,0));
-		vertice    = vertice.translate(v).rotateX(u).translate(v.multScal(-1));
-		baseCenter = baseCenter.translate(v).rotateX(u).translate(v.multScal(-1));	
+		vertice    = vertice.translate(v).rotateX(u).translate(v.scale(-1));
+		baseCenter = baseCenter.translate(v).rotateX(u).translate(v.scale(-1));	
 		ex         = ex.rotateX(u);
 	}
 
 	@Override
 	public void rotateY(double u) {
 		Vector3D v = new Vector3D(getCenter(),new Point(0,0,0));
-		vertice    = vertice.translate(v).rotateY(u).translate(v.multScal(-1));
-		baseCenter = baseCenter.translate(v).rotateY(u).translate(v.multScal(-1));	
+		vertice    = vertice.translate(v).rotateY(u).translate(v.scale(-1));
+		baseCenter = baseCenter.translate(v).rotateY(u).translate(v.scale(-1));	
 		ex         = ex.rotateY(u);
 	}
 
@@ -79,8 +79,8 @@ public class Cone extends WrappedObject {
 	public void rotateZ(double u)
 	{
 		Vector3D v = new Vector3D(getCenter(),new Point(0,0,0));
-		vertice    = vertice.translate(v).rotateZ(u).translate(v.multScal(-1));
-		baseCenter = baseCenter.translate(v).rotateZ(u).translate(v.multScal(-1));	
+		vertice    = vertice.translate(v).rotateZ(u).translate(v.scale(-1));
+		baseCenter = baseCenter.translate(v).rotateZ(u).translate(v.scale(-1));	
 		ex         = ex.rotateZ(u);
 	}
 
@@ -108,7 +108,7 @@ public class Cone extends WrappedObject {
 			return*/		
 		
 		
-		Vector3D normale = (new Vector3D(vertice,baseCenter)).multScal(1/vertice.distance(baseCenter));
+		Vector3D normale = (new Vector3D(vertice,baseCenter)).scale(1/vertice.distance(baseCenter));
 		double u = normale.getX(), v = normale.getY(), w = normale.getZ();
 		double t = - (u*baseCenter.getX() + v*baseCenter.getY() + w*baseCenter.getZ());		
 
@@ -127,20 +127,20 @@ public class Cone extends WrappedObject {
 	     */
 	    
 	    //On ecarte le sommet qui est un cas particulier	
-	    normale      = normale.multScal(-1);
+	    normale      = normale.scale(-1);
 	    if (p.equals(vertice))
 	    	return normale;
 	    
 	    double  z    = new Vector3D(baseCenter,p).dot(normale);
 	    double  h    = vertice.distance(baseCenter);
 	    double  d    = vertice.distance(p);
-	    Vector3D vect = (new Vector3D(vertice,p)).multScal(1/d);
-	    Point   M    = p.translate(vect.multScal(d*(h/(h-z)-1)));	    
+	    Vector3D vect = (new Vector3D(vertice,p)).scale(1/d);
+	    Point   M    = p.translate(vect.scale(d*(h/(h-z)-1)));	    
 	    Vector3D uy   = normale.cross(new Vector3D(baseCenter,M));
-	    uy           = uy.multScal(1/uy.norm());
-	    Point   N    = baseCenter.translate(normale.multScal(z));
+	    uy           = uy.scale(1/uy.norm());
+	    Point   N    = baseCenter.translate(normale.scale(z));
 	    Vector3D ux   = uy.cross(new Vector3D(N,p));
-	    ux           = ux.multScal(1/ux.norm());
+	    ux           = ux.scale(1/ux.norm());
 		
 	    try { intersection(p,ux.cross(uy));}catch(Exception e) { System.out.println(ux+"    "+uy+"   "+vect);}
 	    return ux.cross(uy);
@@ -270,8 +270,8 @@ public class Cone extends WrappedObject {
 	    
 	    double   z     = new Vector3D(baseCenter,p).dot(b[2]);	    
 	    double   d     = vertice.distance(p);	  
-	    Vector3D vect  = (new Vector3D(vertice,p)).multScal(1/d);
-	    Point    M     = p.translate(vect.multScal(d*(h/(h-z)-1)));
+	    Vector3D vect  = (new Vector3D(vertice,p)).scale(1/d);
+	    Point    M     = p.translate(vect.scale(d*(h/(h-z)-1)));
 	    Vector3D pvect = new Vector3D(baseCenter,M);	    
 	    double   xm    = pvect.dot(b[0]);
 	    double   ym    = pvect.dot(b[1]);
@@ -316,8 +316,8 @@ public class Cone extends WrappedObject {
 	protected void checkedResize(double factor) {
 		Point   c  = getCenter();		
 		Vector3D v = new Vector3D(c,vertice);
-		baseCenter = c.translate(v.multScal(-factor));
-		vertice    = c.translate(v.multScal(factor));
+		baseCenter = c.translate(v.scale(-factor));
+		vertice    = c.translate(v.scale(factor));
 		baseRay    = baseRay*factor;
 	}
 	
@@ -363,7 +363,7 @@ public class Cone extends WrappedObject {
 	}		
 	
 	public Point getCenter() {
-		Vector3D v = new Vector3D(baseCenter,vertice).multScal(0.5);
+		Vector3D v = new Vector3D(baseCenter,vertice).scale(0.5);
 		return baseCenter.translate(v);
 	}
 	

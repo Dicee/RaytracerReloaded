@@ -39,7 +39,7 @@ public class Cylinder extends Object3D
 		this.h          = h;
 		this.r          = r;
 		this.ex         = CustomMath.adaptedBase(axis)[0];
-		this.axis       = axis.multScal(1/axis.norm());
+		this.axis       = axis.scale(1/axis.norm());
 		this.baseCenter = center.clone();
 	}
 
@@ -49,7 +49,7 @@ public class Cylinder extends Object3D
 		Point[] centers   =  cylindre.getBasesCenters();
 		
 		axis       = new Vector3D(centers[0],centers[1]);
-		axis       = axis.multScal(1/axis.norm());
+		axis       = axis.scale(1/axis.norm());
 		h          = centers[0].distance(centers[1]);
 		baseCenter = centers[0].clone();
 		r          = cylindre.getRay();
@@ -65,7 +65,7 @@ public class Cylinder extends Object3D
 	@Override
 	public void rotateX(double u) {		
 		Vector3D t = new Vector3D(new Point(0,0,0),getCenter());
-		baseCenter = baseCenter.translate(t.multScal(-1)).rotateX(u).translate(t);
+		baseCenter = baseCenter.translate(t.scale(-1)).rotateX(u).translate(t);
 		axis       = axis.rotateX(u);	
 		ex         = ex.rotateX(u);
 	}
@@ -73,7 +73,7 @@ public class Cylinder extends Object3D
 	@Override
 	public void rotateY(double v) {		
 		Vector3D t = new Vector3D(new Point(),getCenter());
-		baseCenter = baseCenter.translate(t.multScal(-1)).rotateY(v).translate(t);
+		baseCenter = baseCenter.translate(t.scale(-1)).rotateY(v).translate(t);
 		axis       = axis.rotateY(v);	
 		ex         = ex.rotateY(v);
 	}
@@ -81,7 +81,7 @@ public class Cylinder extends Object3D
 	@Override
 	public void rotateZ(double w) {		
 		Vector3D t = new Vector3D(new Point(0,0,0),getCenter());
-		baseCenter = baseCenter.translate(t.multScal(-1)).rotateZ(w).translate(t);
+		baseCenter = baseCenter.translate(t.scale(-1)).rotateZ(w).translate(t);
 		axis       = axis.rotateZ(w);	
 		ex         = ex.rotateZ(w);
 	}
@@ -104,14 +104,14 @@ public class Cylinder extends Object3D
 		//On commence par calculer une equation cartesienne du plan des deux bases pour verifier
 		//si p y est contenu		
 		double u  = axis.getX(), v = axis.getY(), w = axis.getZ();
-		Point c1  = baseCenter, c2 = baseCenter.translate(axis.multScal(h));
+		Point c1  = baseCenter, c2 = baseCenter.translate(axis.scale(h));
 		double t0 = - (u*c1.getX() + v*c1.getY() + w*c1.getZ());
 		double t1 = - (u*c2.getX() + v*c2.getY() + w*c2.getZ());
 
 		//Test sur la premiere base
 		if (Math.abs(u*p.getX() + v*p.getY() + w*p.getZ() + t0) <= Vector3D.epsilon)
 			if (c1.distance(p) <= Vector3D.epsilon + r) {// System.out.println(p+" - 1 - "+axe.multScal(-1));
-				return axis.multScal(-1); }
+				return axis.scale(-1); }
 		
 		//Test sur la deuxieme base
 		if (Math.abs(u*p.getX() + v*p.getY() + w*p.getZ() + t1) <= Vector3D.epsilon) 
@@ -121,9 +121,9 @@ public class Cylinder extends Object3D
 		//Si p n'appartient au plan d'aucune des bases alors on le projette sur l'axe du cylindre et on renvoie
 		//le vecteur norme de direction (resultat projection)->(point p)
 		Vector3D vect = new Vector3D(baseCenter,p);
-		Point m = baseCenter.translate(axis.multScal(vect.dot(axis)));
+		Point m = baseCenter.translate(axis.scale(vect.dot(axis)));
 		//System.out.println(p+" - 3 - "+(new Vecteur(m,p)).multScal(1/r)+"  "+axe+ "  "+m);
-		return (new Vector3D(m,p)).multScal(1/r);
+		return (new Vector3D(m,p)).scale(1/r);
 	}
 
 	/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -142,9 +142,9 @@ public class Cylinder extends Object3D
 		Vector3D b1 = baseAdaptee[1], b2 = baseAdaptee[2];
 		PlaneSurface planBase1 = new PlaneSurface(baseCenter,baseCenter.translate(b0),baseCenter.translate(b1),
 									          Texture.DEFAULT_TEXTURE);
-		PlaneSurface planBase2 = new PlaneSurface(baseCenter.translate(b2.multScal(h)),
-											  baseCenter.translate(b0).translate(b2.multScal(h)),
-											  baseCenter.translate(b1).translate(b2.multScal(h)),
+		PlaneSurface planBase2 = new PlaneSurface(baseCenter.translate(b2.scale(h)),
+											  baseCenter.translate(b0).translate(b2.scale(h)),
+											  baseCenter.translate(b1).translate(b2.scale(h)),
 											  Texture.DEFAULT_TEXTURE);		
 		//Recherche sur les bases
 		Point inter1 = null;
@@ -157,7 +157,7 @@ public class Cylinder extends Object3D
 			 inter1 = null;
 			
 		inter2 = planBase2.intersection(p,rayonIncident);
-		if (inter2 != null && inter2.distance(baseCenter.translate(b2.multScal(h))) > Vector3D.epsilon + r || inter2.equals(p)) 
+		if (inter2 != null && inter2.distance(baseCenter.translate(b2.scale(h))) > Vector3D.epsilon + r || inter2.equals(p)) 
 			inter2 = null;
 			
 		//On stocke la meilleure solution dans inter1
@@ -286,8 +286,8 @@ public class Cylinder extends Object3D
 			return texture.Ka((int) (repeat*theta/Math.PI*(texture.getWidth()-1)),
 				(int) ((1-z)/h*texture.getHeight()),adapt);		
 		else {
-			p     = p.translate(axis.multScal(h-z));
-			vect  = new Vector3D(baseCenter.translate(axis.multScal(h)),p);
+			p     = p.translate(axis.scale(h-z));
+			vect  = new Vector3D(baseCenter.translate(axis.scale(h)),p);
 			x     = vect.dot(u);
 			y     = vect.dot(v);
 			theta = y < 0 ? Math.acos(x/vect.norm()) : Math.acos(x/vect.norm());
@@ -311,7 +311,7 @@ public class Cylinder extends Object3D
 
 	@Override
 	public Point getCenter() {
-		return baseCenter.translate(axis.multScal(h/2));
+		return baseCenter.translate(axis.scale(h/2));
 	}
 
 	@Override
@@ -325,7 +325,7 @@ public class Cylinder extends Object3D
 	}
 	
 	public Point[] getBasesCenters() {
-		return new Point[] { baseCenter,baseCenter.translate(axis.multScal(h)) } ;
+		return new Point[] { baseCenter,baseCenter.translate(axis.scale(h)) } ;
 	}
 	
 	@Override
@@ -351,10 +351,10 @@ public class Cylinder extends Object3D
 	@Override
 	protected void checkedResize(double facteur) {
 		Point c    = getCenter();
-		Vector3D v = (new Vector3D(c,baseCenter)).multScal(2/h);
+		Vector3D v = (new Vector3D(c,baseCenter)).scale(2/h);
 		h         *= facteur;
 		r         *= facteur;
-		baseCenter = baseCenter.translate(v.multScal(h/2));
+		baseCenter = baseCenter.translate(v.scale(h/2));
 	}
 	
 	@Override

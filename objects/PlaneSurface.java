@@ -72,7 +72,7 @@ public class PlaneSurface extends Object3D {
 	@Override
 	public Point intersection(Point p, Vector3D rayonIncident) {					
 		Vector3D direction = 
-		  rayonIncident.multScal(1/rayonIncident.norm());
+		  rayonIncident.scale(1/rayonIncident.norm());
 		
 		double[] c0 = { b.x - a.x,b.y - a.y,b.z - a.z };
 		double[] c1 = { c.x - a.x,c.y - a.y,c.z - a.z };
@@ -89,7 +89,7 @@ public class PlaneSurface extends Object3D {
 		if (Math.abs(gamma) <= Vector3D.epsilon || gamma < 0)
 			return null;			
 			
-		return p.translate(direction.multScal(gamma));
+		return p.translate(direction.scale(gamma));
 	}
 	
 	@Override

@@ -4,8 +4,6 @@ import utils.NamedObject;
 import static guifx.MainUI.strings;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

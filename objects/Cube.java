@@ -24,9 +24,9 @@ public class Cube extends MeshedObject {
 			throw new IllegalArgumentException();
 		
 		Vector3D[] canonicBase = CustomMath.canonicBase;
-		Vector3D   Ox          = canonicBase[0].multScal(a/2);
-		Vector3D   Oy          = canonicBase[1].multScal(a/2);
-		Vector3D   Oz          = canonicBase[2].multScal(a/2);		
+		Vector3D   Ox          = canonicBase[0].scale(a/2);
+		Vector3D   Oy          = canonicBase[1].scale(a/2);
+		Vector3D   Oz          = canonicBase[2].scale(a/2);		
 		
 		O                      = center.translate(Ox.opposed()).translate(Oy.opposed()).translate(Oz.opposed());
 		X                      = center.translate(Ox)          .translate(Oy.opposed()).translate(Oz.opposed());
@@ -133,9 +133,9 @@ public class Cube extends MeshedObject {
 		Vector3D v = new Vector3D(O,Y);
 		Vector3D w = new Vector3D(O,Z);
 		
-		u = u.multScal(d/u.norm());
-		v = v.multScal(d/v.norm());
-		w = w.multScal(d/w.norm());	
+		u = u.scale(d/u.norm());
+		v = v.scale(d/v.norm());
+		w = w.scale(d/w.norm());	
 
 		return O.translate(u).translate(v).translate(w);
 	}
@@ -166,15 +166,15 @@ public class Cube extends MeshedObject {
 		
 		Point   C   = getCenter();
 		double  a   = O.distance(X);
-		Vector3D e1 = (new Vector3D(O,X)).multScal(1/a);
-		Vector3D e2 = (new Vector3D(O,Y)).multScal(1/a);
-		Vector3D e3 = (new Vector3D(O,Z)).multScal(1/a);
+		Vector3D e1 = (new Vector3D(O,X)).scale(1/a);
+		Vector3D e2 = (new Vector3D(O,Y)).scale(1/a);
+		Vector3D e3 = (new Vector3D(O,Z)).scale(1/a);
 		a           = a*factor;
 		
-		O = C.translate(e1.multScal(-a/2)).translate(e2.multScal(-a/2)).translate(e3.multScal(-a/2));
-		X = C.translate(e1.multScal(a/2)).translate(e2.multScal(-a/2)).translate(e3.multScal(-a/2));
-		Y = C.translate(e1.multScal(-a/2)).translate(e2.multScal(a/2)).translate(e3.multScal(-a/2));
-		Z = C.translate(e1.multScal(-a/2)).translate(e2.multScal(-a/2)).translate(e3.multScal(a/2));
+		O = C.translate(e1.scale(-a/2)).translate(e2.scale(-a/2)).translate(e3.scale(-a/2));
+		X = C.translate(e1.scale(a/2)).translate(e2.scale(-a/2)).translate(e3.scale(-a/2));
+		Y = C.translate(e1.scale(-a/2)).translate(e2.scale(a/2)).translate(e3.scale(-a/2));
+		Z = C.translate(e1.scale(-a/2)).translate(e2.scale(-a/2)).translate(e3.scale(a/2));
 		generateFaces();
 	}	
 	

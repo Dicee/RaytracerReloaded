@@ -60,7 +60,7 @@ public class TriFace extends Face {
 		boolean condGamma = Math.abs(gamma) <= Vector3D.epsilon || gamma > 0;
 		if (!condGamma) return null;
 				
-		return p.translate(direction.multScal(gamma));
+		return p.translate(direction.scale(gamma));
 	}
 	
 	@Override
