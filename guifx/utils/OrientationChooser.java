@@ -19,9 +19,9 @@ public class OrientationChooser extends VBox {
 	public OrientationChooser() {
 		super(5);
 		Label title = new Label();
-		HBox xAxis  = new HBox(15,new Label("X : "),sx = new Slider(0,150,10),xValue = new Label("0 Â°"));
-		HBox yAxis  = new HBox(15,new Label("Y : "),sy = new Slider(0,150,10),yValue = new Label("0 Â°"));
-		HBox zAxis  = new HBox(15,new Label("Z : "),sz = new Slider(0,150,10),zValue = new Label("0 Â°"));
+		HBox xAxis  = new HBox(15,new Label("X : "),sx = new Slider(0,150,10),xValue = new Label("0 °"));
+		HBox yAxis  = new HBox(15,new Label("Y : "),sy = new Slider(0,150,10),yValue = new Label("0 °"));
+		HBox zAxis  = new HBox(15,new Label("Z : "),sz = new Slider(0,150,10),zValue = new Label("0 °"));
 		title.textProperty().bind(strings.getObservableProperty("orientationChoiceLabel"));
 		title.setFont(GraphicFactory.subtitlesFont);
 		

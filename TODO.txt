@@ -1,9 +1,16 @@
 ﻿- gérer l'attribut factoryOpenned à la fermeture d'une GraphicFactory par clic sur la croix		DONE
 - bien setter les attributs de texture à la création des objets						DONE
-- protéger contre les fermetures/chargements de scène sans enregistrement préalable
-- gérer les extensions à l'enregistrement
+- gérer les extensions à l'enregistrement								DONE
+- ajouter des options sur les composantes à calculer dans FXPainter					DONE
+- régler le problème d'encodage dans l'OrientationChooser						DONE
+- transformer languageChoiceAction en un EventHandler							DONE
+- gérer les messages d'erreur au chargement d'objets							DONE
+- améliorer la gestion des paramètres de la méthode render()						DONE
 - améliorer les Button avec une action intégrée lors de l'appui sur Entrée
 - afficher les caractéristiques des objets dans le TextPane
 - gérer l'édition de tous les types d'entités
 - gérer le caractère montré/caché des sources en XML
-- ajouter des options sur les composantes à calculer dans FXPainter
+- débuguer les cylindres (et sûrement les cônes)
+- threader le calcul de scène et le chargement/enregistrement
+- protéger contre les fermetures/chargements de scène sans enregistrement préalable
+- paralléliser le raytracer

@@ -14,7 +14,7 @@ public abstract class MeshedObject extends WrappedObject {
 	
 	@Override
 	public final int getPriority() {
-		return -faces.length;
+		return - faces.length;
 	}
 	
 	@Override

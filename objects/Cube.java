@@ -41,6 +41,7 @@ public class Cube extends MeshedObject {
 		this.X = new Point(X);
 		this.Y = new Point(Y);
 		this.Z = new Point(Z);
+		generateFaces();
 	}
 
 	@Override

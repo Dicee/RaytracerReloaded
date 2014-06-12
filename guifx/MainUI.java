@@ -1,6 +1,5 @@
 package guifx;
 
-import static guifx.MainUI.strings;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.SceneFXFactory;
@@ -23,6 +22,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -151,6 +151,11 @@ public class MainUI extends Application {
                     masthead(strings.getProperty("anErrorOccurredMessage")).
                     message(strings.getProperty("unfoundFileErrorMessage")).
                     showError();
+            } catch (Throwable t) {
+            	Dialogs.create().owner(primaryStage).
+                	title(strings.getProperty("error")).
+                	masthead(strings.getProperty("anErrorOccurredMessage")).
+                	showException(t);
             }
         }
     }
@@ -161,6 +166,10 @@ public class MainUI extends Application {
         else {
             refreshProject();
             try {
+            	String path = currentFile.getPath();
+            	int i       = path.lastIndexOf('.');
+            	path        = i == -1 ? path : path.substring(0,i);
+            	currentFile = new File(path + ".xml");
                 XMLProjectBuilder.save(currentFile,project);
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -359,24 +368,20 @@ public class MainUI extends Application {
 		chooseLanguage.getItems().addAll(french,english,spanish);
 		preferences[PREFERRED_LANGUAGE] = selectedMenu;
 		
-		french.setOnAction((ActionEvent ev) -> {
-            languageChoiceAction(french,"FR","fr","FR",checkedIcon);
-		});   
-		english.setOnAction((ActionEvent ev) -> {
-			languageChoiceAction(english,"EN","en","UK",checkedIcon);			
-		});
-        spanish.setOnAction((ActionEvent ev) -> {
-			languageChoiceAction(spanish,"ES","es","ES",checkedIcon);			
-		});
+		french .setOnAction(languageChoiceAction(french,"FR","fr","FR",checkedIcon));   
+		english.setOnAction(languageChoiceAction(english,"EN","en","UK",checkedIcon));
+        spanish.setOnAction(languageChoiceAction(spanish,"ES","es","ES",checkedIcon));
 		return chooseLanguage;
 	}
 	
-    private void languageChoiceAction(MenuItem menu, String propertyName, String lang, String country, ImageView checkedIcon) {
-        if (menu != preferences[PREFERRED_LANGUAGE]) {
-			loadLocalizedTexts(properties.getProperty(propertyName));
-			Localization.setLocale(new Locale(lang,country));				
-		}
-		changePreference(menu,PREFERRED_LANGUAGE,checkedIcon);
+    private EventHandler<ActionEvent> languageChoiceAction(MenuItem menu, String propertyName, String lang, String country, ImageView checkedIcon) {
+      return (ActionEvent ev) -> {
+    	  if (menu != preferences[PREFERRED_LANGUAGE]) {
+    		  loadLocalizedTexts(properties.getProperty(propertyName));
+    		  Localization.setLocale(new Locale(lang,country));				
+    	  }
+    	  changePreference(menu,PREFERRED_LANGUAGE,checkedIcon);
+      };
     }
     
 	private Menu setChooseStyle(final ImageView checkedIcon) {
@@ -455,8 +460,7 @@ public class MainUI extends Application {
 	private void openFXPainter(Screen screen) {
 		//new Thread(() -> {
 			refreshScene();
-			FXPainter painter = new FXPainter(new Raytracer(scene,screen));
-			painter.render();
+			new FXPainter(new Raytracer(scene,screen));
 		//}).start();
 	}
        

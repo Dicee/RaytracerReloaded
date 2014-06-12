@@ -13,7 +13,7 @@ public abstract class Texture implements XMLable {
 	static {
 	  Color c0   = new Color(0.5,0.5,0.5,1);
 	  Color c1   = new Color(0,0,1,1);
-	  DEFAULT_TEXTURE = new BasicTexture(1,5,c0,c0,c0,c1);
+	  DEFAULT_TEXTURE = new BasicTexture(1,5,c0,c0,Color.BLACK,c1);
 	}
 	
 	protected double refractiveIndex;

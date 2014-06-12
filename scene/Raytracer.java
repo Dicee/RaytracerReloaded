@@ -1,6 +1,7 @@
 package scene;
 
 import static objects.Texture.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.paint.Color;
@@ -13,6 +14,12 @@ import static java.lang.Math.*;
 import java.util.ArrayList;
 
 public class Raytracer {
+	public static final int		AMBIENT		= 0;
+	public static final int		SPECULAR	= 1;
+	public static final int		DIFFUSE		= 2;
+	public static final int		REFRACTED	= 3;
+	public static final int		REFLECTED	= 4;
+
 	protected Scene				scene;
 	protected Screen			screen;
 	public int					lines, columns;
@@ -111,14 +118,7 @@ public class Raytracer {
 		return new Color(Rspec,Vspec,Bspec,1);
 	}
 
-	public Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex, int components) {		
-		int b4     = (components            >> 4);
-		int b3     = ((components -= 16*b4) >> 3);
-		int b2     = ((components -= 8 *b3) >> 2);	
-		int b1     = ((components -= 4 *b2) >> 1);				
-		int b0     = components - 2*b1;
-		components = b0 + b1*2 + b2*4 + b3*8 + b4*16;
-	
+	public Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex, boolean[] displayComponents) {		
 		Pair<Point,Object3D> pair         = nearestObject(p,ray);
         Point                intersection = pair.getKey();
         Object3D             obj          = pair.getValue();
@@ -127,14 +127,14 @@ public class Raytracer {
             return Color.BLACK;
         
         //First, we compute the ambient component
-        Color ambientComp = b0 == 1 ? ambientComponent(obj,intersection) : Color.BLACK;
+        Color ambientComp = displayComponents[AMBIENT] ? ambientComponent(obj,intersection) : Color.BLACK;
         
         //Then, we determine the specular and diffuse components
         Color diffSpecComp = Color.BLACK;
 		for (Source source : sources) {
 			if (isEnlighted(source,intersection)) {					
-				Color diffuseComp  = b1 == 1 ? diffuseComponent (intersection,source,obj) : Color.BLACK;
-				Color specularComp = b2 == 1 ? specularComponent(intersection,source,obj) : Color.BLACK;
+				Color diffuseComp  = displayComponents[DIFFUSE ] ? diffuseComponent (intersection,source,obj) : Color.BLACK;
+				Color specularComp = displayComponents[SPECULAR] ? specularComponent(intersection,source,obj) : Color.BLACK;
 				diffSpecComp       = Pixel.colorSynthesis(diffSpecComp,diffuseComp,specularComp);
 			}			
 		}
@@ -142,19 +142,19 @@ public class Raytracer {
         //Finally, we compute the reflected and refracted components
 		Color reflectedComp;		
 		Color color;
-		if ((obj.Kr()[0] <= 0.001 && obj.Kr()[1] <= 0.001 && obj.Kr()[2] <= 0.001) || b3 == 0)
+		if ((obj.Kr()[0] <= 0.001 && obj.Kr()[1] <= 0.001 && obj.Kr()[2] <= 0.001) || !displayComponents[REFLECTED])
 			color = Color.BLACK;
 		else
-			color = pixelColor(intersection,obj.reflectedRay(intersection,ray),depth-1,depth,envRefractiveIndex,components);
+			color = pixelColor(intersection,obj.reflectedRay(intersection,ray),depth-1,depth,envRefractiveIndex,displayComponents);
 		reflectedComp = new Color(obj.Kr()[0]*color.getRed(),obj.Kr()[1]*color.getGreen(),obj.Kr()[2]*color.getBlue(),1);	
 						
 		Color refractedComp;	
 		double nvRefraction = envRefractiveIndex != obj.refractiveIndex() ? obj.refractiveIndex() : scene.getRefractiveIndex();
 		try {
-			if ((obj.Kt()[0] <= 0.001 && obj.Kt()[1] <= 0.001 && obj.Kt()[2] <= 0.001) || b4 == 0)
+			if ((obj.Kt()[0] <= 0.001 && obj.Kt()[1] <= 0.001 && obj.Kt()[2] <= 0.001) || !displayComponents[REFRACTED])
 				color = Color.BLACK;
 			else			
-				color = pixelColor(intersection,obj.refractedRay(intersection,ray,envRefractiveIndex),depth-1,depthMax,nvRefraction,components);
+				color = pixelColor(intersection,obj.refractedRay(intersection,ray,envRefractiveIndex),depth-1,depthMax,nvRefraction,displayComponents);
 			refractedComp = new Color(obj.Kt()[0]*color.getRed(),obj.Kt()[1]*color.getGreen(),obj.Kt()[2]*color.getBlue(),1);	
 			
 		} catch (TotalReflectionException e) {
@@ -164,18 +164,18 @@ public class Raytracer {
 	}
 	
 	public Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex) {
-		return pixelColor(p,ray,depth,depthMax,envRefractiveIndex,31);
+		return pixelColor(p,ray,depth,depthMax,envRefractiveIndex,new boolean[] { true,true,true,true,true });
 	}
 	
 	public void render(int depth) {
-		render(depth,31);
+		render(depth,new boolean[] { true,true,true,true,true });
 	}
 	
-	public void render(int depth, int components) {
+	public void render(int depth, boolean[] displayComponents) {
 		for (int i=0; i<lines ; i++)		
 			for (int j=0; j<columns ; j++) {
 				Vector3D ray = new Vector3D(screen.pView,screen.getPixels()[i][j].pos);
-				Color color  = pixelColor(screen.pView,ray,depth,depth,scene.getRefractiveIndex(),components);
+				Color color  = pixelColor(screen.pView,ray,depth,depth,scene.getRefractiveIndex(),displayComponents);
 				screen.setPixelColor(i,j,color);
                 for (Painter painter : painters)
                     try {
