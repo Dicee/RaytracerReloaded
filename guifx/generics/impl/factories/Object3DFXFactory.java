@@ -24,7 +24,7 @@ import utils.math.Point;
 import utils.math.Vector3D;
 
 public class Object3DFXFactory extends GraphicFactory<Object3D> {
-	private static final double							PREFERRED_WIDTH			= 640;
+	private static final double							PREFERRED_WIDTH			= 680;
 	private static final double							PREFERRED_HEIGHT		= 450;
 	private static final String[]						typesProperties			= { "sphere", "planeSurface", "cube",
 																					"parallelepiped", "cone", "cylinder" };
@@ -101,6 +101,8 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
         AnchorPane.setLeftAnchor(borderPane,30d);
 		AnchorPane.setTopAnchor(borderPane,10d);
 		AnchorPane.setRightAnchor(borderPane,30d);
+		
+		primaryStage.setResizable(true);
 	}
 	
 	@Override

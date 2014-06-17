@@ -10,6 +10,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.StringPropertyBase;
 
 public class ObservableProperties extends Properties {
+	private static final long	serialVersionUID	= 1L;
+	
 	private final Map<String,StringProperty> properties = new HashMap<>();
 		
 	public StringProperty getObservableProperty(String key) {

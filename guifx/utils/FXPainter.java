@@ -1,17 +1,12 @@
 package guifx.utils;
 
 import static guifx.MainUI.strings;
-import static scene.Raytracer.AMBIENT;
-import static scene.Raytracer.DIFFUSE;
-import static scene.Raytracer.REFLECTED;
-import static scene.Raytracer.REFRACTED;
-import static scene.Raytracer.SPECULAR;
+import static scene.Raytracer.*;
 import guifx.generics.GraphicFactory;
 
 import java.util.Arrays;
 
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -51,7 +46,7 @@ public class FXPainter extends Stage implements Painter {
 		borderPane.setCenter(imageView);
 		borderPane.setBottom(bottom);
 		
-		Scene scene = new Scene(borderPane,70d + raytracer.columns,120d + raytracer.lines);
+		Scene scene = new Scene(borderPane,70d + raytracer.columns,130d + raytracer.lines);
 		titleProperty().bind(strings.getObservableProperty("renderingFrameTitle"));
 		setScene(scene);
 		setResizable(false);
@@ -84,9 +79,9 @@ public class FXPainter extends Stage implements Painter {
 		gridPane.addRow(1,checkBoxes[AMBIENT],checkBoxes[SPECULAR],checkBoxes[DIFFUSE]);
 		gridPane.addRow(2,checkBoxes[REFLECTED],checkBoxes[REFRACTED]);
 		gridPane.add(compute,1,3);
-		GridPane.setFillWidth(compute,true);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
+		GridPane.setFillWidth(compute,true);
 		BorderPane.setAlignment(gridPane,Pos.CENTER);
 		BorderPane.setMargin(gridPane,new Insets(10));
 		

@@ -49,7 +49,7 @@ public class Raytracer {
         painters.remove(painter);
     }
     
-	public Pair<Point,Object3D> nearestObject(Point pView, Vector3D ray) {	
+	protected Pair<Point,Object3D> nearestObject(Point pView, Vector3D ray) {	
 		double minDist        = Double.MAX_VALUE;
         Point intersection    = null;
         Object3D resultObject = null;
@@ -66,7 +66,7 @@ public class Raytracer {
 		return new Pair<>(intersection,resultObject);
 	}	
 
-    public boolean isEnlighted(Source source, Point p) {
+    protected boolean isEnlighted(Source source, Point p) {
 		Vector3D ray = new Vector3D(p,source.pos);	
 		return objects.stream().allMatch(obj -> {
             Point intersection = obj.intersection(p,ray);
@@ -79,13 +79,13 @@ public class Raytracer {
         });
 	}
 
-    public Color ambientComponent(Object3D obj, Point p) {		
+    protected Color ambientComponent(Object3D obj, Point p) {		
 		float[] rgb = colorToArr(scene.getAmbientColor());
 		float[] Ka = obj.Ka(p);
 		return new Color(Ka[0]*rgb[0],Ka[1]*rgb[1],Ka[2]*rgb[2],1);
 	}
     
-	public Color diffuseComponent(Point p, Source source, Object3D obj) {
+	protected Color diffuseComponent(Point p, Source source, Object3D obj) {
 		float[] rgb     = colorToArr(source.color);
 		Vector3D ray    = new Vector3D(p,source.pos);		
 		Vector3D normal = obj.normal(p);
@@ -98,7 +98,7 @@ public class Raytracer {
 		return new Color(rgb[0]*cosinus*Ka[0],rgb[1]*cosinus*Ka[1],rgb[2]*cosinus*Ka[2],1);
     }
 	
-	public Color specularComponent(Point p, Source source, Object3D obj) {	
+	protected Color specularComponent(Point p, Source source, Object3D obj) {	
 		Color I  = source.color;
 		double R = I.getRed(), V = I.getGreen(), B = I.getBlue();
 		
@@ -118,7 +118,7 @@ public class Raytracer {
 		return new Color(Rspec,Vspec,Bspec,1);
 	}
 
-	public Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex, boolean[] displayComponents) {		
+	protected Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex, boolean[] displayComponents) {		
 		Pair<Point,Object3D> pair         = nearestObject(p,ray);
         Point                intersection = pair.getKey();
         Object3D             obj          = pair.getValue();
@@ -163,7 +163,7 @@ public class Raytracer {
 		return Pixel.colorSynthesis(ambientComp,diffSpecComp,reflectedComp,refractedComp);
 	}
 	
-	public Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex) {
+	protected Color pixelColor(Point p, Vector3D ray, int depth, int depthMax, double envRefractiveIndex) {
 		return pixelColor(p,ray,depth,depthMax,envRefractiveIndex,new boolean[] { true,true,true,true,true });
 	}
 	

@@ -1,9 +1,6 @@
 package test;
 
-import guifx.utils.FXPainter;
-
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -14,18 +11,17 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import objects.Cube;
 import objects.Sphere;
 import objects.Texture;
 import scene.Pixel;
+import scene.Raytracer;
 import scene.Raytracer;
 import scene.Screen;
 import scene.Source;
@@ -78,30 +74,65 @@ public class SceneDisplayer extends Application {
         scene.setSources(Arrays.asList(source,source2));
         scene.setObjects(Arrays.asList(sphere,cube));
         
-        Raytracer raytracer = new Raytracer(scene,screen);
-        /*raytracer.render(0);
-        
-        screen.save(new File("test.png"),"png");
-        
-        Color[][] colors = screen.getColors();					
-		
-		int longueur = colors.length;
-		int largeur  = colors.length;			
-		
-		BufferedImage img = new BufferedImage(longueur,largeur,BufferedImage.TYPE_INT_RGB);
-		      System.out.println("coucou");
-		for (int i=0; i<longueur; i++) 
-			for (int j=0; j<largeur; j++) 				
-				img.setRGB(i,largeur-j-1,Pixel.toRGB(colors[i][j]));
-        //new ImageView();
-        JFrame frame = new JFrame();
-        frame.setContentPane(new ImagePane(img));
-        frame.setSize(400,400);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
-        
-        new FXPainter(raytracer).render();
-        //System.out.println(ImageIO.write(img, "png",new File("test.png")));
+        parallel(new Raytracer(scene,screen),screen,3);
+        sequential(new Raytracer(scene,screen),screen,3);
+    }
+    
+    public void parallel(Raytracer raytracer, Screen screen, int depth) {
+    	 long start = System.currentTimeMillis();
+    	raytracer.render(depth);
+    	long end = System.currentTimeMillis();
+    	System.out.println(String.format("Parallel raytracer : %d ms",end - start));
+        // screen.save(new File("test.png"),"png");
+         
+         Color[][] colors = screen.getColors();					
+ 		
+ 		int longueur = colors.length;
+ 		int largeur  = colors.length;			
+ 		
+ 		BufferedImage img = new BufferedImage(longueur,largeur,BufferedImage.TYPE_INT_RGB);
+
+ 		for (int i=0; i<longueur; i++) 
+ 			for (int j=0; j<largeur; j++) 				
+ 				img.setRGB(i,largeur-j-1,Pixel.toRGB(colors[i][j]));
+         //new ImageView();
+         JFrame frame = new JFrame();
+         frame.setContentPane(new ImagePane(img));
+         frame.setSize(400,400);
+         frame.setVisible(true);
+         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         
+        //new FXPainter(raytracer).render();
+         //System.out.println(ImageIO.write(img, "png",new File("test.png")));
+    }
+    
+    public void sequential(Raytracer raytracer, Screen screen, int depth) {
+    	long start = System.currentTimeMillis();
+    	raytracer.render(depth);
+    	long end = System.currentTimeMillis();
+    	System.out.println(String.format("Sequential raytracer : %d ms",end - start));
+    	
+        // screen.save(new File("test.png"),"png");
+         
+         Color[][] colors = screen.getColors();					
+ 		
+ 		int longueur = colors.length;
+ 		int largeur  = colors.length;			
+ 		
+ 		BufferedImage img = new BufferedImage(longueur,largeur,BufferedImage.TYPE_INT_RGB);
+
+ 		for (int i=0; i<longueur; i++) 
+ 			for (int j=0; j<largeur; j++) 				
+ 				img.setRGB(i,largeur-j-1,Pixel.toRGB(colors[i][j]));
+         //new ImageView();
+         JFrame frame = new JFrame();
+         frame.setContentPane(new ImagePane(img));
+         frame.setSize(400,400);
+         frame.setVisible(true);
+         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         
+        //new FXPainter(raytracer).render();
+         //System.out.println(ImageIO.write(img, "png",new File("test.png")));
     }
     
     public static void main(String[] args) {
