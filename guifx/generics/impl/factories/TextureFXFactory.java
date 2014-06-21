@@ -4,7 +4,7 @@ import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
 import guifx.utils.Constraints;
-import guifx.utils.DoubleConstraintField;
+import guifx.components.DoubleConstraintField;
 import guifx.utils.TextureID;
 import java.io.File;
 import java.io.IOException;
@@ -121,13 +121,14 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 		if (failure)
 			return DoubleConstraintField.ERROR_RETURN;		
 		double result = fields[i].getValue();
-		failure      = result == DoubleConstraintField.ERROR_RETURN;
+		failure       = result == DoubleConstraintField.ERROR_RETURN;
 		return result;
 	}
 	
 	private HBox doubleConstraintField(int i, String errorPropertyName, double min) {
 		StringProperty error = strings.getObservableProperty(errorPropertyName);
 		fields[i]            = new DoubleConstraintField(new Constraints.LowerBound(error,min));
+		fields[i].bindOnActionProperty(create.onActionProperty());
 		return fields[i];
 	}
 	
@@ -190,6 +191,7 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 		path            = new TextField();
 		Label pathLabel = new Label();
 		Button browse   = new Button();
+		path.onActionProperty().bind(create.onActionProperty());
 		pathLabel.textProperty().bind(strings.getObservableProperty("pathLabel"));
 		pathLabel.setFont(subtitlesFont);
 		browse.textProperty().bind(strings.getObservableProperty("browseLabel"));
@@ -234,5 +236,10 @@ public class TextureFXFactory extends GraphicFactory<Texture> {
 		HBox result = new HBox(10,basic,advanced);
 		result.setPadding(new Insets(5));
 		return result;
+	}
+
+	@Override
+	public void show(Texture texture) {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

@@ -19,6 +19,7 @@ import utils.math.Vector3D;
 import static XML.XMLSceneLoader.findByName;
 import static XML.basicTypes.XMLVector.xmlToPoint;
 import static XML.basicTypes.XMLVector.xmlToVector;
+import java.util.function.Function;
 
 public class XMLObjectLoader {
 	public static List<Object3D> xmlToObjects(Element objectsElt, List<Texture>  textures) {
@@ -41,9 +42,24 @@ public class XMLObjectLoader {
 		}
 		String id = elt.getChild("TextureRef").getAttributeValue("id");
 		result.setTexture(id.equals("default") ? Texture.DEFAULT_TEXTURE : textures.get(Integer.parseInt(id)));
-		return result;
+		return setTextureProperties(elt,result);
+	}
+	
+	private static Object3D setTextureProperties(Element elt, Object3D obj) {
+		obj.setRepeat(safeReadAttribute(elt,"repeat",Boolean::parseBoolean,true));
+		obj.setAdapt(safeReadAttribute(elt,"adapt",Boolean::parseBoolean,true));
+		obj.setPatternRepeat(safeReadAttribute(elt,"patternRepeat",Integer::parseInt,3));
+		return obj;
 	}
 
+	private static <T> T safeReadAttribute(Element elt, String attributeName, Function<String,T> mapper, T defaultValue) {
+		T result = defaultValue;
+		try {
+			result = mapper.apply(elt.getAttributeValue(attributeName));
+		} catch (Throwable t) {	}
+		return result;
+	}
+			
 	private static Object3D xmlToCylinder(Element elt, List<Texture> textures) {
 		List<Element> points     = elt.getChildren("Vector");
 		Vector3D      axis       = xmlToVector(findByName(points,"axis"));

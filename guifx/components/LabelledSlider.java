@@ -1,4 +1,4 @@
-package guifx.utils;
+package guifx.components;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;

@@ -1,5 +1,6 @@
-package guifx.utils;
+package guifx.components;
 
+import guifx.utils.Constraint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

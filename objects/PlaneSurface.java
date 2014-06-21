@@ -117,7 +117,7 @@ public class PlaneSurface extends Object3D {
 	}
 	
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("PlaneSurface");
 		result.addContent(new XMLVector("A",a));
 		result.addContent(new XMLVector("B",b));

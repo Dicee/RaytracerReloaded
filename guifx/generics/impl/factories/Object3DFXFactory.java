@@ -1,10 +1,17 @@
 package guifx.generics.impl.factories;
 
+import guifx.utils.Constraints;
+import guifx.components.ScaledSlider;
+import guifx.components.DoubleConstraintField;
+import guifx.components.OrientationChooser;
+import guifx.components.VectorBuilder;
+import guifx.components.ConstraintForm;
+import guifx.components.LabelledSlider;
+import guifx.utils.Constraint;
 import static guifx.MainUI.strings;
 import static objects.Object3DFactory.*;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
-import guifx.utils.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,14 +25,21 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import objects.Cone;
+import objects.Cube;
+import objects.Cylinder;
 import objects.Object3D;
+import objects.Parallelepiped;
+import objects.PlaneSurface;
+import objects.QuadFace;
+import objects.Sphere;
 import objects.Texture;
 import utils.math.Point;
 import utils.math.Vector3D;
 
 public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	private static final double							PREFERRED_WIDTH			= 680;
-	private static final double							PREFERRED_HEIGHT		= 450;
+	private static final double							PREFERRED_HEIGHT		= 500;
 	private static final String[]						typesProperties			= { "sphere", "planeSurface", "cube",
 																					"parallelepiped", "cone", "cylinder" };
 
@@ -43,18 +57,18 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	 */
 	private final DoubleConstraintField[]				doubleValueFields		= new DoubleConstraintField[2];
 	private final LabelledSlider[]						angleSliders			= new LabelledSlider[3];
-	private final RadioButton							finite					= new RadioButton(),
-			infinite = new RadioButton();
+	private final RadioButton							finite					= new RadioButton();
+	private final RadioButton							infinite				= new RadioButton();
 	private final ComboBox<StringProperty>				typeChoice;
 
 	/**
 	 * Texture fields
 	 */
 	private final Slider								patternRepeat			= new Slider();
-	private final RadioButton							repeat					= new RadioButton(),
-			noRepeat = new RadioButton();
-	private final RadioButton							adapt					= new RadioButton(),
-			noAdapt = new RadioButton();
+	private final RadioButton							repeat					= new RadioButton();
+	private final RadioButton							noRepeat				= new RadioButton();
+	private final RadioButton							adapt					= new RadioButton();
+	private final RadioButton							noAdapt					= new RadioButton();
 	private final ComboBox<NamedObject<Texture>>		textureIds				= new ComboBox<>();
 
 	/**
@@ -195,6 +209,8 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	}
 	
 	private void setCommonCaracteristics() {
+		centerBuilder.setOnAction(create.getOnAction());
+		
 		Label scaleLabel  = new Label();
 		Label centerLabel = new Label();
 		scaleLabel .textProperty().bind(strings.getObservableProperty("scaleLabel"));
@@ -253,7 +269,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 
     public final void setTextureFields() {
         ToggleGroup adaptGroup = new ToggleGroup();
-        adaptGroup.getToggles().addAll(adapt,noRepeat);
+        adaptGroup.getToggles().addAll(adapt,noAdapt);
         adapt.setSelected(true);
         Label adaptLabel   = new Label();
         Label noAdaptLabel = new Label();
@@ -307,12 +323,12 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 			Constraint<Double> ratioConstraint = new Constraints.
 				LowerBound(strings.getObservableProperty("positiveHeightRayRatioMessage"),0);
 			switch (newValue.getName()) {
-				case "sphere"         : show(noSpecificities());                                break;
-				case "cube"           : show(noSpecificities());                                break;
-				case "parallelepiped" : show(parallelepipedSpecificities());                    break;
-				case "cylinder"       : show(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
-				case "cone"           : show(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
-				default               : show(planeSurfaceSpecifities(true));                    break;
+				case "sphere"         : showContent(noSpecificities());                                break;
+				case "cube"           : showContent(noSpecificities());                                break;
+				case "parallelepiped" : showContent(parallelepipedSpecificities());                    break;
+				case "cylinder"       : showContent(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
+				case "cone"           : showContent(doubleValueSpecifities(ratio,ratioConstraint,0));  break;
+				default               : showContent(planeSurfaceSpecifities(true));                    break;
 			}
 			disableFiniteCaracteristics(newValue.getName().equals("planeSurface") && infinite.isSelected());
 		});
@@ -369,6 +385,7 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 	private ConstraintForm doubleValueSpecifities(StringProperty ratioLabelText, int i) {
 		doubleValueFields[i] = new DoubleConstraintField(10,ratioLabelText);		
 		doubleValueFields[i].setPadding(new Insets(5,5,5,5));
+		doubleValueFields[i].bindOnActionProperty(create.onActionProperty());
 		return doubleValueFields[i];
 	}
 
@@ -407,7 +424,53 @@ public class Object3DFXFactory extends GraphicFactory<Object3D> {
 		return content;
 	}
 	
-	private void show(Node content) {
+	private void showContent(Node content) {
 		specificities.setContent(content);
+	}
+	
+	@Override
+	public void show(Object3D object) {
+		//We cannot do better here than using instanceof... Be careful with
+		//some classes that extends other, the order of the if blocks matters
+		showCommonCaracteristics(object);
+		if (object instanceof Sphere) {
+			//do nothing
+		} else if (object instanceof QuadFace) {
+			showLimitedSurface((QuadFace) object);
+		} else if (object instanceof PlaneSurface) {
+			showInfiniteSurface((PlaneSurface) object);
+		} else if (object instanceof Cube) {
+			//do nothing
+		} else if (object instanceof Parallelepiped) {
+			showParallelepiped((Parallelepiped) object);
+		} else if (object instanceof Cone) {
+			showCone((Cone) object);
+		} else if (object instanceof Cylinder) {
+			showCylinder((Cylinder) object);
+		}
+	}
+
+	private void showCommonCaracteristics(Object3D object) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	private void showLimitedSurface(QuadFace quadFace) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	private void showInfiniteSurface(PlaneSurface planeSurface) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	private void showParallelepiped(Parallelepiped parallelepiped) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	private void showCone(Cone cone) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	private void showCylinder(Cylinder cylinder) {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

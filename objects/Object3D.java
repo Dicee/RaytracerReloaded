@@ -7,6 +7,7 @@ import utils.math.Rotatable;
 import utils.math.Translatable;
 import utils.math.Vector3D;
 import XML.XMLable;
+import org.jdom2.Element;
 
 public abstract class Object3D implements XMLable, Translatable, Rotatable, Cloneable, Copiable<Object3D>, Hidable {	
 	
@@ -49,13 +50,26 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 			throw new TotalReflectionException();
 		return Vector3D.linearCombination(incidentRay,normal,x,dot*x - Math.sqrt(radicande));
 	}	
-	
+
 	public void resize(double factor) {
 		if (factor <= 0 || factor <= Vector3D.epsilon)
 			throw new IllegalArgumentException("The resizement factor should be > 0");
 		checkedResize(factor);
 	}
 	protected abstract void checkedResize(double factor);
+	
+	protected Element setXMLTextureProperties(Element e) {
+		e.setAttribute("repeat",repeat + "");
+		e.setAttribute("patternRepeat",patternRepeat + "");
+		e.setAttribute("adapt",adapt + "");
+		return e;
+	}
+	
+	@Override
+	public final Element toXML() {
+		return setXMLTextureProperties(toXMLImpl());
+	}
+	protected abstract Element toXMLImpl();
 	
 	@Override
 	public abstract void rotateX( double u);
@@ -118,10 +132,12 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	  return texture.brillance();
 	}
 	
+	@Override
 	public void setShown(boolean b)	{
 		shown = b;
 	}
 	
+	@Override
 	public boolean isShown() {
 		return shown;
 	}
@@ -148,7 +164,7 @@ public abstract class Object3D implements XMLable, Translatable, Rotatable, Clon
 	
 	/**
 	 * 
-	 * @param repeat
+	 * @param n
 	 * @throws IllegalArgumentException if n <= 0
 	 */
 	public void setPatternRepeat(int n)	{

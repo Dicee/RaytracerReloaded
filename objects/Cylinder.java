@@ -329,7 +329,7 @@ public class Cylinder extends Object3D
 	}
 	
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("Cylinder");
 		result.addContent(new XMLDouble("height",h));
 		result.addContent(new XMLDouble("ray",r));

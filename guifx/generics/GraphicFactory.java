@@ -64,7 +64,7 @@ public abstract class GraphicFactory<T> {
 				this.consumer.accept(element); 
 				hide(); 
 			}
-		} );
+		});
 		close .setOnAction(ev -> hide());
 		
 		javafx.scene.Scene scene = new Scene(root,width,height,Color.WHITESMOKE);
@@ -73,8 +73,6 @@ public abstract class GraphicFactory<T> {
 		primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(ev -> hide());
 	}
-	
-	protected abstract NamedObject<T> create();
 	
 	public void setConsumer(Consumer<NamedObject<T>> consumer) {
 		if (consumer == null)
@@ -86,6 +84,8 @@ public abstract class GraphicFactory<T> {
 		primaryStage.show();
 	}
 	
+	public abstract void show(T item);
+	
 	public final void hide() {
 		primaryStage.hide();
         consumer.accept(null);
@@ -94,4 +94,6 @@ public abstract class GraphicFactory<T> {
 	public StringProperty textProperty() {
 		return create.textProperty();
 	}
+	
+	protected abstract NamedObject<T> create();
 }

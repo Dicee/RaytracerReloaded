@@ -93,6 +93,7 @@ public class Cube extends MeshedObject {
 		return O.distance(X);
 	}
 	
+	@Override
 	public String toString() {
 		return  "      CUBE\n"           + "\n" +
 				"      Vertice 1 :  " + O + "\n" +
@@ -103,7 +104,7 @@ public class Cube extends MeshedObject {
 	}
 	
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("Cube");
 		result.addContent(new XMLVector("O",O));
 		result.addContent(new XMLVector("X",X));
@@ -112,10 +113,12 @@ public class Cube extends MeshedObject {
 		return result;
 	}
 
+	@Override
 	public Object3D getWrappingObject() {		
 		return new Sphere(getCenter(),Math.sqrt(3)*getSideLength()/2,Texture.DEFAULT_TEXTURE);
 	}
 
+	@Override
 	public void translate(Vector3D v) {
 		O = O.translate(v);
 		X = X.translate(v);
@@ -128,6 +131,7 @@ public class Cube extends MeshedObject {
 		return new Point[] { O,X,Y,Z };
 	}
 	
+	@Override
 	public Point getCenter() {
 		double d   = this.getSideLength()/2;
 		Vector3D u = new Vector3D(O,X);
@@ -146,6 +150,7 @@ public class Cube extends MeshedObject {
 		return new Cube(O,X,Y,Z,texture);
 	}	
 
+	@Override
 	public void copy(Object3D clone) {
 		Cube cube   = (Cube) clone;	
 		Point[] pts = cube.getPoints();
@@ -157,6 +162,7 @@ public class Cube extends MeshedObject {
 		generateFaces();
 	}
 	
+	@Override
 	public Vector3D[] getAdaptedBase() {
 		return new Vector3D[] { new Vector3D(O,X),new Vector3D(O,Y),new Vector3D(O,Z) };
 	}

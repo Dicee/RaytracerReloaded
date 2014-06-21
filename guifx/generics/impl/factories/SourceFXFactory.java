@@ -3,7 +3,7 @@ package guifx.generics.impl.factories;
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
-import guifx.utils.VectorBuilder;
+import guifx.components.VectorBuilder;
 import javafx.scene.paint.Color;
 import java.util.function.Consumer;
 import javafx.scene.control.ColorPicker;
@@ -27,6 +27,8 @@ public class SourceFXFactory extends GraphicFactory<Source> {
 	public SourceFXFactory(Consumer<NamedObject<Source>> consumer) {
 		super(strings.getObservableProperty("createSourceTitle"),strings.getObservableProperty("createAction"),
 			consumer,PREFERRED_WIDTH,PREFERRED_HEIGHT);
+		
+		vectorBuilder.bindOnActionProperty(create.onActionProperty());
 		
 		Label colorLabel = new Label();
 		Label posLabel   = new Label();
@@ -61,5 +63,10 @@ public class SourceFXFactory extends GraphicFactory<Source> {
 			result        = new NamedObject<>(strings.getObservableProperty("source"),source);
 		}
 		return result;
+	}
+
+	@Override
+	public void show(Source source) {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

@@ -1,4 +1,4 @@
-package guifx.utils;
+package guifx.components;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;

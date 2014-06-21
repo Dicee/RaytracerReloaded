@@ -136,7 +136,7 @@ public class Parallelepiped extends MeshedObject {
 	}
 	
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("Parallelepiped");
 		result.addContent(new XMLVector("O",O));
 		result.addContent(new XMLVector("X",X));

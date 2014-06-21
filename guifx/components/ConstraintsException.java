@@ -1,4 +1,4 @@
-package guifx.utils;
+package guifx.components;
 
 public class ConstraintsException extends RuntimeException { 
 	private static final long	serialVersionUID	= 1L;

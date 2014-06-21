@@ -1,16 +1,44 @@
-﻿- gérer l'attribut factoryOpenned à la fermeture d'une GraphicFactory par clic sur la croix		DONE
-- bien setter les attributs de texture à la création des objets						DONE
-- gérer les extensions à l'enregistrement								DONE
-- ajouter des options sur les composantes à calculer dans FXPainter					DONE
-- régler le problème d'encodage dans l'OrientationChooser						DONE
-- transformer languageChoiceAction en un EventHandler							DONE
-- gérer les messages d'erreur au chargement d'objets							DONE
-- améliorer la gestion des paramètres de la méthode render()						DONE
-- améliorer les Button avec une action intégrée lors de l'appui sur Entrée
+﻿----------------------------------------------------------
+					Raytracer Reloaded
+----------------------------------------------------------
+
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+						Rendu statique
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+- manque des paramètres pour les parallélépipèdes et les surfaces planes finies					DONE
+- gérer les textures en XML																		DONE
+- améliorer la conception des textures (Basic, Advanced...)										DONE
+- gérer les textures dans la création d'objets													DONE
+- gérer la création de surfaces planes et de parallélépipèdes									DONE
+- gérer l'attribut factoryOpenned à la fermeture d'une GraphicFactory par clic sur la croix		DONE
+- bien setter les attributs de texture à la création des objets									DONE
+- gérer les extensions à l'enregistrement														DONE
+- ajouter des options sur les composantes à calculer dans FXPainter								DONE
+- régler le problème d'encodage dans l'OrientationChooser										DONE
+- transformer languageChoiceAction en un EventHandler											DONE
+- gérer les messages d'erreur au chargement d'objets											DONE
+- améliorer la gestion des paramètres de la méthode render()									DONE
+- améliorer les champs de texte avec une action lors de l'appui sur Entrée						DONE
+- gérer en XML les caractéristiques avancées de textures pour les objets						DONE
+- paralléliser le raytracer																		DONE 		(to be improved)
+- gérer en XML le caractère montré/caché des sources et objets 									CANCELED
+- améliorer les Button avec une action lors de l'appui sur Entrée								DONE
 - afficher les caractéristiques des objets dans le TextPane
 - gérer l'édition de tous les types d'entités
-- gérer le caractère montré/caché des sources en XML
 - débuguer les cylindres (et sûrement les cônes)
 - threader le calcul de scène et le chargement/enregistrement
 - protéger contre les fermetures/chargements de scène sans enregistrement préalable
-- paralléliser le raytracer
+- revoir la réfraction
+- repasser sur le code "géométrique" de toutes les classes du modèle
+- retirer les outils devenus inutiles par les changements opérés dans les classes *Factory
+- éventuellement revoir la méthode GraphicFactory.doAction
+
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+						Animations
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+- revoir toute l'architecture des classes (tâche à décomposer)
+- recoder tous les types d'animations (tâche à décomposer)
+- revoir toute l'organisation de l'interface (tâche à décomposer)
+
+

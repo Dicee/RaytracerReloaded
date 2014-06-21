@@ -1,14 +1,14 @@
 package guifx.generics.impl.factories;
 
-import static guifx.utils.DoubleConstraintField.ERROR_RETURN;
+import static guifx.components.DoubleConstraintField.ERROR_RETURN;
 import static guifx.MainUI.strings;
 import guifx.generics.GraphicFactory;
 import utils.NamedObject;
 import guifx.utils.Constraint;
 import guifx.utils.Constraints;
-import guifx.utils.DoubleConstraintField;
-import guifx.utils.OrientationChooser;
-import guifx.utils.VectorBuilder;
+import guifx.components.DoubleConstraintField;
+import guifx.components.OrientationChooser;
+import guifx.components.VectorBuilder;
 import java.util.function.Consumer;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
@@ -46,6 +46,9 @@ public class ScreenFXFactory extends GraphicFactory<Screen> {
 		this.pViewBuilder         = new VectorBuilder();
 		this.widthField           = new DoubleConstraintField(positiveWidth);
 		this.heightField          = new DoubleConstraintField(positiveHeight);
+		this.pViewBuilder.bindOnActionProperty(create.onActionProperty());
+		this.widthField  .bindOnActionProperty(create.onActionProperty());
+		this.heightField .bindOnActionProperty(create.onActionProperty());
 		
 		Label label               = new Label();
 		Label xLabel              = new Label("x");
@@ -90,5 +93,10 @@ public class ScreenFXFactory extends GraphicFactory<Screen> {
 			result          = new NamedObject<>(strings.getObservableProperty("screen"),screen);
 		}
 		return result;
+	}
+
+	@Override
+	public void show(Screen screen) {
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 }

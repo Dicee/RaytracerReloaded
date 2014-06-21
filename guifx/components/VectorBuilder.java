@@ -1,8 +1,13 @@
-package guifx.utils;
+package guifx.components;
 
+import guifx.utils.Constraint;
 import static guifx.MainUI.strings;
 import java.util.Arrays;
 import java.util.List;
+import javafx.beans.Observable;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.controlsfx.dialog.Dialogs;
@@ -29,18 +34,21 @@ public class VectorBuilder extends ConstraintForm {
 	}	
 
 	private double[] getValues() {
+		TextField errorField = null;
 		try {
-			double x = Double.parseDouble(xField.getText());
-			double y = Double.parseDouble(yField.getText());
-			double z = Double.parseDouble(zField.getText());
-		
-			List<Double> coords = Arrays.asList(x,y,z);
-			constraints.stream().forEach(predicate -> {
-				if (!coords.stream().allMatch(predicate))
-					throw new ConstraintsException(predicate.errorMessage());
-			});
-			return new double[] { x,y,z };
+			final double[] result = new double[3];
+			int            i      = -1;
+			
+			List<TextField> fields = Arrays.asList(xField,yField,zField);
+			for (TextField field : fields) {
+				result[++i] = Double.parseDouble((errorField = field).getText());
+				for (Constraint predicate : constraints)
+					if (!predicate.test(result[i]))
+						throw new ConstraintsException(predicate.errorMessage());
+			}
+			return result;
 		} catch (NumberFormatException nfe) {
+			errorField.requestFocus();
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
 				masthead(strings.getProperty("anErrorOccurredMessage")).
@@ -48,6 +56,7 @@ public class VectorBuilder extends ConstraintForm {
 				showError();
 			return null;
 		} catch (ConstraintsException ce) {
+			errorField.requestFocus();
 			Dialogs.create().owner(this).
 				title(strings.getProperty("error")).
 				masthead(strings.getProperty("anErrorOccurredMessage")).
@@ -71,5 +80,17 @@ public class VectorBuilder extends ConstraintForm {
 			return null;
 		else 
 			return new Point(values[0],values[1],values[2]);
+	}
+	
+	public void setOnAction(EventHandler<ActionEvent> handler) {
+		xField.setOnAction(handler);
+		yField.setOnAction(handler);
+		zField.setOnAction(handler);
+	}
+	
+	public void bindOnActionProperty(ObservableValue< ? extends EventHandler<ActionEvent>> ov) {
+		xField.onActionProperty().bind(ov);
+		yField.onActionProperty().bind(ov);
+		zField.onActionProperty().bind(ov);
 	}
 }

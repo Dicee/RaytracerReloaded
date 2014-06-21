@@ -1,5 +1,6 @@
 package guifx;
 
+import guifx.utils.FXPainter;
 import guifx.generics.SceneElementTab;
 import guifx.generics.Tools;
 import guifx.generics.impl.factories.SceneFXFactory;
@@ -7,7 +8,6 @@ import guifx.generics.impl.tabs.ObjectsTab;
 import guifx.generics.impl.tabs.ScreensTab;
 import guifx.generics.impl.tabs.SourcesTab;
 import guifx.generics.impl.tabs.TexturesTab;
-import guifx.utils.FXPainter;
 import impl.org.controlsfx.i18n.Localization;
 
 import java.io.File;
@@ -55,6 +55,11 @@ import utils.NamedObject;
 import utils.ObservableProperties;
 import XML.XMLProjectBuilder;
 import XML.XMLSceneLoader;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.stage.StageStyle;
 
 public class MainUI extends Application {
 	
@@ -452,10 +457,41 @@ public class MainUI extends Application {
         			break;
         		case 1  :
         			openFXPainter(screensTab.getItems().get(0).bean);
-        		default : break;
+					break;
+        		default : 
+					showScreenSelector();
+					break;
         	}
         });
     }		
+	
+	private void showScreenSelector() {
+		ObservableList<Integer> items = FXCollections.observableArrayList();
+		for (int i=1 ; i<=screensTab.getItems().size() ; i++)
+			items.add(i);
+		
+		Stage             stage = new Stage(StageStyle.DECORATED);
+		Label             label = new Label();
+		ComboBox<Integer> box   = new ComboBox(items);
+		Button            ok    = new Button("OK");
+		label.textProperty().bind(strings.getObservableProperty("selectScreenMessage"));
+		
+		ok.setOnAction(ev -> {
+			Integer index = box.getSelectionModel().getSelectedItem();
+			if (index != null) {
+				openFXPainter(screensTab.getItems().get(index).bean);
+				stage.hide();
+			}
+		});
+		
+		HBox root = new HBox(10,label,box,ok);
+		root.setLayoutX(15);
+		root.setLayoutY(15);
+		
+		stage.setScene(new Scene(root,400,40));
+		stage.setResizable(false);
+		stage.show();
+	}
 	
 	private void openFXPainter(Screen screen) {
 		//new Thread(() -> {

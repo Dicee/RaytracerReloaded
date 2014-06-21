@@ -105,7 +105,7 @@ public class Sphere extends Object3D {
 	}
 		
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("Sphere");
 		result.addContent(new XMLDouble("ray",r));
 		result.addContent(new XMLVector("center",c));

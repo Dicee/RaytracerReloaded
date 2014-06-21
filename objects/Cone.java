@@ -336,7 +336,7 @@ public class Cone extends WrappedObject {
 	}
 	
 	@Override
-	public Element toXML() {	
+	public Element toXMLImpl() {	
 		Element result = new Element("Cone");
 		result.addContent(new XMLDouble("baseRay",baseRay));
 		result.addContent(new XMLVector("vertice",vertice));
