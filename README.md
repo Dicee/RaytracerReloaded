@@ -11,5 +11,3 @@ I decided to rebuild it from scratch, particularly the UI part for which JavaFX 
 - animation mode enabling to create animated gif (in a first time)
 - UI features allowing to create and modify the scene (show/hide objects, resize, translate, rotate...)
 - UI features allowing to create the movie (set the animations, their duration...)
-
-As it is on my leisure time, it could take a moment before I finish.
